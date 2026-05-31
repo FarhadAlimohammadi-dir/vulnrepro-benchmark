@@ -108,7 +108,7 @@ More detail: [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md)
 - [docs/GITHUB_RELEASE_NOTES.md](docs/GITHUB_RELEASE_NOTES.md)
 
   
-##Acknowledgements
+## Acknowledgements
 
 Thanks to [vitorfhc](https://github.com/vitorfhc) for creating [Bug Bounty Daily](https://bugbountydaily.com/), which helped surface many public vulnerability writeups used as source material for this benchmark.
 
