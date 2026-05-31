@@ -107,6 +107,15 @@ More detail: [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md)
 - [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md)
 - [docs/GITHUB_RELEASE_NOTES.md](docs/GITHUB_RELEASE_NOTES.md)
 
+  
+##Acknowledgements
+
+Thanks to [vitorfhc](https://github.com/vitorfhc) for creating [Bug Bounty Daily](https://bugbountydaily.com/), which helped surface many public vulnerability writeups used as source material for this benchmark.
+
+Credit belongs first to the original security researchers who publicly published the writeups and findings that inspired these reproductions.
+
+Thanks also to [rez0](https://x.com/rez0__) and [Justin Gardner](https://x.com/Rhynorater) for the motivation, discussions, and valuable public sharing around this new era of AI-assisted security research.
+
 ## Safety
 
 This repository contains intentionally vulnerable applications. Full research packages may also contain private exploit validation scripts. Run only in isolated local Docker environments. Do not deploy these applications to public networks.
