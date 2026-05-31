@@ -1,0 +1,31 @@
+<header class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">&#9729;</span>
+    <span class="brand-name">CloudLens</span>
+    <span class="brand-sub">IAM Analyzer</span>
+  </div>
+  <% if (user) { %>
+  <nav class="navbar-links">
+    <a href="/" class="nav-link">Dashboard</a>
+    <a href="/resources" class="nav-link">Resources</a>
+    <a href="/iam/users" class="nav-link">IAM Users</a>
+    <a href="/profile" class="nav-link">Profile</a>
+    <% if (user.role === 'admin') { %>
+    <a href="/admin" class="nav-link nav-link-admin">Admin</a>
+    <% } %>
+  </nav>
+  <div class="navbar-user">
+    <% if (typeof notifications !== 'undefined' && notifications.length > 0) { %>
+    <span class="notif-badge"><%= notifications.length %></span>
+    <% } %>
+    <span class="user-chip">
+      <span class="user-avatar"><%= user.username[0].toUpperCase() %></span>
+      <span><%= user.username %></span>
+      <span class="role-tag role-<%= user.role %>"><%= user.role %></span>
+    </span>
+    <form method="POST" action="/logout" style="display:inline">
+      <button class="btn-logout" type="submit">Sign Out</button>
+    </form>
+  </div>
+  <% } %>
+</header>

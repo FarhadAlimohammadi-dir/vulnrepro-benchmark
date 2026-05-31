@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block title %}#{{ room.name }} &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="room-layout">
+  <aside class="sidebar sidebar-narrow">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Attach Document</div>
+      <div class="doc-attach-list">
+        {% for doc in docs %}
+        <button class="doc-attach-btn" onclick='attachDoc({{ doc.id|tojson }}, {{ doc.title|tojson }})'>
+          {{ doc.title[:30] }}{% if doc.title|length > 30 %}…{% endif %}
+        </button>
+        {% endfor %}
+      </div>
+      <div id="attached-doc" class="attached-indicator" style="display:none">
+        <span class="attached-label">Attached:</span>
+        <span id="attached-name"></span>
+        <button class="detach-btn" onclick="detachDoc()">✕</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2 class="room-title"># {{ room.name }}</h2>
+      <span class="room-desc text-muted">{{ room.description }}</span>
+    </div>
+
+    <div class="messages-area" id="messages">
+      {% for m in messages %}
+      <div class="message {% if m.is_assistant %}message-assistant{% endif %}">
+        <div class="message-author">
+          {% if m.is_assistant %}
+          <span class="author-bot">&#9675; NexusBot</span>
+          {% else %}
+          <span class="author-human">{{ m.display_name or m.username }}</span>
+          {% endif %}
+          <span class="message-time text-muted">{{ m.created_at[11:16] if m.created_at else '' }}</span>
+        </div>
+        <div class="message-body">
+          {% if m.is_assistant %}
+            {{ m.content|safe }}
+          {% else %}
+            {{ m.content }}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      <div id="msg-bottom"></div>
+    </div>
+
+    <div class="chat-input-bar">
+      <input id="msgInput" class="chat-input" type="text"
+             placeholder="Message #{{ room.name }}, or ask the AI assistant…"
+             onkeydown="if(event.key==='Enter') sendMsg()">
+      <button class="btn btn-primary" onclick="sendMsg()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let _docId = null;
+function attachDoc(id, title) {
+  _docId = id;
+  document.getElementById('attached-name').textContent = title;
+  document.getElementById('attached-doc').style.display = 'flex';
+}
+function detachDoc() {
+  _docId = null;
+  document.getElementById('attached-doc').style.display = 'none';
+}
+function appendMessage(who, html, isBot) {
+  const area = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'message' + (isBot ? ' message-assistant' : '');
+  div.innerHTML = '<div class="message-author"><span class="' +
+    (isBot ? 'author-bot">&#9675; NexusBot' : 'author-human">' + who) +
+    '</span></div><div class="message-body">' + html + '</div>';
+  area.insertBefore(div, document.getElementById('msg-bottom'));
+  document.getElementById('msg-bottom').scrollIntoView({behavior:'smooth'});
+}
+function sendMsg() {
+  const text = document.getElementById('msgInput').value.trim();
+  if (!text) return;
+  document.getElementById('msgInput').value = '';
+  appendMessage('{{ username }}', text.replace(/</g,'&lt;'), false);
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({room_id: {{ room.id }}, message: text, doc_id: _docId})
+  }).then(r => r.json()).then(data => {
+    if (data.reply) appendMessage('NexusBot', data.reply, true);
+    else if (data.error) appendMessage('System', data.error, true);
+  }).catch(() => appendMessage('System', 'Connection error.', true));
+}
+document.getElementById('msg-bottom').scrollIntoView();
+</script>
+{% endblock %}

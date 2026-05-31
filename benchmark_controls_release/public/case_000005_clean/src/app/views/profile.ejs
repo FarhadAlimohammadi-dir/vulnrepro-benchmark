@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, page: 'profile' }) %>
+<main class="content">
+<div class="page-header">
+  <h1>Your Profile</h1>
+</div>
+
+<% if (saved) { %>
+<div class="alert alert-success">Profile updated successfully.</div>
+<% } %>
+
+<div class="dash-grid" style="grid-template-columns:1fr 1fr">
+  <div class="form-card">
+    <h2 class="card-title">Account Details</h2>
+    <form method="POST" action="/profile">
+      <label class="field-label">Display Name</label>
+      <input class="field-input" name="display_name" value="<%= profile.display_name || '' %>" maxlength="80">
+
+      <label class="field-label">Email</label>
+      <input class="field-input" name="email" type="email" value="<%= profile.email || '' %>" maxlength="120">
+
+      <label class="field-label">Username</label>
+      <input class="field-input" value="<%= profile.username %>" disabled>
+
+      <label class="field-label">Role</label>
+      <input class="field-input" value="<%= profile.role %>" disabled>
+
+      <button class="btn btn-primary" style="margin-top:.75rem" type="submit">Save Changes</button>
+    </form>
+  </div>
+
+  <div class="dash-card">
+    <h2 class="card-title">Connected Integrations</h2>
+    <ul class="integration-list">
+      <% integrations.forEach(i => { %>
+      <li class="integration-item">
+        <div>
+          <strong><%= i.service %></strong>
+          <p class="muted">Scopes: <%= i.scopes %></p>
+        </div>
+        <span class="badge badge-green">Connected</span>
+      </li>
+      <% }) %>
+      <% if (!integrations.length) { %><li class="muted">No integrations connected.</li><% } %>
+    </ul>
+    <a href="#" class="btn btn-secondary" style="margin-top:1rem">+ Connect Service</a>
+  </div>
+</div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

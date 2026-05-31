@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/apps">My Apps</a>
+      <a href="/profile" class="active">Profile</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>My Profile</h2>
+    </div>
+
+    <% if (success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Account Information</h3>
+        <form action="/profile" method="POST">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" value="<%= user.username %>" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" value="<%= user.email || '' %>">
+          </div>
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio" class="form-control" rows="3"><%= user.bio || '' %></textarea>
+          </div>
+          <div class="form-group">
+            <label for="website">Website</label>
+            <input type="url" id="website" name="website" class="form-control" value="<%= user.website || '' %>">
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Connected Applications</h3>
+        <% if (apps && apps.length > 0) { %>
+          <ul class="item-list">
+            <% apps.forEach(function(app) { %>
+              <li>
+                <div>
+                  <strong><%= app.name %></strong>
+                  <span class="badge"><%= app.scopes %></span>
+                </div>
+                <div class="muted small">Pixel: <%= app.pixel_id %></div>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p class="muted">No applications connected.</p>
+        <% } %>
+
+        <div class="mt-2">
+          <h4>Account Details</h4>
+          <p><strong>Role:</strong> <span class="badge"><%= user.role %></span></p>
+          <p><strong>Instagram ID:</strong> <code><%= user.instagram_id || 'Not connected' %></code></p>
+          <p><strong>Member since:</strong> <%= new Date(user.created_at).toLocaleDateString() %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

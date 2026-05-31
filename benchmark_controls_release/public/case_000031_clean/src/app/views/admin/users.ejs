@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Users — Admin — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/admin">Admin</a>
+      <a href="/admin/users" class="active">Users</a>
+      <a href="/admin/posts">Posts</a>
+      <a href="/admin/audit">Audit Log</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>User Management</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Last Login</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><strong><%= u.username %></strong></td>
+        <td><%= u.email || '—' %></td>
+        <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+        <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+        <td><%= u.last_login ? new Date(u.last_login).toLocaleString() : '—' %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

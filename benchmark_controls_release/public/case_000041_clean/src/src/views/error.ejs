@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= code %> — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <% if (typeof user !== 'undefined' && user) { %>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies">Policies</a>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <% } %>
+  <main class="main-content">
+    <div class="error-container">
+      <div class="error-code"><%= code %></div>
+      <h1><%= title %></h1>
+      <p><%= message %></p>
+      <a href="/dashboard" class="btn btn-primary">Return to Dashboard</a>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

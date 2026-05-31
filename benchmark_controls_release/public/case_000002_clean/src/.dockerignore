@@ -1,0 +1,9 @@
+node_modules
+data
+*.log
+.git
+.gitignore
+.env
+BUGREPRO.md
+_generation.json
+_source_meta.json

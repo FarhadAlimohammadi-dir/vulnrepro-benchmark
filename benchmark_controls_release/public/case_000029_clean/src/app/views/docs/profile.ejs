@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/docs/upload">Upload</a>
+    <a href="/docs/settings/profile" class="active">Profile</a>
+    <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header"><h1>Profile &amp; Settings</h1></div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+  <div class="card">
+    <h3>Personal Information</h3>
+    <form method="POST" action="/docs/settings/profile">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" value="<%= profile.username %>" disabled class="input-disabled">
+      </div>
+      <div class="form-group">
+        <label for="display_name">Display Name</label>
+        <input id="display_name" type="text" name="display_name" value="<%= profile.display_name || '' %>" maxlength="80">
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" name="email" value="<%= profile.email || '' %>" maxlength="120">
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Change Password</h3>
+    <form method="POST" action="/docs/settings/password">
+      <div class="form-group">
+        <label for="current_password">Current Password</label>
+        <input id="current_password" type="password" name="current_password" required>
+      </div>
+      <div class="form-group">
+        <label for="new_password">New Password</label>
+        <input id="new_password" type="password" name="new_password" minlength="6" required>
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+        <input id="confirm_password" type="password" name="confirm_password" required>
+      </div>
+      <button type="submit" class="btn btn-secondary">Change Password</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Account Details</h3>
+    <dl class="meta-grid">
+      <dt>Role</dt><dd><span class="badge badge-<%= profile.role %>"><%= profile.role %></span></dd>
+      <dt>Member since</dt><dd><%= new Date(profile.created_at * 1000).toLocaleDateString() %></dd>
+    </dl>
+  </div>
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

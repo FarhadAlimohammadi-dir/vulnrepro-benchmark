@@ -1,0 +1,38 @@
+<section class="section author-page">
+  <div class="author-header">
+    <% if (author.avatarUrl) { %>
+      <img src="<%= author.avatarUrl %>" alt="<%= author.name %>" class="author-avatar" />
+    <% } else { %>
+      <div class="author-avatar-placeholder"><%= (author.name || 'A')[0].toUpperCase() %></div>
+    <% } %>
+    <div class="author-info">
+      <h1><%= author.name %></h1>
+      <p class="author-bio"><%= author.bio || 'No bio available.' %></p>
+      <p class="author-stats">
+        <span><strong><%= author._count.articles %></strong> articles</span>
+        &bull;
+        <span>Member since <%= new Date(author.createdAt).getFullYear() %></span>
+      </p>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:2rem;">
+    <h2>Published Articles</h2>
+  </div>
+
+  <div class="card-list">
+    <% if (author.articles && author.articles.length > 0) { %>
+      <% author.articles.forEach(function(article) { %>
+      <div class="card card-list-item">
+        <h3 class="card-title"><a href="/articles/<%= article.slug %>"><%= article.title %></a></h3>
+        <p class="card-summary"><%= article.summary || '' %></p>
+        <div class="card-meta">
+          <span><%= new Date(article.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+        </div>
+      </div>
+      <% }); %>
+    <% } else { %>
+      <p class="empty-state">No published articles yet.</p>
+    <% } %>
+  </div>
+</section>

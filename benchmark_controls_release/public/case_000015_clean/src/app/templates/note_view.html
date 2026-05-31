@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}{{ note.title | e }} – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>{{ note.title | e }}</h2>
+    <small class="muted">
+      By <a href="/users/{{ note.owner_id }}">author</a>
+      &nbsp;·&nbsp; {{ note.updated_at }}
+      &nbsp;·&nbsp; {{ note.views }} view{{ 's' if note.views != 1 else '' }}
+      {% if note.public %}&nbsp;·&nbsp; <span class="badge badge-public">public</span>{% endif %}
+    </small>
+  </div>
+  {% if session.get('user_id') == note.owner_id %}
+  <div class="card-actions">
+    <a href="/notes/{{ note.id }}/edit" class="btn-secondary">Edit</a>
+    <a href="/notes/{{ note.id }}/export" class="btn-secondary">Export .md</a>
+  </div>
+  {% endif %}
+</div>
+
+{% if note.tags %}
+<div class="note-tags">
+  {% for tag in note.tags.split(',') %}
+  <span class="badge">{{ tag.strip() | e }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="content">{{ rendered | safe }}</div>
+
+<hr>
+<section class="comments">
+  <h3>Comments ({{ comments | length }})</h3>
+
+  {% for c in comments %}
+  <div class="comment">
+    <div class="comment-meta">
+      <strong>{{ c.username | e }}</strong>
+      <small class="muted">{{ c.created_at }}</small>
+    </div>
+    <div class="comment-body">{{ c.body | e }}</div>
+  </div>
+  {% else %}
+  <p class="muted">No comments yet. Be the first!</p>
+  {% endfor %}
+
+  <form method="POST" action="/notes/{{ note.id }}/comment" class="comment-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <textarea name="body" rows="3" placeholder="Add a comment…" required></textarea>
+    <button type="submit" class="btn-primary">Post Comment</button>
+  </form>
+</section>
+
+<div class="back-link">
+  <a href="/">← Back to My Notes</a>
+  &nbsp;·&nbsp; <a href="/public">Explore public notes</a>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralOps — Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav', { user, role }) %>
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <span class="subtitle">Overview of platform activity</span>
+    </div>
+
+    <% if (notifications && notifications.length) { %>
+    <div class="notifications">
+      <h3>🔔 Notifications</h3>
+      <ul>
+        <% notifications.forEach(n => { %>
+          <li><span class="notif-msg"><%= n.message %></span> <span class="notif-time"><%= n.created_at %></span></li>
+        <% }) %>
+      </ul>
+    </div>
+    <% } %>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.totalRuns %></div>
+        <div class="stat-label">Total Runs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value text-blue"><%= stats.activeRuns %></div>
+        <div class="stat-label">Active Runs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value text-green"><%= stats.totalModels %></div>
+        <div class="stat-label">Registered Models</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value text-red"><%= stats.errorCount %></div>
+        <div class="stat-label">Errors (24h)</div>
+      </div>
+    </div>
+
+    <h2>Recent Training Runs</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Model</th><th>Status</th><th>Started</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% runs.forEach(r => { %>
+        <tr>
+          <td><a href="/runs/<%= r.id %>">#<%= r.id %></a></td>
+          <td><code><%= r.model_name %></code></td>
+          <td><span class="badge badge-<%= r.status %>"><%= r.status %></span></td>
+          <td class="ts"><%= r.started_at %></td>
+          <td><a href="/runs/<%= r.id %>" class="btn-sm">Details →</a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <p><a href="/runs" class="btn-link-blue">View all runs →</a></p>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

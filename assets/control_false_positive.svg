@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<rect width="100%" height="100%" fill="#0f172a"/>
+<text x="48" y="46" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="28" font-weight="700">Control False-Positive Rate</text>
+<text x="48" y="75" fill="#cbd5e1" font-family="Segoe UI, Arial" font-size="15">Lower is better on 119 clean controls</text>
+<text x="48" y="126" fill="#e2e8f0" font-family="Segoe UI, Arial" font-size="18">Claude Opus 4.7</text>
+<rect x="260" y="95" width="770" height="48" rx="8" fill="#1e293b"/>
+<rect x="260" y="95" width="444" height="48" rx="8" fill="#6f5bd8"/>
+<text x="718" y="126" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="18" font-weight="700">50.4%</text>
+<text x="48" y="202" fill="#e2e8f0" font-family="Segoe UI, Arial" font-size="18">GPT-5.5 medium</text>
+<rect x="260" y="171" width="770" height="48" rx="8" fill="#1e293b"/>
+<rect x="260" y="171" width="488" height="48" rx="8" fill="#10a37f"/>
+<text x="762" y="202" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="18" font-weight="700">55.5%</text>
+<text x="48" y="278" fill="#e2e8f0" font-family="Segoe UI, Arial" font-size="18">Claude Opus 4.8</text>
+<rect x="260" y="247" width="770" height="48" rx="8" fill="#1e293b"/>
+<rect x="260" y="247" width="547" height="48" rx="8" fill="#8b5cf6"/>
+<text x="821" y="278" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="18" font-weight="700">62.2%</text>
+<text x="48" y="354" fill="#e2e8f0" font-family="Segoe UI, Arial" font-size="18">Claude Sonnet 4.6</text>
+<rect x="260" y="323" width="770" height="48" rx="8" fill="#1e293b"/>
+<rect x="260" y="323" width="770" height="48" rx="8" fill="#e06f2f"/>
+<text x="1044" y="354" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="18" font-weight="700">87.4%</text>
+<text x="48" y="492" fill="#94a3b8" font-family="Segoe UI, Arial" font-size="13">Benchmark: 119 vulnerable + 119 clean controls. Detection task with private exploit/scoring assets.</text>
+</svg>

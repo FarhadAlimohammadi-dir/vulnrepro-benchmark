@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <%
+    const reqRoles = (user.roles || '').split(',').map(r => r.trim());
+    const reqIsAdmin = reqRoles.some(r => r === 'ADMIN' || r === 'ADMIN AND REQUESTER');
+  %>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">&#9656; Gateway Portal</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/requests" class="active">My Requests</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <% if (reqIsAdmin) { %><li><a href="/admin">Admin</a></li><% } %>
+    </ul>
+    <div class="nav-user">
+      <span class="nav-username"><%= user.employee_name %></span>
+      <a href="/logout" class="btn-logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>My Access Requests</h1>
+      <button class="btn btn-primary" onclick="document.getElementById('new-request-modal').style.display='flex'">+ New Request</button>
+    </div>
+
+    <% if (requests.length === 0) { %>
+    <div class="empty-state">
+      <p>No access requests found.</p>
+    </div>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>System</th>
+          <th>Title</th>
+          <th>Level</th>
+          <th>Status</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% requests.forEach(function(r) { %>
+        <tr>
+          <td><%= r.id %></td>
+          <td><%= r.system_name %></td>
+          <td><%= r.title %></td>
+          <td><span class="badge badge-level"><%= r.access_level %></span></td>
+          <td><span class="badge badge-<%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+          <td><%= new Date(r.created_at).toLocaleDateString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <% if (pagination.pages > 1) { %>
+    <div class="pagination">
+      <% for (let i = 1; i <= pagination.pages; i++) { %>
+        <a href="?page=<%= i %>" class="<%= pagination.page === i ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+    <% } %>
+    <% } %>
+  </main>
+
+  <!-- New Request Modal -->
+  <div id="new-request-modal" class="modal" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>New Access Request</h3>
+        <button onclick="document.getElementById('new-request-modal').style.display='none'" class="modal-close">&times;</button>
+      </div>
+      <form id="new-request-form">
+        <div class="form-group">
+          <label>Request Title</label>
+          <input type="text" id="req-title" name="title" required maxlength="200" />
+        </div>
+        <div class="form-group">
+          <label>System</label>
+          <select id="req-system" name="system_name" required>
+            <option value="">-- Select a system --</option>
+            <% systems.forEach(function(s) { %>
+            <option value="<%= s.name %>"><%= s.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Access Level</label>
+          <select id="req-level" name="access_level">
+            <option value="READ">READ</option>
+            <option value="WRITE">WRITE</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Business Justification</label>
+          <textarea id="req-desc" name="description" rows="3" placeholder="Describe why you need this access..."></textarea>
+        </div>
+        <div id="req-message" class="alert" style="display:none;"></div>
+        <button type="submit" class="btn btn-primary btn-full">Submit Request</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 Target Corporation</p>
+  </footer>
+  <script>
+    document.getElementById('new-request-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const msg = document.getElementById('req-message');
+      const data = {
+        title: document.getElementById('req-title').value,
+        system_name: document.getElementById('req-system').value,
+        access_level: document.getElementById('req-level').value,
+        description: document.getElementById('req-desc').value
+      };
+      const resp = await fetch('/api/requests/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await resp.json();
+      msg.style.display = 'block';
+      if (resp.ok) {
+        msg.className = 'alert alert-success';
+        msg.textContent = result.message;
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        msg.className = 'alert alert-error';
+        msg.textContent = result.error;
+      }
+    });
+  </script>
+</body>
+</html>

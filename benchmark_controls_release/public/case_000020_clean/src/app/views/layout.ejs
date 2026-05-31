@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolBridge – <%= typeof title !== 'undefined' ? title : 'Dashboard' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/integrations">Integrations</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <% if (currentUser.role === 'admin') { %>
+      <li><a href="/admin">Admin</a></li>
+      <% } %>
+      <li><a href="/logout">Logout (<%= currentUser.username %>)</a></li>
+    </ul>
+    <% } %>
+  </nav>
+  <main class="main-content">
+    <%- body %>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2024 ToolBridge, Inc. &mdash; Developer Integration Platform</p>
+  </footer>
+</body>
+</html>

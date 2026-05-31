@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Policies — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies" class="active">Policies</a>
+      <% if (userRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Trust Policies</h1>
+      <a href="/policies/new/form" class="btn btn-primary">+ New Policy</a>
+    </div>
+
+    <div class="filter-bar">
+      <form method="GET" action="/policies" class="filter-form">
+        <input type="text" name="search" placeholder="Search policies..." value="<%= search %>">
+        <select name="provider">
+          <option value="">All Providers</option>
+          <% providers.forEach(p => { %>
+          <option value="<%= p %>" <%= provider === p ? 'selected' : '' %>><%= p %></option>
+          <% }); %>
+        </select>
+        <select name="environment">
+          <option value="">All Environments</option>
+          <% environments.forEach(e => { %>
+          <option value="<%= e %>" <%= environment === e ? 'selected' : '' %>><%= e %></option>
+          <% }); %>
+        </select>
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        <a href="/policies" class="btn btn-outline">Clear</a>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Provider</th>
+            <th>Environment</th>
+            <th>Role ARN</th>
+            <th>Owner</th>
+            <th>Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (items.length === 0) { %>
+          <tr><td colspan="7" class="empty-state">No policies found matching your criteria.</td></tr>
+          <% } %>
+          <% items.forEach(p => { %>
+          <tr>
+            <td><a href="/policies/<%= p.id %>"><%= p.name %></a></td>
+            <td><span class="badge"><%= p.provider %></span></td>
+            <td><span class="badge badge-env-<%= p.environment %>"><%= p.environment %></span></td>
+            <td class="mono small"><%= p.role_arn || '—' %></td>
+            <td><%= p.owner_name || '—' %></td>
+            <td><%= new Date(p.updated_at).toLocaleDateString() %></td>
+            <td>
+              <a href="/policies/<%= p.id %>" class="btn btn-sm btn-outline">View</a>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% if (page > 1) { %>
+      <a href="/policies?page=<%= page - 1 %>&search=<%= search %>&provider=<%= provider %>&environment=<%= environment %>" class="btn btn-sm btn-outline">← Prev</a>
+      <% } %>
+      <span class="page-info">Page <%= page %> of <%= totalPages %> (<%= total %> total)</span>
+      <% if (page < totalPages) { %>
+      <a href="/policies?page=<%= page + 1 %>&search=<%= search %>&provider=<%= provider %>&environment=<%= environment %>" class="btn btn-sm btn-outline">Next →</a>
+      <% } %>
+    </div>
+    <% } %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

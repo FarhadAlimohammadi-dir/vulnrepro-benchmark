@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <h1>Search Public Projects</h1>
+
+      <form method="GET" action="/projects/search" style="display:flex;gap:10px;margin-bottom:24px;">
+        <input type="text" name="q" value="<%= q %>"
+               placeholder="Search by name or description…"
+               style="flex:1;padding:8px 12px;background:#0f1117;border:1px solid #2d3748;border-radius:6px;color:#e2e8f0;" />
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <% if (q && results.length === 0) { %>
+      <div class="empty-state">
+        <p>No public projects matching "<strong><%= q %></strong>".</p>
+      </div>
+      <% } else if (results.length > 0) { %>
+      <div class="project-grid">
+        <% results.forEach(function(p) { %>
+        <div class="project-card">
+          <div class="project-card-header">
+            <span style="font-weight:600;"><%= p.name %></span>
+            <span class="badge badge-lang"><%= p.language %></span>
+          </div>
+          <p class="project-desc"><%= p.description || 'No description.' %></p>
+          <p class="project-meta">by <%= p.owner_name %> &mdash; updated <%= p.updated_at.slice(0,10) %></p>
+        </div>
+        <% }); %>
+      </div>
+      <% } %>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

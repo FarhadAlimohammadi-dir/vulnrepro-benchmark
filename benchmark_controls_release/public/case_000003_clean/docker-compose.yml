@@ -1,0 +1,14 @@
+services:
+  codenest:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=development
+      - ANTHROPIC_API_KEY=sk-ant-api03-placeholder-dev-key
+      - SECRET_KEY=super-secret-codenest-dev-key-2025
+      - DATABASE_PATH=/tmp/codenest.db
+      - PORT=9000
+    restart: unless-stopped

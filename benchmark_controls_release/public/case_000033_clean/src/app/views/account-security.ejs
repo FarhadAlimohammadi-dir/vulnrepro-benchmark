@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Settings - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/account/overview">Account</a></li>
+        <li><a href="/account/security" class="active">Security</a></li>
+        <li class="user-menu">
+          <span><%= user.first_name || user.username %></span>
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Security Settings</h1>
+    
+    <div class="settings-grid">
+      <section class="card">
+        <h2>Password</h2>
+        <p>Manage your account password</p>
+        <a href="/account/password" class="btn btn-secondary">Change Password</a>
+      </section>
+      
+      <section class="card">
+        <h2>Two-Factor Authentication</h2>
+        <p>Add an extra layer of security to your account</p>
+        <a href="#" class="btn btn-secondary">Enable 2FA</a>
+      </section>
+      
+      <section class="card">
+        <h2>Active Sessions</h2>
+        <p>Manage your active login sessions</p>
+        <a href="#" class="btn btn-secondary">View Sessions</a>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/apps">My Apps</a>
+      <a href="/profile">Profile</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Pixel Analytics</h2>
+      <p class="muted">Application: <strong><%= app.name %></strong> &nbsp;&bull;&nbsp; Pixel: <code><%= app.pixel_id %></code></p>
+    </div>
+
+    <div class="card mb-2">
+      <h3>Event Breakdown</h3>
+      <% if (breakdown.length > 0) { %>
+        <div class="breakdown-grid">
+          <% breakdown.forEach(function(row) { %>
+            <div class="breakdown-item">
+              <span class="breakdown-label"><%= row.event_type %></span>
+              <span class="breakdown-count"><%= row.count %></span>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="muted">No events recorded for this pixel yet.</p>
+      <% } %>
+    </div>
+
+    <div class="card">
+      <h3>Event Log</h3>
+      <% if (events.length > 0) { %>
+        <table class="table">
+          <thead>
+            <tr><th>Event</th><th>Page URL</th><th>Referrer</th><th>Timestamp</th></tr>
+          </thead>
+          <tbody>
+            <% events.forEach(function(ev) { %>
+            <tr>
+              <td><span class="badge badge-event"><%= ev.event_type %></span></td>
+              <td class="small muted truncate"><%= ev.page_url || '—' %></td>
+              <td class="small muted truncate"><%= ev.referrer || '—' %></td>
+              <td class="small muted"><%= new Date(ev.timestamp).toLocaleString() %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <% if (totalPages > 1) { %>
+          <div class="pagination">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>" class="page-link <%= page === i ? 'active' : '' %>"><%= i %></a>
+            <% } %>
+          </div>
+        <% } %>
+      <% } else { %>
+        <p class="muted">No events recorded yet.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

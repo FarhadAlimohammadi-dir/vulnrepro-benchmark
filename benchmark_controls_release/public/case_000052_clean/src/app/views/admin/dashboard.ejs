@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/oauth/clients">Applications</a>
+      <a href="/profile">Profile</a>
+      <a href="/admin" class="active">Admin</a>
+      <form action="/logout" method="post" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="nav-logout" type="submit">Logout (<%= user %>)</button></form>
+    </div>
+  </nav>
+  <main class="container">
+    <h1>&#9881; Admin Dashboard</h1>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.users %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.clients %></div>
+        <div class="stat-label">OAuth Clients</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.tokens %></div>
+        <div class="stat-label">Active Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.auditEntries %></div>
+        <div class="stat-label">Audit Events</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h2>Admin Actions</h2>
+        <ul class="link-list">
+          <li><a href="/admin/users">&#128100; Manage Users</a></li>
+          <li><a href="/admin/clients">&#128196; Manage OAuth Clients</a></li>
+          <li><a href="/admin/audit">&#128196; View Audit Log</a></li>
+          <li><a href="/health">&#128200; System Health</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Recent Audit Events</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>User</th><th>Action</th><th>Time</th></tr>
+          </thead>
+          <tbody>
+            <% for (const e of recentAudit) { %>
+              <tr>
+                <td><%= e.username || 'system' %></td>
+                <td><code><%= e.action %></code></td>
+                <td class="muted"><%= new Date(e.created_at * 1000).toLocaleString() %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+        <p><a href="/admin/audit" class="btn btn-sm">View All</a></p>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

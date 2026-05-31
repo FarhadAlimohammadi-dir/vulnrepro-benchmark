@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}Admin Panel — NexusAI Workspace{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Administration</h1>
+
+  <div class="section">
+    <h2>Users</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Username</th><th>Display Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>{{ u.username }}</td>
+          <td>{{ u.display_name }}</td>
+          <td>{{ u.email or '—' }}</td>
+          <td><span class="badge">{{ u.role }}</span></td>
+          <td>{{ u.created_at[:10] }}</td>
+          <td>
+            <form method="POST" action="/admin/users/{{ u.id }}/role" style="display:flex;gap:4px">
+              <select name="role">
+                {% for r in ['admin','employee','viewer'] %}
+                  <option value="{{ r }}" {% if u.role == r %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn-secondary" style="padding:2px 8px">Set</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Recent Audit Log</h2>
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Action</th><th>User ID</th><th>Detail</th><th>IP</th></tr></thead>
+      <tbody>
+      {% for entry in audit_logs %}
+        <tr>
+          <td>{{ entry.created_at[:16].replace('T',' ') }}</td>
+          <td>{{ entry.action }}</td>
+          <td>{{ entry.user_id or '—' }}</td>
+          <td>{{ entry.detail or '—' }}</td>
+          <td>{{ entry.ip_addr or '—' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" style="text-align:center;color:#9ca3af">No entries yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

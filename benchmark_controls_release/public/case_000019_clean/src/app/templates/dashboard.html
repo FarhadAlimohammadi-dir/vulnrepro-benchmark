@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Welcome back, {{ display_name }}</h1>
+  <p class="subtitle">Your AI-powered research workspace</p>
+</div>
+
+<div class="dashboard-grid">
+
+  <!-- Quick actions -->
+  <div class="card">
+    <h2>Quick Actions</h2>
+    <div class="action-list">
+      <a href="/chat" class="action-btn">&#128172; New Chat</a>
+      <a href="/browse/view" class="action-btn">&#128269; Browse</a>
+      <a href="/explore" class="action-btn">&#127758; Explore Topics</a>
+      <a href="/collections" class="action-btn">&#128193; Collections</a>
+    </div>
+  </div>
+
+  <!-- Recent conversations -->
+  <div class="card">
+    <h2>Recent Conversations
+      <a href="/conversations" class="see-all">See all ({{ total_convs }})</a>
+    </h2>
+    {% if conversations %}
+    <ul class="conv-list">
+      {% for conv in conversations %}
+      <li class="conv-item">
+        <a href="/chat?conv_id={{ conv.id }}">{{ conv.title or 'Untitled' }}</a>
+        <span class="conv-date">{{ conv.updated_at[:10] }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No conversations yet. <a href="/chat">Start chatting!</a></p>
+    {% endif %}
+  </div>
+
+  <!-- Connected services -->
+  <div class="card">
+    <h2>Connected Services</h2>
+    {% if connectors %}
+    <ul class="connector-list">
+      {% for c in connectors %}
+      <li class="connector-item {% if c.status == 'connected' %}connected{% endif %}">
+        <span class="connector-name">{{ c.service }}</span>
+        <span class="connector-status">{{ c.status }}</span>
+        {% if c.scope_granted %}
+        <span class="connector-scope">{{ c.scope_granted }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No services connected. <a href="/settings">Connect services</a></p>
+    {% endif %}
+  </div>
+
+  <!-- Collections -->
+  <div class="card">
+    <h2>My Collections
+      <a href="/collections" class="see-all">View all</a>
+    </h2>
+    {% if collections %}
+    <ul class="collection-list">
+      {% for col in collections %}
+      <li><a href="/collections/{{ col.id }}">{{ col.name }}</a>
+          <span class="col-desc">{{ col.description or '' }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No collections yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Notifications -->
+  {% if notifications %}
+  <div class="card card-accent">
+    <h2>&#128276; Notifications</h2>
+    <ul class="notif-list">
+      {% for n in notifications %}
+      <li>{{ n.message }}</li>
+      {% endfor %}
+    </ul>
+    <a href="/notifications" class="btn btn-sm">View all</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

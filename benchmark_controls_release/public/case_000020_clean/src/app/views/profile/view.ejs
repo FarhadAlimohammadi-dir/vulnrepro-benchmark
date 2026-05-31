@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – Profile</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/integrations">Integrations</a></li>
+      <li><a href="/profile" class="active">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>My Profile</h1>
+      <a href="/profile/edit" class="btn btn-primary">Edit Profile</a>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-row"><span class="profile-label">Username</span><span><%= user.username %></span></div>
+      <div class="profile-row"><span class="profile-label">Display Name</span><span><%= user.display_name || '—' %></span></div>
+      <div class="profile-row"><span class="profile-label">Email</span><span><%= user.email || '—' %></span></div>
+      <div class="profile-row"><span class="profile-label">Bio</span><span><%= user.bio || '—' %></span></div>
+      <div class="profile-row"><span class="profile-label">Role</span><span><span class="badge"><%= user.role %></span></span></div>
+      <div class="profile-row"><span class="profile-label">Member Since</span><span><%= new Date(user.created_at).toLocaleDateString() %></span></div>
+    </div>
+
+    <div class="section">
+      <h2>API Tokens</h2>
+      <% if (tokens.length === 0) { %>
+        <p class="muted">No API tokens yet.</p>
+      <% } else { %>
+        <table class="data-table">
+          <thead><tr><th>Label</th><th>Last Used</th><th>Created</th></tr></thead>
+          <tbody>
+            <% tokens.forEach(function(t) { %>
+            <tr>
+              <td><%= t.label || 'Unnamed' %></td>
+              <td class="muted"><%= t.last_used ? new Date(t.last_used).toLocaleString() : 'Never' %></td>
+              <td><%= new Date(t.created_at).toLocaleDateString() %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="section">
+      <h2>Recent Activity</h2>
+      <% if (logs.length === 0) { %>
+        <p class="muted">No activity recorded yet.</p>
+      <% } else { %>
+        <ul class="activity-list">
+          <% logs.forEach(function(l) { %>
+          <li><span class="activity-action"><%= l.action %></span> <span class="muted"><%= l.detail %></span> <span class="activity-time"><%= new Date(l.created_at).toLocaleString() %></span></li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

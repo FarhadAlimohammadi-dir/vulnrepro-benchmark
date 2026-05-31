@@ -1,0 +1,40 @@
+# Actual Weakness Patterns in Verified Model Misses - 2026-05-30
+
+The original benchmark category is not always the real reasoning skill being tested. Many cases are labeled `AI` because they came from AI-product writeups, but the missed vulnerability primitive is often XSS, IDOR, command injection, secret exposure, SSRF, or business logic.
+
+| Case | Source Category | Actual Weakness Pattern | Missed By | Missed Reasoning Step |
+|---|---|---|---|---|
+| `case_000012` | AI | Browser/extension trust-chain XSS | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They recognized XSS shape but missed that a normal reflected/stored redirect bug becomes higher impact through externally_connectable extension/browser trust context. |
+| `case_000015` | AI | Markdown/rendering XSS | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They focused on sanitization/linkification in isolation and missed the image-tag rendering path that keeps attacker-controlled src/HTML executable. |
+| `case_000017` | AI | Indirect prompt injection + exfiltration sink | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They did not connect malicious document content, assistant markdown output, CSP-allowed image URL loading, and chat-history/secret exfiltration. |
+| `case_000018` | AI | Object authorization/IDOR in AI media workflow | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that analysis results are user-owned objects and can be accessed cross-user; the AI/vision label hides a standard authorization failure. |
+| `case_000020` | AI | OAuth/custom-integration URL injection | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed the multi-step path from user-registered integration URL to connect-page rendering and downstream XSS/RCE impact. |
+| `case_000025` | AI | Prompt injection leaking internal routing data | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They treated prompt handling as app logic and did not model confidential policy/routing text as a protected sink exposed through assistant output. |
+| `case_000027` | AI | Training-data/secrets disclosure | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that hardcoded credentials are reachable through semantic retrieval/generation, not only literal source-code exposure. |
+| `case_000028` | AI | Unauthenticated data API exposure | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They underweighted missing authentication on a database/query endpoint because the app context looked like internal AI/analytics tooling. |
+| `case_000029` | AI | Predictable identifier / IDOR | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They did not infer that timestamp/sequence-based document IDs are enumerable and grant cross-user document access. |
+| `case_000039` | Auth_Bypass | Forged pagination token authorization bypass | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that pageToken carries an attacker-controlled org_id and overrides the authorized route/org context. |
+| `case_000043` | Auth_Bypass | CRLF/header/credential leakage chain | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that newline injection changes protocol/header semantics and leaks credentials despite otherwise normal auth flow. |
+| `case_000045` | Auth_Bypass | Plaintext credential storage exposure | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They did not treat local/readable credential records as an auth bypass primitive when accessed through the app file/model path. |
+| `case_000054` | Business_Logic | Over-permissive policy generation | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They saw policy construction as intended behavior but missed that generated default bucket policy grants unsafe broad access. |
+| `case_000056` | Business_Logic | ORM/query logic injection | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that relational/filter parameters alter ORM query semantics enough to disclose timing/data beyond intended access. |
+| `case_000074` | Supply_Chain_Cloud_Resource_Hijack | Cloud resource ownership validation bypass | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed the external-resource lifecycle: registering/squatting a bucket name creates ownership confusion outside the app database. |
+| `case_000082` | Side_Channel_Timing | Timing side channel | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed measurable timing differences in auth logic because there is no obvious direct secret-returning sink. |
+| `case_000110` | XSS | Self-XSS to stored XSS escalation | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They classified it as low-impact/profile/self-XSS and missed credentialless iframe plus CSRF/clickjacking escalation into victim execution. |
+| `case_000115` | XSS | Template helper/vendor-extension DOM XSS | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6, gpt-5.5-medium | They missed that OpenAPI vendor-extension fields flow into a Handlebars/helper attribute builder without escaping. |
+| `case_000014` | AI | Code generation command injection | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6 | They missed that generated shell code embeds attacker-controlled image URI into a heredoc/script context and breaks out into command execution. |
+| `case_000023` | AI | Config-file prompt injection to RCE | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6 | They missed that attacker-controlled configuration changes the AI/tool execution behavior and reaches a root command execution path. |
+| `case_000053` | Business_Logic | Account lifecycle business logic DoS | claude-opus-4-7, claude-opus-4-8, gpt-5.5-medium | They missed that weak rate-limit/verification/logout behavior can lock out or disrupt real users, even without data exfiltration. |
+| `case_000069` | Information_Disclosure_XSSI | XSSI/hotlinkable JSON disclosure | claude-opus-4-7, claude-sonnet-4-6, gpt-5.5-medium | They missed browser cross-origin embedding semantics and anti-XSSI requirements around JSON/profile/settings endpoints. |
+| `case_000072` | File_Upload_Type_Confusion_XSS | File type confusion XSS | claude-opus-4-7, claude-opus-4-8, gpt-5.5-medium | They trusted magic-number/content checks and missed browser MIME sniffing/interpretation mismatch after upload. |
+| `case_000097` | SSRF | SSRF via trusted integration response | claude-opus-4-7, claude-opus-4-8, claude-sonnet-4-6 | They missed that a trusted API response can control the server-side fetch target, so the source is indirect, not a raw user URL. |
+| `case_000107` | XSS | DOM clobbering gadget chain | claude-opus-4-7, claude-opus-4-8, gpt-5.5-medium | They missed browser DOM name/id clobbering and how it changes client-side object references before rendering. |
+| `case_000037` | Auth_Bypass | Cross-tenant token minting | claude-sonnet-4-6, gpt-5.5-medium | They missed that user-controlled actor identity is trusted during token mint/exchange, enabling tenant impersonation. |
+| `case_000078` | Path_Traversal_Argument_Injection_RCE | Best-fit encoding path traversal/argument injection | claude-opus-4-7, claude-opus-4-8 | They missed Windows/platform encoding conversion where visually different Unicode becomes dangerous path/argument characters. |
+
+## What This Means
+
+- `AI` cases should be analyzed by actual primitive, not only by product domain.
+- The strongest failure mode is not inability to read code; it is failure to connect multiple semantic steps into exploitability.
+- Models often identify a nearby smell but do not promote it to a reportable vulnerability because the impact depends on browser, cloud, tenant, timing, or assistant behavior.
+- For paper charts, report both source category and actual weakness pattern. This avoids overstating that models fail only on AI-specific bugs.

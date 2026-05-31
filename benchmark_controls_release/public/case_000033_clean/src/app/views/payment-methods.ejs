@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Methods - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/billing_interfaces" class="active">Billing</a></li>
+        <li class="user-menu">
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Payment Methods</h1>
+    
+    <section class="card">
+      <% if (methods && methods.length > 0) { %>
+        <table class="methods-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Last 4 Digits</th>
+              <th>Default</th>
+              <th>Verified</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% methods.forEach(method => { %>
+              <tr>
+                <td><%= method.payment_type %></td>
+                <td>**** **** **** <%= method.last_four %></td>
+                <td><%= method.is_default ? 'Yes' : 'No' %></td>
+                <td><%= method.verified ? 'Yes' : 'No' %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No payment methods added</p>
+      <% } %>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block title %}Admin &mdash; CodeNest{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.users }}</div>
+    <div class="stat-label">Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.workspaces }}</div>
+    <div class="stat-label">Workspaces</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.active_workspaces }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.review_sessions }}</div>
+    <div class="stat-label">Review Sessions</div>
+  </div>
+</div>
+
+<div class="admin-nav">
+  <a href="/admin/users" class="btn btn-secondary">Manage Users</a>
+  <a href="/admin/workspaces" class="btn btn-secondary">All Workspaces</a>
+  <a href="/admin/audit" class="btn btn-secondary">Audit Log</a>
+</div>
+
+<section class="section">
+  <h2>Recent Events</h2>
+  <table class="table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td class="mono small">{{ e.created_at }}</td>
+        <td>{{ e.username or '—' }}</td>
+        <td>{{ e.action }}</td>
+        <td>{{ e.resource_type or '' }} {% if e.resource_id %}#{{ e.resource_id }}{% endif %}</td>
+        <td class="mono small">{{ e.ip_address or '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

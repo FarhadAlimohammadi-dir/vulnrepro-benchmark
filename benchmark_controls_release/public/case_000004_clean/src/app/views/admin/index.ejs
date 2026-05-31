@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin">Admin</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header"><h2>Admin Panel</h2></div>
+
+  <div class="stats-grid mb-lg">
+    <div class="stat-card"><span class="stat-val"><%= stats.users %></span><span class="stat-label">Users</span></div>
+    <div class="stat-card"><span class="stat-val"><%= stats.notes %></span><span class="stat-label">Notes</span></div>
+    <div class="stat-card"><span class="stat-val"><%= stats.workspaces %></span><span class="stat-label">Workspaces</span></div>
+  </div>
+
+  <div class="two-col">
+    <section>
+      <h3 class="section-title">All Users</h3>
+      <table class="data-table">
+        <thead><tr><th>Username</th><th>Email</th><th>Plan</th><th>Role</th><th></th></tr></thead>
+        <tbody>
+          <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.display_name || u.username %></td>
+            <td><%= u.email %></td>
+            <td><span class="badge badge-<%= u.plan %>"><%= u.plan %></span></td>
+            <td><%= u.role %></td>
+            <td><a href="/admin/users/<%= u.id %>" class="link-muted">manage</a></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h3>Recent Audit Events</h3>
+      <table class="data-table data-table-sm">
+        <thead><tr><th>User</th><th>Action</th><th>When</th></tr></thead>
+        <tbody>
+          <% recentLog.forEach(e => { %>
+          <tr>
+            <td><%= e.username || '(system)' %></td>
+            <td><%= e.action %></td>
+            <td class="muted"><%= e.created_at %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<%
+  title = 'Users — Admin'
+  const esc = (v) => String(v == null ? '' : v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+  const rows = users.map(u2 => `
+    <tr>
+      <td>${esc(u2.id)}</td>
+      <td>${esc(u2.username)}</td>
+      <td class="muted">${esc(u2.email)}</td>
+      <td>
+        <form method="post" action="/admin/users/${encodeURIComponent(u2.id)}/role" style="display:inline;display:flex;gap:0.3rem;align-items:center">
+          <input type="hidden" name="_csrf" value="${esc(csrfToken)}">
+          <select name="role" style="padding:0.2rem">
+            <option value="admin"     ${u2.role==='admin'?'selected':''}>admin</option>
+            <option value="developer" ${u2.role==='developer'?'selected':''}>developer</option>
+            <option value="viewer"    ${u2.role==='viewer'?'selected':''}>viewer</option>
+          </select>
+          <button type="submit" style="padding:0.2rem 0.5rem;font-size:0.8rem">Set</button>
+        </form>
+      </td>
+      <td class="muted">${esc(u2.created_at)}</td>
+      <td>
+        <form method="post" action="/admin/users/${encodeURIComponent(u2.id)}/delete" style="display:inline">
+          <input type="hidden" name="_csrf" value="${esc(csrfToken)}">
+          <button class="danger" style="font-size:0.8rem;padding:0.2rem 0.5rem">Delete</button>
+        </form>
+      </td>
+    </tr>
+  `).join('')
+  body = `
+<h1>User management</h1>
+<form class="form inline" method="get" style="margin-bottom:1rem">
+  <input name="q" value="${esc(q)}" placeholder="Search username or email…">
+  <button>Search</button>
+</form>
+<table class="list">
+  <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th></th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+<p><a href="/admin">← Back to admin</a></p>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

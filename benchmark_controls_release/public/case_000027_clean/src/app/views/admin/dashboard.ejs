@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/admin">Admin</a>
+  <span class="spacer"></span>
+  <% if (locals.currentUser) { %>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } %>
+</nav>
+<div class="container page">
+  <h1 class="mb-2">Admin Dashboard</h1>
+  <div class="grid-3 mb-2">
+    <div class="card" style="text-align:center">
+      <div style="font-size:2rem;font-weight:700"><%= stats.users %></div>
+      <div class="text-muted">Users</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:2rem;font-weight:700"><%= stats.snippets %></div>
+      <div class="text-muted">Snippets (<%= stats.public %> public)</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:2rem;font-weight:700"><%= stats.corpus %></div>
+      <div class="text-muted">Corpus Entries</div>
+    </div>
+  </div>
+
+  <div class="flex mb-2" style="gap:.5rem">
+    <a href="/admin/users" class="btn btn-secondary btn-sm">Manage Users</a>
+    <a href="/admin/corpus" class="btn btn-secondary btn-sm">Browse Corpus</a>
+  </div>
+
+  <h2 class="mb-2">Recent Audit Log</h2>
+  <table>
+    <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr></thead>
+    <tbody>
+      <% recent.forEach(e => { %>
+        <tr>
+          <td class="text-muted" style="font-size:.82rem"><%= new Date(e.created_at).toLocaleString() %></td>
+          <td><%= e.username || '(system)' %></td>
+          <td><span class="badge"><%= e.action %></span></td>
+          <td class="text-muted" style="font-size:.82rem"><%= e.detail %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

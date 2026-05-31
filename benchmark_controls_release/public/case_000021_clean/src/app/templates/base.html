@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>{% block title %}DocuMind AI{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css">
+{% block head %}{% endblock %}
+</head>
+<body class="theme-light">
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">&#129504;</span>
+    <span class="brand-name">DocuMind AI</span>
+    <span class="brand-tagline">Document Intelligence</span>
+  </div>
+  {% if session and session.get('user_id') %}
+  <div class="navbar-menu">
+    <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Dashboard</a>
+    <a href="/profile" class="nav-link {% if request.path == '/profile' %}active{% endif %}">Profile</a>
+    {% if session.get('role') == 'admin' %}
+    <a href="/admin" class="nav-link {% if request.path == '/admin' %}active{% endif %}">Admin</a>
+    {% endif %}
+    <div class="nav-user">
+      <span class="user-badge">{{ session.get('display_name', session.get('username', '')) }}</span>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+  {% endif %}
+</nav>
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <span>&copy; 2024 ACME Corp &mdash; DocuMind AI v2.4.1</span>
+  <span>HR &amp; Legal Document Intelligence Platform</span>
+</footer>
+<script>
+function getCsrfToken() {
+  const m = document.querySelector('meta[name="csrf-token"]');
+  return m ? m.getAttribute('content') : '';
+}
+function csrfHeaders(extra) {
+  const h = Object.assign({}, extra || {});
+  h['X-CSRF-Token'] = getCsrfToken();
+  return h;
+}
+async function doLogout() {
+  await fetch('/logout', {method: 'POST', headers: csrfHeaders()});
+  window.location.href = '/login';
+}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

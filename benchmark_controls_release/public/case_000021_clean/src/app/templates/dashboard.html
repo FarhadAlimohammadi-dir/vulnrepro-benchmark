@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – DocuMind AI{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  <!-- Sidebar: Document Library -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="section-header">
+        <h3>&#128196; Documents</h3>
+        <button class="btn-sm btn-primary" onclick="showUploadModal()">+ Upload</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search documents…" oninput="searchDocs()">
+      </div>
+
+      <div class="category-filter">
+        <select id="categoryFilter" onchange="loadDocuments()">
+          <option value="">All categories</option>
+          <option value="performance">Performance</option>
+          <option value="compensation">Compensation</option>
+          <option value="planning">Planning</option>
+          <option value="recruiting">Recruiting</option>
+          <option value="legal">Legal</option>
+          <option value="templates">Templates</option>
+          <option value="general">General</option>
+        </select>
+      </div>
+
+      <div id="docList" class="doc-list">
+        <div class="loading-state">Loading documents…</div>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <div class="sidebar-section sidebar-stats">
+      <h4>&#128202; Workspace</h4>
+      <div id="categoryStats" class="category-stats"></div>
+    </div>
+  </aside>
+
+  <!-- Main: AI Chat Panel -->
+  <section class="chat-panel">
+    <div class="chat-header">
+      <h3>&#129504; AI Analysis Assistant</h3>
+      <div class="chat-controls">
+        <select id="personaSelect" title="AI persona">
+          <option value="professional">Professional</option>
+          <option value="friendly">Friendly</option>
+          <option value="detailed">Detailed</option>
+        </select>
+        <button class="btn-sm btn-outline" onclick="clearHistory()">Clear history</button>
+        <button class="btn-sm btn-outline" onclick="exportReport()">&#11015; Export</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-welcome">
+        <p>&#128075; Welcome, <strong>{{ username }}</strong>!</p>
+        <p>Upload HR documents in the sidebar and ask me to analyze, compare, or summarize them.</p>
+        <p class="chat-examples">
+          <em>Try: "Summarize all performance reviews" &bull; "Who had the highest rating?" &bull; "Extract salary bands"</em>
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea id="chatInput" rows="2" placeholder="Ask about your documents…"
+                  onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"></textarea>
+        <button class="btn-primary btn-send" onclick="sendMessage()">&#9654; Send</button>
+      </div>
+      <div class="chat-input-hint">Press Enter to send &bull; Shift+Enter for newline</div>
+    </div>
+  </section>
+
+  <!-- Right Panel: Document Preview -->
+  <aside class="preview-panel" id="previewPanel" style="display:none;">
+    <div class="preview-header">
+      <h4 id="previewTitle">Document Preview</h4>
+      <button class="btn-icon" onclick="closePreview()">&#x2715;</button>
+    </div>
+    <div class="preview-meta" id="previewMeta"></div>
+    <div class="preview-content" id="previewContent"></div>
+    <div class="preview-actions">
+      <button class="btn-sm btn-outline" onclick="renameDoc()">&#9998; Rename</button>
+      <button class="btn-sm btn-danger" onclick="deleteDoc()">&#128465; Delete</button>
+    </div>
+  </aside>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Upload Document</h3>
+      <button class="btn-icon" onclick="hideUploadModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Filename</label>
+        <input type="text" id="uploadFilename" placeholder="e.g. Review_John_Q1.txt">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="uploadCategory">
+            <option value="general">General</option>
+            <option value="performance">Performance</option>
+            <option value="compensation">Compensation</option>
+            <option value="planning">Planning</option>
+            <option value="recruiting">Recruiting</option>
+            <option value="legal">Legal</option>
+            <option value="templates">Templates</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tags (comma-separated)</label>
+          <input type="text" id="uploadTags" placeholder="e.g. q1, alice, senior">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <textarea id="uploadContent" rows="8" placeholder="Paste or type document content…"></textarea>
+      </div>
+      <div id="uploadError" class="form-error"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="hideUploadModal()">Cancel</button>
+      <button class="btn-primary" onclick="uploadDocument()">Upload Document</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPage = 1;
+let currentDocId = null;
+
+// ── Document list ─────────────────────────────────────────────────────────────
+
+async function loadDocuments(page) {
+  page = page || currentPage;
+  const search = document.getElementById('searchInput').value.trim();
+  const category = document.getElementById('categoryFilter').value;
+  let url = `/api/documents?page=${page}`;
+  if (search) url += `&search=${encodeURIComponent(search)}`;
+  if (category) url += `&category=${encodeURIComponent(category)}`;
+
+  const r = await fetch(url);
+  const d = await r.json();
+  currentPage = page;
+
+  const list = document.getElementById('docList');
+  if (!d.documents || d.documents.length === 0) {
+    list.innerHTML = '<div class="empty-state">No documents found. Upload one to get started.</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  list.innerHTML = d.documents.map(doc => `
+    <div class="doc-item" onclick="previewDocument(${doc.id})" data-id="${doc.id}">
+      <div class="doc-icon">${getCategoryIcon(doc.category)}</div>
+      <div class="doc-info">
+        <div class="doc-name">${escHtml(doc.filename)}</div>
+        <div class="doc-meta">
+          <span class="doc-category">${doc.category}</span>
+          <span class="doc-size">${formatSize(doc.size_bytes)}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Pagination
+  const pag = document.getElementById('pagination');
+  if (d.pages > 1) {
+    let html = '';
+    if (page > 1) html += `<button class="btn-sm btn-outline" onclick="loadDocuments(${page-1})">&#8249;</button>`;
+    html += ` <span class="page-info">Page ${page} / ${d.pages}</span> `;
+    if (page < d.pages) html += `<button class="btn-sm btn-outline" onclick="loadDocuments(${page+1})">&#8250;</button>`;
+    pag.innerHTML = html;
+  } else {
+    pag.innerHTML = '';
+  }
+
+  loadCategoryStats();
+}
+
+let searchTimer;
+function searchDocs() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { currentPage = 1; loadDocuments(1); }, 300);
+}
+
+async function loadCategoryStats() {
+  const r = await fetch('/api/documents/categories');
+  const d = await r.json();
+  const el = document.getElementById('categoryStats');
+  if (!d.categories) return;
+  el.innerHTML = d.categories.map(c =>
+    `<div class="stat-item"><span>${getCategoryIcon(c.category)} ${c.category}</span><span class="stat-count">${c.cnt}</span></div>`
+  ).join('');
+}
+
+function getCategoryIcon(cat) {
+  const icons = {performance:'&#127942;', compensation:'&#128176;', planning:'&#128203;',
+    recruiting:'&#128101;', legal:'&#9878;', templates:'&#128462;', general:'&#128196;'};
+  return icons[cat] || '&#128196;';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  return (bytes / 1024).toFixed(1) + ' KB';
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Document preview ──────────────────────────────────────────────────────────
+
+async function previewDocument(id) {
+  currentDocId = id;
+  const r = await fetch(`/api/documents/preview?id=${id}`);
+  const d = await r.json();
+  if (d.error) return;
+
+  document.getElementById('previewTitle').textContent = d.filename;
+  document.getElementById('previewMeta').innerHTML =
+    `<span class="doc-category">${d.category}</span> &bull; ${formatSize(d.size_bytes)} &bull; ${d.uploaded_at}`;
+  document.getElementById('previewContent').textContent = d.preview;
+  document.getElementById('previewPanel').style.display = 'flex';
+}
+
+function closePreview() {
+  document.getElementById('previewPanel').style.display = 'none';
+  currentDocId = null;
+}
+
+async function renameDoc() {
+  if (!currentDocId) return;
+  const newName = prompt('Enter new filename:');
+  if (!newName) return;
+  const r = await fetch('/api/documents/rename', {
+    method: 'POST',
+    headers: csrfHeaders({'Content-Type': 'application/json'}),
+    body: JSON.stringify({id: currentDocId, new_name: newName})
+  });
+  const d = await r.json();
+  if (d.ok) { closePreview(); loadDocuments(); }
+  else alert(d.error || 'Rename failed');
+}
+
+async function deleteDoc() {
+  if (!currentDocId) return;
+  if (!confirm('Delete this document? This cannot be undone.')) return;
+  await fetch('/api/documents/delete', {
+    method: 'POST',
+    headers: csrfHeaders({'Content-Type': 'application/json'}),
+    body: JSON.stringify({id: currentDocId})
+  });
+  closePreview();
+  loadDocuments();
+}
+
+// ── Upload modal ──────────────────────────────────────────────────────────────
+
+function showUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
+function hideUploadModal() {
+  document.getElementById('uploadModal').style.display = 'none';
+  document.getElementById('uploadFilename').value = '';
+  document.getElementById('uploadContent').value = '';
+  document.getElementById('uploadError').textContent = '';
+}
+
+async function uploadDocument() {
+  const filename = document.getElementById('uploadFilename').value.trim();
+  const content = document.getElementById('uploadContent').value;
+  const category = document.getElementById('uploadCategory').value;
+  const tags = document.getElementById('uploadTags').value.trim();
+  const errEl = document.getElementById('uploadError');
+  errEl.textContent = '';
+
+  if (!filename || !content) {
+    errEl.textContent = 'Filename and content are required.';
+    return;
+  }
+
+  const r = await fetch('/api/documents/upload', {
+    method: 'POST',
+    headers: csrfHeaders({'Content-Type': 'application/json'}),
+    body: JSON.stringify({filename, content, category, tags})
+  });
+  const d = await r.json();
+  if (d.ok) {
+    hideUploadModal();
+    loadDocuments();
+  } else {
+    errEl.textContent = d.error || 'Upload failed.';
+  }
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────────
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const persona = document.getElementById('personaSelect').value;
+  appendMessage('user', escHtml(msg));
+
+  const r = await fetch('/api/chat', {
+    method: 'POST',
+    headers: csrfHeaders({'Content-Type': 'application/json'}),
+    body: JSON.stringify({message: msg, persona})
+  });
+  const d = await r.json();
+  // Render the AI response as plain text. Even though the server attempts
+  // to sanitize markdown-derived HTML, treating it as HTML in the DOM
+  // creates a stored-XSS sink whenever the sanitizer drifts; the safer
+  // contract is text in / text out at the rendering boundary.
+  if (d.response_text || d.rendered_html) {
+    appendMessageText('ai', d.response_text || d.rendered_html);
+  } else {
+    appendMessage('ai', d.error || 'Error getting response.');
+  }
+}
+
+function appendMessageText(role, text) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg-${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.style.whiteSpace = 'pre-wrap';
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function appendMessage(role, html) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg-${role}`;
+  div.innerHTML = `<div class="msg-bubble">${html}</div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function appendMessageRaw(role, html) {
+  // Deprecated raw-HTML sink — fall back to text rendering to avoid XSS
+  // when stale callers still invoke this helper.
+  appendMessageText(role, html);
+}
+
+async function clearHistory() {
+  if (!confirm('Clear all chat history?')) return;
+  await fetch('/api/chat/clear', {method: 'POST', headers: csrfHeaders()});
+  document.getElementById('chatMessages').innerHTML =
+    '<div class="chat-welcome"><p>Chat history cleared.</p></div>';
+}
+
+async function exportReport() {
+  const r = await fetch('/api/export', {method: 'POST', headers: csrfHeaders()});
+  const d = await r.json();
+  if (!d.report) return;
+  const blob = new Blob([d.report], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'documind_report.txt';
+  a.click();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadDocuments();
+</script>
+{% endblock %}

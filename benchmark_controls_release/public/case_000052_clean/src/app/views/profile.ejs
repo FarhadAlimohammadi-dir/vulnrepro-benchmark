@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/oauth/clients">Applications</a>
+      <a href="/profile" class="active">Profile</a>
+      <form action="/logout" method="post" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="nav-logout" type="submit">Logout (<%= user %>)</button></form>
+    </div>
+  </nav>
+  <main class="container">
+    <h1>&#128100; Your Profile</h1>
+
+    <div class="card-grid">
+      <div class="card">
+        <h2>Account Information</h2>
+        <form method="POST" action="/profile">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<%= userRecord.username %>" disabled class="input-disabled">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="text" value="<%= userRecord.email %>" disabled class="input-disabled">
+          </div>
+          <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" value="<%= userRecord.full_name || '' %>" maxlength="100">
+          </div>
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio" rows="3" maxlength="500"><%= userRecord.bio || '' %></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Active Tokens</h2>
+        <% if (tokens.length === 0) { %>
+          <p class="muted">No active tokens.</p>
+        <% } else { %>
+          <table class="data-table">
+            <thead>
+              <tr><th>Client</th><th>Scope</th><th>Token</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <% for (const tok of tokens) { %>
+                <tr>
+                  <td><%= tok.client_name || 'Unknown' %></td>
+                  <td><span class="badge"><%= tok.scope %></span></td>
+                  <td><code>...<%= tok.token_suffix %></code></td>
+                  <td>
+                    <form method="POST" action="/revoke-token" style="display:inline">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <input type="hidden" name="token_id" value="<%= tok.token_id %>">
+                      <button type="submit" class="btn btn-sm btn-danger">Revoke</button>
+                    </form>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+
+      <div class="card">
+        <h2>Authorized Applications</h2>
+        <% if (consents.length === 0) { %>
+          <p class="muted">No applications authorized.</p>
+        <% } else { %>
+          <table class="data-table">
+            <thead>
+              <tr><th>Application</th><th>Scopes</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <% for (const c of consents) { %>
+                <tr>
+                  <td>
+                    <% if (c.website) { %>
+                      <a href="<%= c.website %>" target="_blank"><%= c.client_name %></a>
+                    <% } else { %>
+                      <%= c.client_name %>
+                    <% } %>
+                  </td>
+                  <td><span class="badge"><%= c.scopes %></span></td>
+                  <td>
+                    <form method="POST" action="/revoke-consent" style="display:inline">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <input type="hidden" name="client_id" value="<%= c.client_id %>">
+                      <button type="submit" class="btn btn-sm btn-danger">Revoke</button>
+                    </form>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

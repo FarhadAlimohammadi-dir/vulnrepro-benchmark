@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' — IAM Policy Studio' : 'IAM Policy Studio' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <% if (typeof user !== 'undefined' && user) { %>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/dashboard">🔐 IAM Policy Studio</a>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard" class="<%= typeof title !== 'undefined' && title === 'Dashboard' ? 'active' : '' %>">Dashboard</a>
+      <a href="/policies" class="<%= typeof title !== 'undefined' && title === 'Trust Policies' ? 'active' : '' %>">Policies</a>
+      <% if (typeof userRole !== 'undefined' && userRole === 'admin') { %>
+      <a href="/admin">Admin</a>
+      <a href="/admin/audit">Audit Log</a>
+      <% } %>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <% } %>
+  <main class="main-content">
+    <%- body %>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio — Cloud Identity Governance Platform</p>
+  </footer>
+</body>
+</html>

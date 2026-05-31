@@ -1,0 +1,25 @@
+<%- include('layout') %>
+<% const title = project ? 'Edit Project' : 'New Project' %>
+
+<div class="page-header">
+  <h1><%= project ? 'Edit Project' : 'New Project' %></h1>
+</div>
+
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<form method="POST" action="<%= project ? '/projects/' + project.id + '/edit' : '/projects/new' %>" class="form-card">
+  <div class="form-group">
+    <label>Project Name</label>
+    <input name="name" type="text" value="<%= project ? project.name : '' %>" placeholder="e.g. Q2 Marketing Campaign" required maxlength="120">
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <textarea name="description" rows="3" placeholder="Brief description of the project"><%= project ? project.description : '' %></textarea>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary"><%= project ? 'Save Changes' : 'Create Project' %></button>
+    <a href="/projects" class="btn">Cancel</a>
+  </div>
+</form>
+
+<%- include('layout_end') %>

@@ -1,0 +1,22 @@
+{
+  "name": "gateway-portal",
+  "version": "2.1.0",
+  "description": "HR Workforce Management & Access Request Portal",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js",
+    "dev": "nodemon app/server.js",
+    "seed": "node app/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "better-sqlite3": "^9.0.0",
+    "ejs": "^3.1.9",
+    "morgan": "^1.10.0",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

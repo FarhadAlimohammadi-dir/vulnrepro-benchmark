@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  cloudvault:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - NODE_ENV=production
+      - PORT=9000
+    volumes:
+      - cloudvault_data:/app/app
+    restart: unless-stopped
+
+volumes:
+  cloudvault_data:

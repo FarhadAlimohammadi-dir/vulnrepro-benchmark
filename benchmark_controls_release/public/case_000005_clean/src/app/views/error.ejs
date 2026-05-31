@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %> — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<% if (typeof user !== 'undefined' && user) { %>
+<%- include('partials/nav', { user: { name: user, role: 'user' }, page: '' }) %>
+<% } %>
+<main class="content" style="text-align:center;padding-top:5rem">
+  <div style="font-size:4rem;margin-bottom:1rem">⚠</div>
+  <h1><%= title %></h1>
+  <p class="muted"><%= message %></p>
+  <a href="/dashboard" class="btn btn-primary" style="margin-top:1.5rem">Go to Dashboard</a>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

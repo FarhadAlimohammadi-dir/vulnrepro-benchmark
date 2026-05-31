@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <% if (locals.currentUser) { %>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/dashboard">&#9656; Gateway Portal</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/dashboard" class="<%= locals.activePage === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
+      <li><a href="/requests" class="<%= locals.activePage === 'requests' ? 'active' : '' %>">My Requests</a></li>
+      <li><a href="/profile" class="<%= locals.activePage === 'profile' ? 'active' : '' %>">Profile</a></li>
+      <% 
+        const navRoles = (currentUser.roles || '').split(',').map(r => r.trim());
+        const navIsAdmin = navRoles.some(r => r === 'ADMIN' || r === 'ADMIN AND REQUESTER');
+        if (navIsAdmin) { %>
+        <li><a href="/admin" class="<%= locals.activePage === 'admin' ? 'active' : '' %>">Admin</a></li>
+      <% } %>
+    </ul>
+    <div class="nav-user">
+      <span class="nav-username"><%= currentUser.employee_name || currentUser.username %></span>
+      <a href="/logout" class="btn-logout">Sign Out</a>
+    </div>
+  </nav>
+  <% } %>
+
+  <% if (locals.flash) { %>
+  <div class="flash flash-<%= flash.type %>">
+    <%= flash.message %>
+  </div>
+  <% } %>
+
+  <main class="main-content">
+    <%- body %>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 Target Corporation &mdash; Workforce Management Portal &mdash; v2.1</p>
+  </footer>
+</body>
+</html>

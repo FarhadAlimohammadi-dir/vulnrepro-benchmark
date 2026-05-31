@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Documents — NexusAI Workspace{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Document Library</h1>
+    <span class="badge">{{ documents|length }} shown</span>
+  </div>
+
+  <div class="filter-bar">
+    <form method="GET" action="/documents">
+      <input type="text" name="tag" placeholder="Filter by tag…" value="{{ tag_filter }}" class="filter-input">
+      <select name="source">
+        <option value="">All sources</option>
+        {% for src in ['internal','docs','gmail','calendar','shared','external','email'] %}
+          <option value="{{ src }}" {% if source_filter == src %}selected{% endif %}>{{ src }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn-secondary">Filter</button>
+      <a href="/documents" class="btn-link">Reset</a>
+    </form>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Source</th>
+        <th>Tags</th>
+        <th>Indexed</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for doc in documents %}
+      <tr>
+        <td>{{ doc.id }}</td>
+        <td><a href="/documents/{{ doc.id }}">{{ doc.title }}</a></td>
+        <td><span class="badge badge-{{ doc.source }}">{{ doc.source }}</span></td>
+        <td>
+          {% if doc.tags %}
+            {% for tag in doc.tags.split(',') %}
+              <span class="tag">{{ tag.strip() }}</span>
+            {% endfor %}
+          {% endif %}
+        </td>
+        <td>{{ doc.created_at[:10] }}</td>
+        <td>
+          {% if user.role == 'admin' %}
+            <form method="POST" action="/documents/{{ doc.id }}/delete" style="display:inline" onsubmit="return confirm('Delete this document?')">
+              <button type="submit" class="btn-danger-sm">Delete</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" style="text-align:center;color:#9ca3af">No documents found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    {% if page > 1 %}
+      <a href="/documents?page={{ page-1 }}&source={{ source_filter }}&tag={{ tag_filter }}" class="btn-link">&laquo; Prev</a>
+    {% endif %}
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}
+      <a href="/documents?page={{ page+1 }}&source={{ source_filter }}&tag={{ tag_filter }}" class="btn-link">Next &raquo;</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

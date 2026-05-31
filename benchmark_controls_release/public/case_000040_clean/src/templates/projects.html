@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CloudPanel — Projects</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; }
+  header { background: #1a1a2e; color: #fff; padding: 1rem 2rem; }
+  main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+  .card { background: #fff; border-radius: 8px; padding: 1.5rem;
+          box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .6rem; border-bottom: 1px solid #e5e7eb; }
+  th { color: #6b7280; }
+</style>
+</head>
+<body>
+<header>☁ CloudPanel — Projects</header>
+<main>
+  <div class="card">
+    <table>
+      <thead><tr><th>Name</th><th>Owner</th><th>Status</th><th>Created</th></tr></thead>
+      <tbody>
+      {% for p in projects %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.owner_name }}</td>
+        <td>{{ p.status }}</td>
+        <td>{{ p.created_at }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

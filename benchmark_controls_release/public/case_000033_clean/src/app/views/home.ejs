@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accounts Center - Multi-Platform Account Management</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/auth/logout" class="btn-logout">Logout</a></li>
+        <% } else { %>
+          <li><a href="/auth/login">Login</a></li>
+          <li><a href="/auth/signup">Sign Up</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Manage All Your Accounts in One Place</h1>
+    <p>Seamlessly link and manage your social media and business accounts</p>
+    <% if (!user) { %>
+      <a href="/auth/login" class="btn btn-primary">Get Started</a>
+    <% } %>
+  </div>
+
+  <div class="container features">
+    <div class="feature">
+      <h3>Unified Dashboard</h3>
+      <p>View all your linked accounts from a single dashboard</p>
+    </div>
+    <div class="feature">
+      <h3>Secure Linking</h3>
+      <p>Link accounts safely with our encrypted authentication flow</p>
+    </div>
+    <div class="feature">
+      <h3>Activity Tracking</h3>
+      <p>Monitor all account activities and security events</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteVault — Collaborative Notes for Teams</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <% if (user) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/notes">My Notes</a>
+        <form action="/logout" method="post" style="margin:0">
+          <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-sm">Sign in</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <section class="hero">
+    <h1>Collaborative notes,<br>without the chaos.</h1>
+    <p class="hero-sub">NoteVault keeps your team's knowledge organised, searchable, and always in sync — from quick scratch notes to shared engineering runbooks.</p>
+    <div class="hero-actions">
+      <% if (user) { %>
+        <a href="/dashboard" class="btn btn-lg">Go to Dashboard</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-lg">Get started free</a>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <h3>Team Workspaces</h3>
+      <p>Organise notes by project, team, or topic. Invite collaborators and keep everyone on the same page.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Instant Search</h3>
+      <p>Full-text search across all your notes. Find what you need in milliseconds, not minutes.</p>
+    </div>
+    <div class="feature-card">
+      <h3>REST API</h3>
+      <p>Integrate NoteVault into your CI pipeline, Slack bots, or internal tools with a simple token-based API.</p>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <small>&copy; 2024 NoteVault, Inc.</small>
+  </div>
+</footer>
+</body>
+</html>

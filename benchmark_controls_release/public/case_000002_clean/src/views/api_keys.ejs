@@ -1,0 +1,46 @@
+<%
+  title = 'API Keys'
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]))
+  const keyRows = keys.map(k => `
+    <tr>
+      <td>${esc(k.label)}</td>
+      <td><code>${esc(k.prefix)}...</code></td>
+      <td class="muted">${esc(k.scopes || '(none)')}</td>
+      <td class="muted">${esc(k.created_at)}</td>
+      <td class="muted">${esc(k.last_used_at || 'never')}</td>
+      <td>
+        <form action="/api-keys/${esc(k.id)}/revoke" method="post" style="display:inline">
+          <button class="danger" style="font-size:0.8rem;padding:0.2rem 0.5rem">Revoke</button>
+        </form>
+      </td>
+    </tr>
+  `).join('')
+  body = `
+<h1>API Keys</h1>
+${newKey ? '<div class="flash flash-info"><strong>New key (copy now, shown once):</strong> <code>' + esc(newKey) + '</code></div>' : ''}
+
+<form class="form" method="post" action="/api-keys" style="background:#fff;padding:1rem;border-radius:6px;margin-bottom:1.5rem">
+  <h3 style="margin-top:0">Create new key</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:0.5rem;align-items:end">
+    <label>Label<input name="label" required placeholder="CI runner, VS Code plugin"></label>
+    <label>Scopes
+      <select name="scopes" multiple style="height:5rem">
+        <option value="read:projects">read:projects</option>
+        <option value="write:projects">write:projects</option>
+        <option value="read:snippets">read:snippets</option>
+        ${user && user.role === 'admin' ? '<option value="admin">admin</option>' : ''}
+      </select>
+    </label>
+    <div><button type="submit">Create</button></div>
+  </div>
+</form>
+
+<table class="list">
+  <thead><tr><th>Label</th><th>Prefix</th><th>Scopes</th><th>Created</th><th>Last used</th><th></th></tr></thead>
+  <tbody>${keyRows || '<tr><td colspan="6" class="muted">No API keys yet</td></tr>'}</tbody>
+</table>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

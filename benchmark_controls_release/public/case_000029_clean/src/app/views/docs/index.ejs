@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Documents – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/docs/upload">Upload</a>
+    <a href="/docs/settings/profile">Profile</a>
+    <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+
+  <% if (success === 'uploaded') { %>
+  <div class="alert alert-success">File uploaded successfully.</div>
+  <% } else if (success === 'deleted') { %>
+  <div class="alert alert-success">Document deleted.</div>
+  <% } %>
+
+  <div class="page-header">
+    <h1>My Documents</h1>
+    <a href="/docs/upload" class="btn btn-primary">+ Upload</a>
+  </div>
+
+  <div class="card">
+    <form method="GET" action="/docs" class="search-bar">
+      <input name="tag" placeholder="Filter by tag…" value="<%= tag %>">
+      <button type="submit" class="btn btn-secondary">Filter</button>
+      <% if (tag) { %><a href="/docs" class="btn btn-link">Clear</a><% } %>
+    </form>
+
+    <% if (docs.length === 0) { %>
+    <p class="empty-state">No documents found. <a href="/docs/upload">Upload your first file →</a></p>
+    <% } else { %>
+    <table class="table">
+      <thead>
+        <tr><th>Filename</th><th>Type</th><th>Size</th><th>Tags</th><th>Uploaded</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+      <% docs.forEach(d => { %>
+        <tr>
+          <td><a href="/docs/<%= d.id %>"><%= d.filename %></a></td>
+          <td><span class="badge"><%= d.mimetype.split('/')[1] %></span></td>
+          <td><%= (d.size_bytes / 1024).toFixed(1) %> KB</td>
+          <td><%= d.tags || '—' %></td>
+          <td><%= new Date(d.created_at * 1000).toLocaleDateString() %></td>
+          <td>
+            <a href="/docs/<%= d.id %>" class="btn-sm">View</a>
+            <form method="POST" action="/docs/<%= d.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this document?')">
+              <button type="submit" class="btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/docs?page=<%= i %><%= tag ? '&tag='+tag : '' %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+    <p class="pagination-info">Showing <%= docs.length %> of <%= total %> documents</p>
+    <% } %>
+  </div>
+
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

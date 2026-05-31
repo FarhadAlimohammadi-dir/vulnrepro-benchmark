@@ -1,0 +1,66 @@
+<%- include('layout') %>
+<% const title = 'Admin Panel' %>
+
+<div class="page-header"><h1>Admin Panel</h1></div>
+
+<div class="grid-two">
+  <section>
+    <h2>Users</h2>
+    <table class="data-table">
+      <thead><tr><th>Username</th><th>Display Name</th><th>Role</th><th>Joined</th><th>Change Role</th></tr></thead>
+      <tbody>
+      <% users.forEach(u => { %>
+      <tr>
+        <td><strong><%= u.username %></strong></td>
+        <td><%= u.display_name || '—' %></td>
+        <td><span class="badge"><%= u.role %></span></td>
+        <td><%= u.created_at ? u.created_at.slice(0,10) : '—' %></td>
+        <td>
+          <form method="POST" action="/admin/users/<%= u.id %>/role" style="display:inline">
+            <select name="role">
+              <option value="viewer" <%= u.role==='viewer'?'selected':'' %>>viewer</option>
+              <option value="member" <%= u.role==='member'?'selected':'' %>>member</option>
+              <option value="admin"  <%= u.role==='admin' ?'selected':'' %>>admin</option>
+            </select>
+            <button type="submit" class="btn btn-sm">Set</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <p><a href="/admin/audit">View full audit log &rarr;</a></p>
+  </section>
+
+  <section>
+    <h2>Recent Activity</h2>
+    <ul class="item-list">
+    <% recentAudit.slice(0,10).forEach(a => { %>
+      <li class="item-card">
+        <span class="badge"><%= a.action %></span>
+        <span class="item-meta"><%= a.username || 'system' %></span>
+        <div><%= a.detail %></div>
+        <div class="item-meta"><%= a.created_at %></div>
+      </li>
+    <% }) %>
+    </ul>
+  </section>
+</div>
+
+<h2>Recent Tasks (all projects)</h2>
+<table class="data-table">
+  <thead><tr><th>Task</th><th>Project</th><th>Assignee</th><th>Priority</th><th>Status</th></tr></thead>
+  <tbody>
+  <% recentTasks.forEach(t => { %>
+  <tr>
+    <td><%= t.title %></td>
+    <td><%= t.project_name %></td>
+    <td><%= t.assignee || '—' %></td>
+    <td><span class="badge badge-<%= t.priority %>"><%= t.priority %></span></td>
+    <td><%= t.done ? 'Done' : 'Open' %></td>
+  </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<%- include('layout_end') %>

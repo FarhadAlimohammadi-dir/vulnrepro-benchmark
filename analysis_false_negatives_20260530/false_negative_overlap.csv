@@ -1,0 +1,47 @@
+case_id,missed_count,missed_by,category,cwe,type,primitive,locations
+case_000006,1,claude-sonnet-4-6,AI,CWE-352,CSRF,CSRF Token Leakage + RCE via Language Server,src/app/routes/lsp.js:GET /lsp/browser/credentials-bootstrap
+case_000012,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-79,XSS,Stored/Reflected XSS escalated to Universal XSS (UXSS) via Chrome extension externally_connectable,src/app/app.js:
+case_000014,3,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6,AI,CWE-94,Prompt Injection,Command injection through unescaped image URI parameters in generated code,src/app/app.py:
+case_000015,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-79,XSS,Stored XSS via Markdown image injection through linkification bypass,src/app/app.py:
+case_000017,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-94,Prompt Injection,Indirect Prompt Injection with Image Markdown Injection leading to data exfiltration via CSP bypass,src/app/app.py:
+case_000018,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-639,Multiple,IDOR in Bard Vision + GraphQL Denial of Service,src/app/app.js:
+case_000019,1,claude-opus-4-7,AI,CWE-94,Prompt Injection,URL-based prompt injection with data exfiltration via AI agent hijacking,src/app/services/agent.py:process_conversation_turn
+case_000020,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-601,Prompt Injection,MCP OAuth URL Injection leading to XSS and RCE,src/app/app.js:
+case_000021,1,gpt-5.5-medium,AI,CWE-94,Prompt Injection,Prompt Injection leading to Data Exfiltration via Image Markdown Rendering,src/app/routes/chat.py:chat;src/app/services/ai_service.py:process_documents_with_ai
+case_000023,3,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6,AI,CWE-94,Prompt Injection,Prompt Injection leading to RCE via configuration file manipulation,src/app/app.py:process_snippet
+case_000025,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-94,Prompt Injection,Prompt injection attacks on AI systems,src/app/routes/api.py:process_ticket
+case_000027,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-798,Supply Chain,Hardcoded Credentials in LLM Training Data,src/app/app.js:
+case_000028,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-942,Information Disclosure,Publicly Accessible Database without Authentication,src/app/app.js:
+case_000029,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,AI,CWE-330,IDOR,Predictable Document IDs with weak randomness and timestamp patterns,src/app/app.js:
+case_000030,1,gpt-5.5-medium,Auth_Bypass,CWE-346,Auth Bypass,MessageChannel hijacking with PKCE bypass enabling cross-origin account takeover,src/routes/sso.js:;src/views/sso/embed.ejs:
+case_000032,1,gpt-5.5-medium,Auth_Bypass,CWE-346,Auth Bypass,OAuth Code Theft via Unsafe PostMessage and Token Validation Bypass,src/app/views/oauth_error.ejs:handlePixelMessage
+case_000033,1,gpt-5.5-medium,Auth_Bypass,CWE-601,Auth Bypass,"Cross-platform SSO token reuse, redirect validation bypass, postMessage token leakage",src/app/services/sso.js:validateRedirectPath
+case_000037,2,claude-sonnet-4-6;gpt-5.5-medium,Auth_Bypass,CWE-862,Auth Bypass,Cross-tenant impersonation via user-controlled actor token minting and exchange,src/routes/integration.py:create_integration_token
+case_000039,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Auth_Bypass,CWE-639,Auth Bypass,Insecure Pagination Token - Cross-Project Service Account Enumeration,src/routes/auth.py:login
+case_000043,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Auth_Bypass,CWE-426,Auth Bypass,Credential Leakage via Carriage Return/Newline Injection,src/app/main.py:index
+case_000045,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Auth_Bypass,CWE-522,Auth Bypass,Credential Storage in Plaintext - Local File Access,src/models/database.py:
+case_000053,3,claude-opus-4-7;claude-opus-4-8;gpt-5.5-medium,Business_Logic,CWE-307,Business Logic,"Account Lockout / Denial of Access via weak rate limiting, email verification flaws, logout CSRF, and client-side DoS",src/routes/auth.py:_check_login_rate_limit;src/routes/auth.py:register;src/routes/auth.py:login;src/routes/auth.py:logout
+case_000054,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Business_Logic,CWE-732,Business Logic,Overly Permissive Bucket Policy,src/app/services/policyEngine.js:createDefaultBucketPolicy
+case_000056,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Business_Logic,CWE-89,Business Logic,ORM Injection / Time-based Information Disclosure via relational filtering,src/app/app.js:
+case_000062,1,gpt-5.5-medium,Information_Disclosure,CWE-200,Information Disclosure,MIME Type Handling Vulnerability,src/app/routes/documents.py:get_document;src/app/routes/documents.py:export_document;src/app/routes/documents.py:_render_document_xml
+case_000069,3,claude-opus-4-7;claude-sonnet-4-6;gpt-5.5-medium,Information_Disclosure_XSSI,CWE-829,Other,Cross-Origin Resource Embedding / Hotlinking / XSSI,src/routes/api.py:get_user_profile;src/routes/api.py:get_user_settings
+case_000070,1,gpt-5.5-medium,Web_Cache_Poisoning_DoS,CWE-444,Web Cache Poisoning / Pre-render State Spoofing,Pre-render context header trust and hydration-state merge enabling state spoofing / cache poisoning,src/app/routes/pages.py:_decode_prerender_context;src/app/routes/pages.py:dashboard
+case_000072,3,claude-opus-4-7;claude-opus-4-8;gpt-5.5-medium,File_Upload_Type_Confusion_XSS,CWE-434,Other,File Type Confusion / Magic Number Detection Bypass,src/routes/documents.py:upload_document;src/services/document_service.py:detect_file_type
+case_000073,1,gpt-5.5-medium,Information_Disclosure_Privacy_Leak,CWE-200,Other,"IP Leakage, CSP Bypass, Popunder Attack",src/app/routes/properties.py:
+case_000074,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Supply_Chain_Cloud_Resource_Hijack,CWE-434,Other,Bucket name squatting / Resource ownership validation bypass,src/routes/auth.py:register
+case_000075,1,claude-sonnet-4-6,Side_Channel,CWE-208,Side Channel,"Timing Side-Channel Attack, Physical Memory Extraction, Debug Interface Access",src/app.py:unlock;src/app.py:app.secret_key
+case_000078,2,claude-opus-4-7;claude-opus-4-8,Path_Traversal_Argument_Injection_RCE,CWE-429,Other,"Best-Fit Character Encoding Bypass leading to Path Traversal, Argument Injection, and RCE",src/app.py:sync_file;src/utils/validators.py:is_allowed_source
+case_000081,1,claude-opus-4-8,Open_Redirect,CWE-601,Open Redirect,Post-login open redirect via protocol-relative next parameter,src/routes/auth.py:login
+case_000082,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,Side_Channel_Timing,CWE-208,SIDE_CHANNEL,Username enumeration through measurable authentication timing differential,src/services/auth_service.py:authenticate_user
+case_000083,1,gpt-5.5-medium,Path_Traversal,CWE-22,Path Traversal,Client-Side Path Traversal (CSPT) escalated to XSS via file upload and CORS bypass,src/app/app.js:
+case_000091,1,claude-sonnet-4-6,RCE,CWE-95,RCE,"Multiple Ruby-specific RCE vectors: Kernel.open pipe injection, insecure send/public_send reflection, binary deserialization gadget chains",src/app/routes/documents.py:process_document
+case_000093,1,gpt-5.5-medium,SSRF,CWE-918,SSRF,Full-read SSRF via Host header spoofing and pathname manipulation,src/server.js:fetchPrerenderedContent
+case_000097,3,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6,SSRF,CWE-918,SSRF,Server-side request forgery through JSON response control in Google Drive API integration,src/app/main.py:internal_ping
+case_000102,1,gpt-5.5-medium,XSS,CWE-644,XSS,Parser Differential - Content-Type Header Confusion between Browser and Server-Side Parser,src/app/routes/preview.py:parseContentTypeHeader;src/app/routes/preview.py:renderPreview
+case_000107,3,claude-opus-4-7;claude-opus-4-8;gpt-5.5-medium,XSS,CWE-79,XSS,DOM-based XSS via DOM Clobbering gadget chain,src/routes/notes.py:preview_note;src/services/renderer.py:
+case_000108,1,gpt-5.5-medium,XSS,CWE-79,XSS,Stored profile bio XSS through Markup-wrapped user content rendered into profile.html,src/app/routes/profile.py:view_profile;src/app/templates/profile.html:rendered_bio
+case_000110,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,XSS,CWE-79,XSS,Stored Self-XSS elevated to Stored XSS via credentialless iframe + CSRF/Clickjacking,src/app/routes/auth.py:profile;src/app/templates/profile.html:
+case_000113,1,gpt-5.5-medium,XSS,CWE-79,XSS,Mutation XSS (mXSS) via comment injection in style tags with template sanitization,src/routes/cards.js:buildPurifier;src/routes/cards.js:
+case_000114,1,gpt-5.5-medium,XSS,CWE-94,XSS,DOM XSS via XML Processing Instructions and Node Type Confusion,src/src/services/docProcessor.js:sanitizeDocument;src/src/routes/documents.js:;src/views/document.ejs:
+case_000115,4,claude-opus-4-7;claude-opus-4-8;claude-sonnet-4-6;gpt-5.5-medium,XSS,CWE-79,XSS,DOM XSS via unsanitized dataVendorExtensions in renderTextParam Handlebars helper,src/src/routes/docs.js:GET /
+case_000119,1,gpt-5.5-medium,XSS,CWE-79,XSS,DOM XSS via postMessage origin bypass,src/app/routes/widget.py:

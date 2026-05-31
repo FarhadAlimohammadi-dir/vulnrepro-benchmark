@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Search – NoteFlow{% endblock %}
+{% block content %}
+<h2>Search Notes</h2>
+<form method="GET" action="/search" class="search-form">
+  <input type="text" name="q" value="{{ query | e }}" placeholder="Search titles, bodies, tags…" autofocus>
+  <button type="submit" class="btn-primary">Search</button>
+</form>
+
+{% if query %}
+  {% if results %}
+  <p class="muted">{{ total }} result{{ 's' if total != 1 else '' }} for <strong>{{ query | e }}</strong></p>
+  <div class="note-list">
+    {% for n in results %}
+    <div class="card">
+      <div class="card-title">
+        <a href="/notes/{{ n.id }}">{{ n.title | e }}</a>
+        {% if n.public %}<span class="badge badge-public">public</span>{% endif %}
+      </div>
+      <div class="card-meta">
+        By {{ n.owner_name | e }}
+        {% if n.tags %}&nbsp;·&nbsp; <span class="tags">{{ n.tags | e }}</span>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% if page > 1 %}<a href="/search?q={{ query | urlencode }}&page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}<a href="/search?q={{ query | urlencode }}&page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <p class="muted">No results found for <strong>{{ query | e }}</strong>.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

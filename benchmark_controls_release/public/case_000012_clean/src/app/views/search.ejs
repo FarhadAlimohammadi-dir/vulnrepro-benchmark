@@ -1,0 +1,27 @@
+<%- include('layout') %>
+<% const title = 'Search' %>
+
+<div class="page-header"><h1>Search Projects</h1></div>
+
+<form method="GET" action="/dashboard/search" class="search-form">
+  <input name="q" type="search" placeholder="Search by name or description…" value="<%= q %>">
+  <button type="submit" class="btn">Search</button>
+</form>
+
+<% if (q) { %>
+<p class="muted"><%= results.total %> result<%= results.total !== 1 ? 's' : '' %> for "<%= q %>"</p>
+<% } %>
+
+<% if (results.rows.length > 0) { %>
+<ul class="item-list">
+<% results.rows.forEach(p => { %>
+  <li class="item-card">
+    <div class="item-title"><a href="/projects/<%= p.id %>"><%= p.name %></a></div>
+    <div class="item-meta"><%= p.description %></div>
+    <div class="item-meta">Owner: <%= p.owner_name %></div>
+  </li>
+<% }) %>
+</ul>
+<% } %>
+
+<%- include('layout_end') %>

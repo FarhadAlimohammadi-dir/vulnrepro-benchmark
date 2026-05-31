@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ProjectSync — <%= project.name %></title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">ProjectSync</div>
+    <nav>
+      <a href="/dashboard">Projects</a>
+      <a href="/settings">Settings</a>
+      <a href="/logout" class="btn-logout">Sign out</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1><%= project.name %></h1>
+    <p class="meta">Slug: <code><%= project.slug %></code> &middot; Status: <strong><%= project.status %></strong></p>
+    <p class="meta">Owner: <%= project.owner_email %> &middot; Created: <%= project.created_at %></p>
+
+    <% if (project.description) { %>
+      <div class="description-box">
+        <h3>Description</h3>
+        <p><%= project.description %></p>
+      </div>
+    <% } %>
+
+    <div class="actions">
+      <a href="/dashboard" class="btn-secondary">← Back</a>
+    </div>
+  </main>
+</body>
+</html>

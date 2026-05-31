@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/dashboard">Dashboard</a>
+  <span class="spacer"></span>
+  <a href="/profile/<%= user.username %>"><%= user.username %></a>
+  <a href="/logout">Logout</a>
+</nav>
+<div class="container page" style="max-width:600px">
+  <h1 class="mb-2">Account Settings</h1>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+  <div class="card">
+    <form method="POST" action="/profile/settings/edit">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" value="<%= user.username %>" disabled style="background:#f1f5f9;color:#64748b" />
+        <small class="text-muted">Username cannot be changed.</small>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= user.email %>" required />
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="3" maxlength="500"
+                  placeholder="Tell others about yourself…"><%= user.bio || '' %></textarea>
+      </div>
+      <hr style="border:none;border-top:1px solid #e2e8f0;margin:1.5rem 0"/>
+      <h3 class="mb-1">Change Password</h3>
+      <p class="text-muted mb-2" style="font-size:.85rem">Leave blank to keep your current password.</p>
+      <div class="form-group">
+        <label for="current_password">Current Password</label>
+        <input type="password" id="current_password" name="current_password" autocomplete="current-password" />
+      </div>
+      <div class="form-group">
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" autocomplete="new-password"
+               placeholder="At least 8 characters" />
+      </div>
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

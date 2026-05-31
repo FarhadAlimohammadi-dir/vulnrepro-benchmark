@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= snippet ? 'Edit' : 'New' %> Snippet — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/dashboard">Dashboard</a>
+  <span class="spacer"></span>
+  <% if (locals.currentUser) { %>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } %>
+</nav>
+<div class="container page" style="max-width:760px">
+  <h1 class="mb-2"><%= snippet ? 'Edit Snippet' : 'New Snippet' %></h1>
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+  <div class="card">
+    <form method="POST" action="<%= snippet ? '/snippets/' + snippet.id + '/edit' : '/snippets' %>">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required maxlength="120"
+               value="<%= snippet ? snippet.title : '' %>" placeholder="Short descriptive title" />
+      </div>
+      <div class="form-group">
+        <label for="language">Language</label>
+        <input type="text" id="language" name="language" maxlength="40"
+               value="<%= snippet ? snippet.language : '' %>" placeholder="e.g. python, javascript, bash …" />
+      </div>
+      <div class="form-group">
+        <label for="description">Description <span class="text-muted">(optional)</span></label>
+        <input type="text" id="description" name="description" maxlength="300"
+               value="<%= snippet ? snippet.description || '' : '' %>" placeholder="One-liner about this snippet" />
+      </div>
+      <div class="form-group">
+        <label for="body">Code</label>
+        <textarea id="body" name="body" rows="16" required
+                  placeholder="Paste your code here…"><%= snippet ? snippet.body : '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="isPublic" <%= snippet && snippet.public ? 'checked' : '' %> />
+          &nbsp;Make this snippet public
+        </label>
+      </div>
+      <div class="flex">
+        <button type="submit" class="btn btn-primary"><%= snippet ? 'Save Changes' : 'Create Snippet' %></button>
+        <a href="<%= snippet ? '/snippets/' + snippet.id : '/dashboard' %>" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

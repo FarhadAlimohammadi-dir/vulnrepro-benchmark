@@ -1,0 +1,51 @@
+<section class="section">
+  <div class="section-header">
+    <h1>Articles</h1>
+    <% if (category) { %>
+      <p>Filtered by category: <strong><%= category %></strong> &mdash; <a href="/articles">Clear filter</a></p>
+    <% } %>
+  </div>
+
+  <div class="card-list">
+    <% if (typeof result !== 'undefined' && result.articles.length > 0) { %>
+      <% result.articles.forEach(function(article) { %>
+      <div class="card card-list-item">
+        <div class="card-category">
+          <% if (article.category) { %><span class="badge"><%= article.category.name %></span><% } %>
+          <% if (article.featured) { %><span class="badge badge-featured">Featured</span><% } %>
+        </div>
+        <h2 class="card-title"><a href="/articles/<%= article.slug %>"><%= article.title %></a></h2>
+        <p class="card-summary"><%= article.summary || '' %></p>
+        <div class="card-meta">
+          <% if (article.createdBy) { %>
+            <span>By <a href="/authors/<%= article.createdBy.id %>"><%= article.createdBy.name %></a></span>
+          <% } %>
+          <span><%= new Date(article.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+          <span><%= article.viewCount %> views</span>
+        </div>
+        <% if (article.tags && article.tags.length > 0) { %>
+        <div class="card-tags">
+          <% article.tags.forEach(function(tag) { %>
+            <span class="tag">#<%= tag %></span>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+      <% }); %>
+    <% } else { %>
+      <p class="empty-state">No articles found.</p>
+    <% } %>
+  </div>
+
+  <% if (typeof result !== 'undefined' && result.totalPages > 1) { %>
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/articles?page=<%= currentPage - 1 %><% if (category) { %>&category=<%= category %><% } %>" class="btn-page">&laquo; Previous</a>
+    <% } %>
+    <span class="page-info">Page <%= currentPage %> of <%= result.totalPages %></span>
+    <% if (currentPage < result.totalPages) { %>
+      <a href="/articles?page=<%= currentPage + 1 %><% if (category) { %>&category=<%= category %><% } %>" class="btn-page">Next &raquo;</a>
+    <% } %>
+  </div>
+  <% } %>
+</section>

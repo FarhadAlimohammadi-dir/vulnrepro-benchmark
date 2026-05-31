@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <%
+    const dashRoles = (user.roles || '').split(',').map(r => r.trim());
+    const dashIsAdmin = dashRoles.some(r => r === 'ADMIN' || r === 'ADMIN AND REQUESTER');
+  %>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">&#9656; Gateway Portal</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard" class="active">Dashboard</a></li>
+      <li><a href="/requests">My Requests</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <% if (dashIsAdmin) { %><li><a href="/admin">Admin</a></li><% } %>
+    </ul>
+    <div class="nav-user">
+      <span class="nav-username"><%= user.employee_name %></span>
+      <a href="/logout" class="btn-logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Welcome back, <%= user.employee_name.split(' ')[0] %></h1>
+      <p class="page-subtitle"><%= user.department %> &mdash; <%= user.title || 'Employee' %></p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><%= requestCount %></div>
+        <div class="stat-label">Total Requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= recentRequests.filter(r => r.status === 'PENDING').length %></div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= recentRequests.filter(r => r.status === 'APPROVED').length %></div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= dashRoles.join(', ') %></div>
+        <div class="stat-label">Your Role</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2>Recent Access Requests</h2>
+      <a href="/requests" class="btn btn-outline btn-sm">View All</a>
+    </div>
+
+    <% if (recentRequests.length === 0) { %>
+    <div class="empty-state">
+      <p>You haven't submitted any access requests yet.</p>
+      <a href="/requests" class="btn btn-primary">Submit a Request</a>
+    </div>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>System</th>
+          <th>Title</th>
+          <th>Access Level</th>
+          <th>Status</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentRequests.forEach(function(r) { %>
+        <tr>
+          <td><%= r.system_name %></td>
+          <td><%= r.title %></td>
+          <td><span class="badge badge-level"><%= r.access_level %></span></td>
+          <td><span class="badge badge-<%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+          <td><%= new Date(r.created_at).toLocaleDateString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2024 Target Corporation &mdash; Workforce Management Portal</p>
+  </footer>
+</body>
+</html>

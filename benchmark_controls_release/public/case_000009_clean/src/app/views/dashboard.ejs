@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – ContextBridge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">⚡ ContextBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard" class="active">Dashboard</a></li>
+      <li><a href="/pipelines">Pipelines</a></li>
+      <% if (user.role === 'admin') { %><li><a href="/admin">Admin</a></li><% } %>
+      <li><a href="/profile"><%= user.username %></a></li>
+      <li>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Welcome back, <%= user.username %> 👋</h1>
+      <span class="badge badge-<%= user.role %>"><%= user.role %></span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= pipelines.length %></div>
+        <div class="stat-label">Active Pipelines</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= connectors.length %></div>
+        <div class="stat-label">Connectors Available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= unreadCount %></div>
+        <div class="stat-label">Unread Notifications</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Recent Pipelines</h2>
+        <a href="/pipelines" class="btn btn-secondary btn-sm">View All</a>
+      </div>
+      <% if (pipelines.length === 0) { %>
+        <div class="empty-state">
+          <p>No pipelines yet. <a href="/pipelines">Create your first pipeline →</a></p>
+        </div>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th><th>Connector</th><th>Schedule</th><th>Runs</th><th>Last Run</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pipelines.slice(0, 5).forEach(function(p) { %>
+              <tr>
+                <td><strong><%= p.name %></strong></td>
+                <td><span class="badge badge-connector"><%= p.connector_type %></span> <%= p.connector_name %></td>
+                <td><%= p.schedule || '—' %></td>
+                <td><%= p.run_count %></td>
+                <td><%= p.last_run ? new Date(p.last_run).toLocaleString() : 'Never' %></td>
+                <td>
+                  <a href="/api/pipelines/<%= p.id %>/run" class="btn btn-sm btn-primary">▶ Run</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><h2>Notifications</h2></div>
+      <% if (notifications.length === 0) { %>
+        <p class="text-muted">No notifications.</p>
+      <% } else { %>
+        <ul class="notification-list">
+          <% notifications.forEach(function(n) { %>
+            <li class="notification-item <%= n.read ? '' : 'unread' %>">
+              <span><%= n.message %></span>
+              <small class="text-muted"><%= new Date(n.created_at).toLocaleString() %></small>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </main>
+  <footer class="footer"><p>&copy; 2026 ContextBridge Inc.</p></footer>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Audit Log &mdash; Admin &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>Audit Log</h2>
+    <a class="btn btn-sm btn-outline" href="/admin/">Back to Dashboard</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Target</th><th>Detail</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      {% for a in actions %}
+      <tr>
+        <td class="text-muted">{{ a.created_at[:19] if a.created_at else '' }}</td>
+        <td>{{ a.username or '—' }}</td>
+        <td><code>{{ a.action }}</code></td>
+        <td>{{ (a.target_type or '') + ' ' + (a.target_id|string if a.target_id else '') }}</td>
+        <td class="text-muted">{{ a.detail or '' }}</td>
+        <td class="text-muted">{{ a.ip_addr or '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

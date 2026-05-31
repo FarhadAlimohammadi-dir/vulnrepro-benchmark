@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVault — Profile</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/dashboard" class="logo">☁ CloudVault</a>
+      <nav class="main-nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/buckets">Buckets</a>
+        <a href="/search">Search</a>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="/admin">Admin</a>
+        <% } %>
+        <a href="/profile" class="active">Profile</a>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="page-header">
+      <h1>Profile</h1>
+    </div>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-header"><h2>Account Details</h2></div>
+        <form method="POST" action="/profile/update">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<%= profileUser.username %>" disabled>
+          </div>
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" name="displayName" value="<%= profileUser.displayName || '' %>">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="<%= profileUser.email || '' %>">
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <input type="text" value="<%= profileUser.role %>" disabled>
+          </div>
+          <div class="form-group">
+            <label>Member Since</label>
+            <input type="text" value="<%= new Date(profileUser.createdAt).toLocaleDateString() %>" disabled>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header"><h2>Recent Activity</h2></div>
+        <div class="activity-list">
+          <% activity.forEach(entry => { %>
+            <div class="activity-item">
+              <span class="activity-action"><%= entry.action %></span>
+              <span class="activity-resource"><%= entry.resource %></span>
+              <span class="activity-time"><%= new Date(entry.timestamp).toLocaleString() %></span>
+            </div>
+          <% }) %>
+          <% if (activity.length === 0) { %>
+            <p class="empty">No recent activity.</p>
+          <% } %>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container"><span>CloudVault Storage Manager v2.1.0</span></div>
+  </footer>
+</body>
+</html>

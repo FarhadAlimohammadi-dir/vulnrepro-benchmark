@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  nexusai:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - SECRET_KEY=dev-nexus-key-change-in-prod-abc123
+      - DATABASE_PATH=/tmp/nexus.db
+    restart: unless-stopped

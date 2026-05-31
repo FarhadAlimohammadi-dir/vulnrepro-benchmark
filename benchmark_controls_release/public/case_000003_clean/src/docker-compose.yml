@@ -1,0 +1,11 @@
+services:
+  codenest:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=development
+      - ANTHROPIC_API_KEY=sk-ant-api03-placeholder-dev-key
+      - DATABASE_PATH=/tmp/codenest.db
+      - PORT=9000
+    restart: unless-stopped

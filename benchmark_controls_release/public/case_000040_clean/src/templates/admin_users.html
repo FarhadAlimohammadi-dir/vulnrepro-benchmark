@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CloudPanel — Admin: Users</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; }
+  header { background: #1a1a2e; color: #fff; padding: 1rem 2rem; }
+  main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+  .card { background: #fff; border-radius: 8px; padding: 1.5rem;
+          box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .6rem; border-bottom: 1px solid #e5e7eb; }
+  th { color: #6b7280; }
+</style>
+</head>
+<body>
+<header>☁ CloudPanel — Admin</header>
+<main>
+  <div class="card">
+    <h2 style="margin-bottom:1rem">All Users</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Last Login</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.role }}</td>
+        <td>{{ u.last_login or '—' }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

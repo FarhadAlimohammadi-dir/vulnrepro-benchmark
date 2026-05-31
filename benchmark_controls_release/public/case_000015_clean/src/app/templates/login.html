@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Login – NoteFlow{% endblock %}
+{% block content %}
+<div class="auth-box">
+  <h2>Sign in to NoteFlow</h2>
+  {% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+  {% endif %}
+  <form method="POST" action="/login">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label>Username
+      <input type="text" name="username" autocomplete="username" required placeholder="e.g. alice">
+    </label>
+    <label>Password
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <button type="submit" class="btn-primary">Sign in</button>
+  </form>
+  <p class="hint">Demo accounts: alice / alice123 &nbsp;·&nbsp; bob / bob456 &nbsp;·&nbsp; carol / carol789</p>
+</div>
+{% endblock %}

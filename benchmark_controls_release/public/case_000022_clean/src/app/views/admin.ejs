@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<div class="container">
+  <h1 class="page-title">Admin Panel</h1>
+
+  <section>
+    <h2>Users</h2>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Email</th><th>Joined</th><th>Actions</th></tr></thead>
+      <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><strong><%= u.username %></strong></td>
+          <td><span class="badge role-<%= u.role %>"><%= u.role %></span></td>
+          <td><%= u.email || '—' %></td>
+          <td class="muted"><%= new Date(u.created_at).toLocaleDateString() %></td>
+          <td>
+            <% if (u.username !== user) { %>
+              <form method="POST" action="/admin/users/<%= u.username %>?_method=DELETE" style="display:inline">
+                <button class="btn-sm btn-danger" onclick="return confirm('Delete <%= u.username %>?')">Delete</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="margin-top:2rem">
+    <h2>Audit Log <span class="muted">(last 30)</span></h2>
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target</th></tr></thead>
+      <tbody>
+      <% logs.forEach(l => { %>
+        <tr>
+          <td class="muted"><%= new Date(l.created_at).toLocaleString() %></td>
+          <td><%= l.actor %></td>
+          <td><code><%= l.action %></code></td>
+          <td><%= l.target_type ? `${l.target_type}:${l.target_id}` : '—' %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  nexuschat:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_PATH=/app/data/nexus.db
+      - PORT=9000
+    volumes:
+      - nexus_data:/app/data
+volumes:
+  nexus_data:

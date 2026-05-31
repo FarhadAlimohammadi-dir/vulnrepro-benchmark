@@ -1,0 +1,18 @@
+{
+  "name": "codeflow-oauth-platform",
+  "version": "2.1.0",
+  "description": "CodeFlow - OAuth 2.0 Authorization Server and Developer Portal",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js",
+    "seed": "node app/scripts/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "better-sqlite3": "^9.0.0",
+    "ejs": "^3.1.9",
+    "winston": "^3.11.0",
+    "morgan": "^1.10.0"
+  }
+}

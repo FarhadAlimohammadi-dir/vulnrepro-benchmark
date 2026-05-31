@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — CodeHub</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">&#128196;</div>
+    <h1 class="auth-title">CodeHub</h1>
+    <p class="auth-subtitle">Collaborative Code Review Platform</p>
+    <form id="login-form" onsubmit="return doLogin(event)">
+      <div class="form-group">
+        <label for="user">Username</label>
+        <input type="text" id="user" name="username" placeholder="your username" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      <div id="msg" class="form-error"></div>
+    </form>
+  </div>
+  <script>
+    async function doLogin(e) {
+      e.preventDefault();
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+      try {
+        const r = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('user').value,
+            password: document.getElementById('pass').value
+          })
+        });
+        const d = await r.json();
+        if (d.ok) {
+          window.location = '/';
+        } else {
+          msg.textContent = d.error || 'Login failed. Please try again.';
+        }
+      } catch {
+        msg.textContent = 'Network error. Please try again.';
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

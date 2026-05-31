@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=s3cr3t-cloudpanel-key-2024
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

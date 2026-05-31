@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Accounts Center' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/account/overview">Account</a></li>
+          <li><a href="/billing_interfaces">Billing</a></li>
+          <li><a href="/audit/logs">Activity</a></li>
+          <li class="user-menu">
+            <span><%= user.first_name || user.username %></span>
+            <a href="/auth/logout" class="btn-logout">Logout</a>
+          </li>
+        <% } else { %>
+          <li><a href="/auth/login">Login</a></li>
+          <li><a href="/auth/signup">Sign Up</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    
+    <%- body %>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Accounts Center. All rights reserved.</p>
+  </footer>
+</body>
+</html>

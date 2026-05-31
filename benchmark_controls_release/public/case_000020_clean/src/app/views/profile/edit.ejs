@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – Edit Profile</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/integrations">Integrations</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Edit Profile</h1>
+      <a href="/profile" class="btn btn-ghost">&larr; Back</a>
+    </div>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+    <div class="form-card">
+      <h3>Personal Information</h3>
+      <form method="POST" action="/profile/edit" class="form-stack">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" value="<%= user.username %>" disabled class="input-disabled" />
+          <span class="hint">Username cannot be changed.</span>
+        </div>
+        <div class="form-group">
+          <label for="display_name">Display Name</label>
+          <input id="display_name" name="display_name" type="text" value="<%= user.display_name || '' %>" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" value="<%= user.email || '' %>" maxlength="120" />
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="3" maxlength="500"><%= user.bio || '' %></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-card" style="margin-top:2rem">
+      <h3>Change Password</h3>
+      <form method="POST" action="/profile/password" class="form-stack">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group">
+          <label for="current_password">Current Password</label>
+          <input id="current_password" name="current_password" type="password" required />
+        </div>
+        <div class="form-group">
+          <label for="new_password">New Password</label>
+          <input id="new_password" name="new_password" type="password" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="confirm_password">Confirm New Password</label>
+          <input id="confirm_password" name="confirm_password" type="password" required minlength="6" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

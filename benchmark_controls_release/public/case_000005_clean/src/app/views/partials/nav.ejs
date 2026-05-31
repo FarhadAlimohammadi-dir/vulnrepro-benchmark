@@ -1,0 +1,15 @@
+<nav class="topnav">
+  <a class="brand" href="/dashboard">⬡ NexusAI</a>
+  <% if (typeof user !== 'undefined' && user) { %>
+  <div class="nav-links">
+    <a href="/dashboard" class="<%= page==='dashboard'?'active':'' %>">Home</a>
+    <a href="/contacts"  class="<%= page==='contacts' ?'active':'' %>">Contacts</a>
+    <a href="/calendar"  class="<%= page==='calendar' ?'active':'' %>">Calendar</a>
+    <% if (user.role === 'admin') { %>
+    <a href="/admin"     class="<%= page==='admin'    ?'active':'' %>">Admin</a>
+    <% } %>
+    <a href="/profile"   class="<%= page==='profile'  ?'active':'' %>">Profile</a>
+    <a href="/logout" class="btn-logout">Sign out</a>
+  </div>
+  <% } %>
+</nav>

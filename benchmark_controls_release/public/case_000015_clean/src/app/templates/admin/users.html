@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}Users – Admin – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>User Management</h2>
+  <a href="/admin/" class="btn-secondary">← Admin Home</a>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Username</th><th>Email</th><th>Role</th>
+      <th>Notes</th><th>Since</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.id }}</td>
+      <td><a href="/users/{{ u.username | e }}">{{ u.username | e }}</a></td>
+      <td>{{ u.email | e }}</td>
+      <td><span class="badge {% if u.role == 'admin' %}badge-admin{% endif %}">{{ u.role | e }}</span></td>
+      <td>{{ u.note_count }}</td>
+      <td><small>{{ u.created_at }}</small></td>
+      <td>
+        <form method="POST" action="/admin/users/{{ u.id }}/promote" style="display:inline">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-link">
+            {% if u.role == 'admin' %}Demote{% else %}Promote{% endif %}
+          </button>
+        </form>
+        {% if u.id != session.get('user_id') %}
+        <form method="POST" action="/admin/users/{{ u.id }}/delete" style="display:inline"
+              onsubmit="return confirm('Delete user {{ u.username | e }}?')">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-link-danger">Delete</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}My Notes – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>My Notes</h2>
+  <a href="/notes/new" class="btn-primary">+ New Note</a>
+</div>
+
+{% if notes %}
+<div class="note-list">
+  {% for n in notes %}
+  <div class="card">
+    <div class="card-title">
+      <a href="/notes/{{ n.id }}">{{ n.title | e }}</a>
+      {% if n.public %}<span class="badge badge-public">public</span>{% endif %}
+    </div>
+    <div class="card-meta">
+      {% if n.tags %}<span class="tags">{{ n.tags | e }}</span> &nbsp;·&nbsp; {% endif %}
+      {{ n.updated_at }} &nbsp;·&nbsp; {{ n.views }} view{{ 's' if n.views != 1 else '' }}
+    </div>
+    <div class="card-actions">
+      <a href="/notes/{{ n.id }}/edit">Edit</a>
+      <form method="POST" action="/notes/{{ n.id }}/delete" style="display:inline"
+            onsubmit="return confirm('Delete this note?')">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <button type="submit" class="btn-link-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}<a href="/?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="/?page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p class="muted">No notes yet. <a href="/notes/new">Create your first note</a>.</p>
+{% endif %}
+{% endblock %}

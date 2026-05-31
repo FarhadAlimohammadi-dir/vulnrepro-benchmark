@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Sign In{% endblock %}
+{% block content %}
+<div class="login-box">
+  <div class="login-logo">&#x1F9E0;</div>
+  <h1>NeuralDesk</h1>
+  <p class="login-tagline">AI-Powered Support Portal</p>
+  {% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+  {% endif %}
+  <form method="post" class="login-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" placeholder="your.username" required autofocus>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" placeholder="••••••••" required>
+    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+  </form>
+</div>
+{% endblock %}

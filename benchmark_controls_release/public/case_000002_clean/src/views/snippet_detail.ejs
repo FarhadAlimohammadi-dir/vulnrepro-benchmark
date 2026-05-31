@@ -1,0 +1,24 @@
+<%
+  const esc = v => String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+  title = esc(snippet.title)
+  body = `
+<h1>${esc(snippet.title)}</h1>
+<p class="muted">by ${esc(snippet.owner_name)} - <span class="pill">${esc(snippet.language || '-')}</span> - <span class="pill">${esc(snippet.visibility)}</span></p>
+<pre>${esc(snippet.body || '')}</pre>
+<div style="margin-top:1rem">
+  ${canEdit ? `
+    <a href="/snippets/${snippet.id}/edit" class="btn">Edit</a>
+    <form action="/snippets/${snippet.id}/delete" method="post" style="display:inline;margin-left:0.5rem">
+      <button class="danger">Delete</button>
+    </form>
+  ` : ''}
+  <a href="/snippets" style="margin-left:1rem">Back</a>
+</div>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

@@ -1,0 +1,30 @@
+<%
+  title = 'Register'
+  const esc = (value) => String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+  body = `
+<div style="max-width:400px;margin:3rem auto">
+  <h1>Create account</h1>
+  ${error ? '<p class="err">' + esc(error) + '</p>' : ''}
+  <form class="form" method="post" action="/auth/register">
+    <label>Username
+      <input type="text" name="username" pattern="[a-zA-Z0-9_-]{3,32}" required autofocus>
+    </label>
+    <label>Email
+      <input type="email" name="email" required>
+    </label>
+    <label>Password
+      <input type="password" name="password" minlength="6" required>
+    </label>
+    <br>
+    <button type="submit">Create account</button>
+  </form>
+  <p class="muted" style="margin-top:1rem">Have an account? <a href="/auth/login">Sign in</a></p>
+</div>
+`
+%>
+<%- include('layout', { title, body, user: null, flash: null }) %>

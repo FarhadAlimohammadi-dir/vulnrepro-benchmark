@@ -1,0 +1,47 @@
+<%
+  title = 'Snippets'
+  const esc = v => String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+  const rows = snippets.map(s => `
+    <tr>
+      <td><a href="/snippets/${s.id}">${esc(s.title)}</a></td>
+      <td><span class="pill">${esc(s.language || '-')}</span></td>
+      <td><span class="pill">${esc(s.visibility)}</span></td>
+      <td class="muted">${esc(s.owner_name)}</td>
+    </tr>
+  `).join('')
+
+  const langOptions = langs.map(l =>
+    `<option value="${esc(l)}" ${lang===l?'selected':''}>${esc(l)}</option>`
+  ).join('')
+
+  const pagination = pages > 1 ? `
+    <div class="page" style="margin-top:1rem">
+      ${page > 1 ? '<a href="?page='+(page-1)+'&q='+encodeURIComponent(q)+'&lang='+encodeURIComponent(lang)+'">Prev</a>' : '<span></span>'}
+      <span class="muted">Page ${page} of ${pages} (${total})</span>
+      ${page < pages ? '<a href="?page='+(page+1)+'&q='+encodeURIComponent(q)+'&lang='+encodeURIComponent(lang)+'">Next</a>' : '<span></span>'}
+    </div>
+  ` : ''
+
+  body = `
+<h1>Snippets</h1>
+<div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:flex-end">
+  <form class="form inline" method="get">
+    <input name="q" value="${esc(q)}" placeholder="Search...">
+    <select name="lang"><option value="">All languages</option>${langOptions}</select>
+    <button type="submit">Filter</button>
+  </form>
+  <a class="btn" href="/snippets/new" style="margin-left:auto">+ New snippet</a>
+</div>
+<table class="list">
+  <thead><tr><th>Title</th><th>Language</th><th>Visibility</th><th>Owner</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="4" class="muted">No snippets</td></tr>'}</tbody>
+</table>
+${pagination}
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

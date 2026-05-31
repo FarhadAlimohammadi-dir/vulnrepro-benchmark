@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_PATH=/app/data/notesync.db
+      - SECRET_KEY=s3cr3t-pr0d-k3y-n0t3sync-2024
+    volumes:
+      - notesync_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:9000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  notesync_data:

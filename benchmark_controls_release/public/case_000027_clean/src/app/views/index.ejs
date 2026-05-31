@@ -1,0 +1,111 @@
+<%
+  // simple layout include approach
+  const title = 'Home';
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeVault — Share &amp; Discover Code Snippets</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <% if (locals.currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+    <a href="/register" class="btn-nav btn">Register</a>
+  <% } %>
+</nav>
+
+<div class="hero">
+  <div class="container">
+    <h1>Share code. Learn faster.</h1>
+    <p>CodeVault is a collaborative snippet manager with AI-assisted code suggestions from an indexed training corpus.</p>
+    <div class="mt-2 flex">
+      <% if (!locals.currentUser) { %>
+        <a href="/register" class="btn btn-primary">Get Started Free</a>
+        <a href="/snippets" class="btn btn-secondary">Browse Snippets</a>
+      <% } else { %>
+        <a href="/snippets/new" class="btn btn-primary">+ New Snippet</a>
+        <a href="/snippets" class="btn btn-secondary">Browse All</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<div class="container page">
+  <div class="grid-2">
+    <div>
+      <h2 class="mb-2">Recent Public Snippets</h2>
+      <% recent.forEach(s => { %>
+        <div class="card">
+          <div class="flex">
+            <a href="/snippets/<%= s.id %>"><strong><%= s.title %></strong></a>
+            <span class="badge badge-blue"><%= s.language %></span>
+          </div>
+          <div class="text-muted mt-1">
+            by <a href="/profile/<%= s.username %>"><%= s.username %></a>
+            &nbsp;·&nbsp; <%= s.view_count %> views
+            &nbsp;·&nbsp; <%= new Date(s.created_at).toLocaleDateString() %>
+          </div>
+        </div>
+      <% }) %>
+      <% if (!recent.length) { %>
+        <p class="text-muted">No snippets yet. Be the first!</p>
+      <% } %>
+    </div>
+    <div>
+      <h2 class="mb-2">Popular Languages</h2>
+      <div class="card">
+        <% topLangs.forEach(l => { %>
+          <div class="flex mb-1">
+            <a href="/search?lang=<%= encodeURIComponent(l.language) %>">
+              <span class="badge badge-purple"><%= l.language %></span>
+            </a>
+            <span class="text-muted"><%= l.cnt %> snippet<%= l.cnt !== 1 ? 's' : '' %></span>
+          </div>
+        <% }) %>
+      </div>
+
+      <h2 class="mb-2 mt-3">AI Code Suggest <span class="badge">beta</span></h2>
+      <div class="card">
+        <p class="text-muted mb-2">Get code examples from our indexed training corpus. Log in to try it.</p>
+        <% if (locals.currentUser) { %>
+          <input id="ai-prompt" type="text" placeholder="e.g. aws s3 upload, stripe payment …"
+                 style="margin-bottom:8px" />
+          <button class="btn btn-primary btn-sm" onclick="aiSuggest()">Get Suggestion</button>
+          <pre id="ai-out" style="margin-top:10px;min-height:40px;font-size:.78rem"></pre>
+          <script>
+          async function aiSuggest() {
+            const p = document.getElementById('ai-prompt').value;
+            const r = await fetch('/ai/suggest', {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({prompt: p})
+            });
+            const d = await r.json();
+            document.getElementById('ai-out').textContent = d.suggestion || JSON.stringify(d, null, 2);
+          }
+          </script>
+        <% } else { %>
+          <a href="/login" class="btn btn-secondary btn-sm">Login to use AI Suggest</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – Authorization <%= success ? 'Complete' : 'Error' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+  </nav>
+  <main class="main-content">
+    <div class="oauth-page">
+      <div class="oauth-card">
+        <h2><%= title %></h2>
+        <div class="alert <%= success ? 'alert-success' : 'alert-error' %>"><%= message %></div>
+        <a href="/integrations" class="btn btn-primary">Back to Integrations</a>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

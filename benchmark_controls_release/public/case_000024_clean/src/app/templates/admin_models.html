@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}ModelHub — Admin: Models{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Model Management</h1>
+  <a href="/admin/" class="btn btn-secondary">← Admin Home</a>
+</div>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Name</th><th>Framework</th><th>Owner</th>
+      <th>Status</th><th>Public</th><th>Downloads</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in models %}
+    <tr>
+      <td>{{ m.id }}</td>
+      <td><a href="/models/{{ m.id }}">{{ m.name }}</a></td>
+      <td>{{ m.framework }}</td>
+      <td>{{ m.username }}</td>
+      <td><span class="badge badge-{{ m.status }}">{{ m.status }}</span></td>
+      <td>{{ '✓' if m.is_public else '✗' }}</td>
+      <td>{{ m.download_count }}</td>
+      <td>
+        <form method="post" action="/admin/models/{{ m.id }}/delete" style="display:inline">
+          <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+          <button class="btn btn-danger" type="submit"
+                  onclick="return confirm('Delete model {{ m.id }}?')">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

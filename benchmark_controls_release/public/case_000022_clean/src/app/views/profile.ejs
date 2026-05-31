@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Profile</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<div class="container" style="max-width:640px">
+  <h1 class="page-title">My Profile</h1>
+
+  <div class="profile-card">
+    <div class="avatar"><%- profileUser.avatar_url
+      ? `<img src="${profileUser.avatar_url}" alt="avatar">`
+      : `<span>${profileUser.username[0].toUpperCase()}</span>` %></div>
+    <div>
+      <strong><%= profileUser.username %></strong>
+      <span class="badge role-<%= profileUser.role %>" style="margin-left:.4rem"><%= profileUser.role %></span>
+      <p class="muted" style="margin:.2rem 0 0">Member since <%= new Date(profileUser.created_at).toLocaleDateString() %></p>
+    </div>
+  </div>
+
+  <form method="POST" action="/profile" class="settings-form">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" value="<%= profileUser.email || '' %>">
+    </div>
+    <div class="field">
+      <label>Bio</label>
+      <textarea name="bio" rows="3"><%= profileUser.bio || '' %></textarea>
+    </div>
+    <button type="submit" class="btn-primary">Save</button>
+  </form>
+</div>
+</body>
+</html>

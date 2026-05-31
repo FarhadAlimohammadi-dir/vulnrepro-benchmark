@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}All Notes – Admin – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>All Notes</h2>
+  <a href="/admin/" class="btn-secondary">← Admin Home</a>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr><th>ID</th><th>Title</th><th>Owner</th><th>Public</th><th>Views</th><th>Updated</th></tr>
+  </thead>
+  <tbody>
+    {% for n in notes %}
+    <tr>
+      <td>{{ n.id }}</td>
+      <td><a href="/notes/{{ n.id }}">{{ n.title | e }}</a></td>
+      <td>{{ n.owner_name | e }}</td>
+      <td>{% if n.public %}✓{% endif %}</td>
+      <td>{{ n.views }}</td>
+      <td><small>{{ n.updated_at }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}<a href="/admin/notes?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="/admin/notes?page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Project Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 20px; text-align: center; }
+        .hero h1 { font-size: 3em; margin-bottom: 15px; }
+        .hero p { font-size: 1.2em; opacity: 0.9; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 20px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #555; }
+        .form-group input { width: 100%; padding: 12px 16px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 15px; transition: border 0.2s; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .btn { padding: 12px 28px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a6fd6; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab { padding: 8px 20px; border-radius: 6px; cursor: pointer; border: 1.5px solid #ddd; background: white; font-weight: 500; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+        .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; display: none; }
+        .alert-error { background: #fee; border: 1px solid #fcc; color: #c33; }
+        .alert-success { background: #efe; border: 1px solid #cfc; color: #363; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+        .feature { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .feature h3 { color: #667eea; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<div class="hero">
+    <h1>TaskFlow</h1>
+    <p>Streamline your projects. Collaborate with your team. Ship faster.</p>
+</div>
+<div class="container">
+    <div class="card" style="max-width:480px; margin: 0 auto 20px;">
+        <div class="tabs">
+            <div class="tab active" id="tab-login" onclick="showTab('login')">Sign In</div>
+            <div class="tab" id="tab-register" onclick="showTab('register')">Create Account</div>
+        </div>
+        <div id="alert" class="alert"></div>
+
+        <div id="login-form">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="login-email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Your password">
+            </div>
+            <button class="btn btn-primary" onclick="doLogin()">Sign In</button>
+            <p style="margin-top:12px; font-size:13px; color:#888;">
+                <a href="/password-reset-request" style="color:#667eea;">Forgot password?</a>
+            </p>
+        </div>
+
+        <div id="register-form" style="display:none;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="reg-email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-password" placeholder="At least 8 characters">
+            </div>
+            <button class="btn btn-primary" onclick="doRegister()">Create Account</button>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <h3>📋 Task Management</h3>
+            <p>Create, assign, and track tasks across all your projects with ease.</p>
+        </div>
+        <div class="feature">
+            <h3>🤝 Team Collaboration</h3>
+            <p>Work together with real-time updates and project-level access controls.</p>
+        </div>
+        <div class="feature">
+            <h3>📊 Progress Tracking</h3>
+            <p>Visualize your team's velocity and keep projects on schedule.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(tab) {
+    document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('tab-login').className = 'tab' + (tab === 'login' ? ' active' : '');
+    document.getElementById('tab-register').className = 'tab' + (tab === 'register' ? ' active' : '');
+    document.getElementById('alert').style.display = 'none';
+}
+
+function showAlert(msg, type) {
+    const el = document.getElementById('alert');
+    el.className = 'alert alert-' + type;
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+async function doLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const res = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email, password})
+    });
+    const data = await res.json();
+    if (res.ok) {
+        window.location.href = '/dashboard';
+    } else {
+        showAlert(data.error || 'Login failed', 'error');
+    }
+}
+
+async function doRegister() {
+    const username = document.getElementById('reg-username').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const res = await fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, email, password})
+    });
+    const data = await res.json();
+    if (res.ok) {
+        showAlert('Account created! Please check your email to verify your account.', 'success');
+    } else {
+        showAlert(data.error || 'Registration failed', 'error');
+    }
+}
+</script>
+</body>
+</html>

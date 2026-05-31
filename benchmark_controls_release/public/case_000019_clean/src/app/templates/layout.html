@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NexusAI{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if username is defined and username %}
+<nav class="navbar">
+  <div class="nav-brand">
+    <a href="/">&#x2726; NexusAI</a>
+  </div>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/chat">Chat</a>
+    <a href="/browse/view">Browse</a>
+    <a href="/explore">Explore</a>
+    <a href="/collections">Collections</a>
+    {% if role is defined and role == 'admin' %}
+    <a href="/admin/">Admin</a>
+    {% endif %}
+  </div>
+  <div class="nav-user">
+    <a href="/profile">{{ display_name if display_name is defined else username }}</a>
+    <a href="/settings">&#9881;</a>
+    <form method="post" action="/logout" style="display:inline">
+      <button type="submit" class="btn-link">Sign out</button>
+    </form>
+  </div>
+</nav>
+{% endif %}
+
+<main class="main-content">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <span>&copy; 2025 NexusAI Inc. &mdash; <a href="/explore">Explore</a> &mdash; <a href="/settings">Settings</a></span>
+</footer>
+</body>
+</html>

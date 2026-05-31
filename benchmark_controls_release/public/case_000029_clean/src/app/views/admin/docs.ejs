@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Documents – Admin – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/admin" class="active">Admin</a>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header">
+    <h1>All Documents</h1>
+    <a href="/admin" class="btn btn-secondary">← Back</a>
+  </div>
+  <div class="card">
+    <table class="table">
+      <thead><tr><th>Filename</th><th>Owner</th><th>Type</th><th>Size</th><th>Tags</th><th>Uploaded</th><th>Action</th></tr></thead>
+      <tbody>
+      <% docs.forEach(d => { %>
+      <tr>
+        <td><%= d.filename %></td>
+        <td><%= d.owner_name %></td>
+        <td><span class="badge"><%= d.mimetype.split('/')[1] %></span></td>
+        <td><%= (d.size_bytes / 1024).toFixed(1) %> KB</td>
+        <td><%= d.tags || '—' %></td>
+        <td><%= new Date(d.created_at * 1000).toLocaleDateString() %></td>
+        <td>
+          <form method="POST" action="/admin/docs/<%= d.id %>/delete" onsubmit="return confirm('Delete?')">
+            <button type="submit" class="btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/admin/docs?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+    <p class="pagination-info">Showing <%= docs.length %> of <%= total %> documents</p>
+  </div>
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

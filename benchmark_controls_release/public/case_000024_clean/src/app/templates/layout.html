@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ModelHub{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="topnav">
+  <div class="nav-brand"><a href="/dashboard">🧠 ModelHub</a></div>
+  <ul class="nav-links">
+    <li><a href="/dashboard">Explore</a></li>
+    <li><a href="/profile">My Profile</a></li>
+    {% if role == 'admin' %}<li><a href="/admin/">Admin</a></li>{% endif %}
+    <li><a href="/logout">Sign out ({{ username }})</a></li>
+  </ul>
+</nav>
+<div class="flash-container">
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+  <div class="flash flash-{{ cat }}">{{ msg }}</div>
+  {% endfor %}
+</div>
+<main class="container">
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+  <small>ModelHub © 2024 — collaborative ML model registry</small>
+</footer>
+</body>
+</html>

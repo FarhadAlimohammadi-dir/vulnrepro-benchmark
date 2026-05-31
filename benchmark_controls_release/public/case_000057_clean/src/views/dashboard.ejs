@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - <%= user %></title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+    h1 { color: #333; }
+    .data-panel { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .output { background: #f9f9f9; padding: 10px; margin-top: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard - <%= user %></h1>
+    <button onclick="logout()">Logout</button>
+    
+    <div class="data-panel">
+      <h2>Portfolio</h2>
+      <button onclick="fetchPortfolio()">Load Portfolio Data</button>
+      <div class="output" id="portfolio-output">Ready</div>
+    </div>
+    
+    <div class="data-panel">
+      <h2>Transactions</h2>
+      <button onclick="fetchTransactions()">Load Transaction History</button>
+      <div class="output" id="transactions-output">Ready</div>
+    </div>
+  </div>
+
+  <script>
+    let ws;
+    
+    function connectWebSocket() {
+      ws = new WebSocket('ws://' + window.location.host + '/ws');
+      
+      ws.onopen = function() {
+        console.log('WebSocket connected');
+      };
+      
+      ws.onmessage = function(event) {
+        const msg = JSON.parse(event.data);
+        
+        if (msg.type === 'portfolio_data') {
+          const html = '<strong>Balance:</strong> $' + msg.balance.toFixed(2) + '<br>' +
+                       '<strong>Holdings:</strong><br>' +
+                       msg.holdings.map(h => h.symbol + ': ' + h.quantity + ' @ $' + h.price.toFixed(2)).join('<br>');
+          document.getElementById('portfolio-output').innerHTML = html;
+        } else if (msg.type === 'transaction_list') {
+          const html = '<strong>Recent Transactions:</strong><br>' +
+                       msg.transactions.map(t => t.type + ': $' + t.amount.toFixed(2)).join('<br>');
+          document.getElementById('transactions-output').innerHTML = html;
+        }
+      };
+      
+      ws.onerror = function(error) {
+        console.error('WebSocket error:', error);
+      };
+    }
+    
+    function fetchPortfolio() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action: 'fetch_portfolio' }));
+      }
+    }
+    
+    function fetchTransactions() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action: 'get_transactions' }));
+      }
+    }
+    
+    function logout() {
+      fetch('/logout').then(() => window.location = '/');
+    }
+    
+    connectWebSocket();
+  </script>
+</body>
+</html>

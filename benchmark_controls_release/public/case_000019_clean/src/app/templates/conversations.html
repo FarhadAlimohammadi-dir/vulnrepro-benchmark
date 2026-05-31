@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}Conversations — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Conversations</h1>
+  <p class="subtitle">{{ total }} conversation{{ 's' if total != 1 else '' }}</p>
+</div>
+
+<div class="conv-table-container">
+  {% if conversations %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Last updated</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for conv in conversations %}
+      <tr>
+        <td><a href="/chat?conv_id={{ conv.id }}">{{ conv.title or 'Untitled' }}</a></td>
+        <td>{{ conv.updated_at[:16] }}</td>
+        <td>
+          <form method="post" action="/conversations/{{ conv.id }}/archive"
+                style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger"
+                    onclick="return confirm('Archive this conversation?')">Archive</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% if page > 1 %}
+    <a href="?page={{ page - 1 }}" class="btn btn-sm">&laquo; Prev</a>
+    {% endif %}
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}
+    <a href="?page={{ page + 1 }}" class="btn btn-sm">Next &raquo;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <p class="empty-state">No conversations yet. <a href="/chat">Start one!</a></p>
+  {% endif %}
+</div>
+{% endblock %}

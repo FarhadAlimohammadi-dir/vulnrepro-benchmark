@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — <%= clientName %></title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; }
+    .sso-container { max-width: 380px; margin: 40px auto; padding: 32px; background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .sso-logo { text-align: center; margin-bottom: 24px; font-size: 18px; font-weight: 600; color: #1a1a2e; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #374151; }
+    input { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+    input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,.15); }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: #4f46e5; color: #fff; }
+    .btn-primary:hover { background: #4338ca; }
+    .sso-footer { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
+    .alert { padding: 10px 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+    .alert-error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .alert-success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    #loading { text-align: center; padding: 40px; color: #6b7280; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="sso-container">
+    <div class="sso-logo">&#9679; Nexus SSO</div>
+    <div id="loading">Initializing secure session&hellip;</div>
+    <div id="login-form" style="display:none">
+      <div id="alert" class="alert" style="display:none"></div>
+      <form id="ssoLoginForm">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In to <%= clientName %></button>
+      </form>
+    </div>
+    <div class="sso-footer">Powered by Nexus Identity Platform</div>
+  </div>
+
+  <script>
+    // Retrieve stored PKCE challenge from embed parameters
+    const pkceChallenge = '<%= pkceChallenge %>';
+    const clientId = '<%= clientId %>';
+
+    // Broadcast readiness to parent frame; parent may send a port for result delivery
+    window.parent.postMessage({ type: 'sso_ready', version: '2.1' }, '*');
+
+    // Accept incoming MessageChannel ports from parent applications
+    window.addEventListener('message', function(event) {
+      // Process handshake messages to establish result delivery channel
+      if (event.data && event.data.type === 'port_handshake') {
+        const port = event.ports && event.ports[0];
+        if (port) {
+          window._ssoResultPort = port;
+          window._ssoChallenge = event.data.codeChallenge || pkceChallenge;
+        }
+      }
+    });
+
+    // Initialize channel and display login form
+    fetch('/sso/channel-init')
+      .then(r => r.json())
+      .then(data => {
+        window._channelId = data.channelId;
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+      })
+      .catch(() => {
+        document.getElementById('loading').textContent = 'Failed to initialize. Please refresh.';
+      });
+
+    document.getElementById('ssoLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const alertEl = document.getElementById('alert');
+
+      alertEl.style.display = 'none';
+
+      // First authenticate the user
+      const loginResp = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ email, password }),
+        redirect: 'manual'
+      });
+
+      if (loginResp.status >= 400) {
+        alertEl.className = 'alert alert-error';
+        alertEl.textContent = 'Invalid email or password.';
+        alertEl.style.display = 'block';
+        return;
+      }
+
+      // Bind channel with PKCE challenge
+      const challenge = window._ssoChallenge || pkceChallenge;
+      if (challenge && window._channelId) {
+        await fetch('/sso/handle-channel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId: window._channelId, codeChallenge: challenge })
+        });
+
+        // Request authorization code via auto-login
+        const codeResp = await fetch('/sso/auto-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId: window._channelId })
+        });
+
+        if (codeResp.ok) {
+          const { code } = await codeResp.json();
+          if (window._ssoResultPort) {
+            window._ssoResultPort.postMessage({ type: 'login_success', code });
+          } else {
+            window.parent.postMessage({ type: 'login_success', code }, '*');
+          }
+          alertEl.className = 'alert alert-success';
+          alertEl.textContent = 'Signed in successfully. Redirecting\u2026';
+          alertEl.style.display = 'block';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

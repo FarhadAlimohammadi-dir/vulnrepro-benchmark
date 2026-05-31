@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/workflows">Workflows</a>
+      <a href="/workspace/load">Workspace</a>
+      <a href="/workspace/settings">Settings</a>
+      <% if (currentRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <a href="/workflows/new" class="btn btn-primary">+ New Workflow</a>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.totalWorkflows %></div>
+        <div class="stat-label">Workflows</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.totalRuns %></div>
+        <div class="stat-label">Total Runs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.pluginCount %></div>
+        <div class="stat-label">Plugins</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value <%= gateway.connected ? 'ok' : 'err' %>">
+          <%= gateway.connected ? 'Connected' : 'Disconnected' %>
+        </div>
+        <div class="stat-label">Gateway</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h2>Recent Workflows</h2>
+        <% if (workflows.length === 0) { %>
+          <p class="muted">No workflows yet. <a href="/workflows/new">Create one</a>.</p>
+        <% } else { %>
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Trigger</th><th>Runs</th><th>Status</th></tr></thead>
+            <tbody>
+              <% workflows.forEach(w => { %>
+              <tr>
+                <td><a href="/workflows/<%= w.id %>"><%= w.name %></a></td>
+                <td><span class="badge"><%= w.trigger_type %></span></td>
+                <td><%= w.run_count %></td>
+                <td><span class="status-dot <%= w.status === 'active' ? 'green' : 'grey' %>"></span> <%= w.status %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <a href="/workflows" class="link-more">View all workflows →</a>
+        <% } %>
+      </section>
+
+      <section>
+        <h2>Gateway</h2>
+        <div class="info-block">
+          <div class="info-row"><span>Endpoint</span><code class="small"><%= gateway.gatewayUrl %></code></div>
+          <div class="info-row"><span>Region</span><%= gateway.region %></div>
+          <div class="info-row"><span>Protocol</span>v<%= gateway.protocolVersion %></div>
+          <div class="info-row"><span>Sandbox</span><%= gateway.sandboxMode ? 'Enabled' : 'Disabled' %></div>
+          <div class="info-row"><span>Exec Approvals</span><%= gateway.execApprovalsEnabled ? 'Required' : 'Disabled' %></div>
+        </div>
+
+        <% if (notifCount > 0) { %>
+        <div class="alert alert-info mt16">
+          You have <%= notifCount %> unread notification<%= notifCount > 1 ? 's' : '' %>.
+          <a href="/profile">View</a>
+        </div>
+        <% } %>
+      </section>
+    </div>
+
+    <% if (recentRuns.length > 0) { %>
+    <section class="mt32">
+      <h2>Recent Run History</h2>
+      <table class="data-table">
+        <thead><tr><th>Workflow</th><th>Status</th><th>Ran At</th></tr></thead>
+        <tbody>
+          <% recentRuns.forEach(r => { %>
+          <tr>
+            <td><%= r.workflow_name %></td>
+            <td><span class="badge <%= r.status === 'ok' ? 'badge-green' : 'badge-red' %>"><%= r.status %></span></td>
+            <td class="muted"><%= r.ran_at %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+    <% } %>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

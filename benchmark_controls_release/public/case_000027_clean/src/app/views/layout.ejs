@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' — CodeVault' : 'CodeVault' %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <% if (locals.currentUser.role === 'admin') { %>
+      <a href="/admin">Admin</a>
+    <% } %>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+    <a href="/register" class="btn-nav btn">Register</a>
+  <% } %>
+</nav>
+
+<div class="content">
+  <%- body %>
+</div>
+
+</body>
+</html>

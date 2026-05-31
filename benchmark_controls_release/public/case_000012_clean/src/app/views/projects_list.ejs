@@ -1,0 +1,43 @@
+<%- include('layout') %>
+<% const title = 'Projects' %>
+
+<div class="page-header">
+  <h1>All Projects</h1>
+  <a href="/projects/new" class="btn btn-primary">+ New Project</a>
+</div>
+
+<form method="GET" action="/projects" class="search-form">
+  <input name="q" type="search" placeholder="Search projects…" value="<%= q %>">
+  <button type="submit" class="btn">Search</button>
+</form>
+
+<% if (results.rows.length === 0) { %>
+  <p class="muted">No projects found<%= q ? ` for "${q}"` : '' %>.</p>
+<% } else { %>
+<table class="data-table">
+  <thead>
+    <tr><th>Name</th><th>Owner</th><th>Status</th><th>Created</th><th></th></tr>
+  </thead>
+  <tbody>
+  <% results.rows.forEach(p => { %>
+    <tr>
+      <td><a href="/projects/<%= p.id %>"><%= p.name %></a></td>
+      <td><%= p.owner_name %></td>
+      <td><span class="badge"><%= p.status %></span></td>
+      <td><%= p.created_at ? p.created_at.slice(0,10) : '—' %></td>
+      <td><a href="/projects/<%= p.id %>">View</a></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<% if (results.pages > 1) { %>
+<div class="pagination">
+  <% for (let i = 1; i <= results.pages; i++) { %>
+    <a href="/projects?q=<%= encodeURIComponent(q) %>&page=<%= i %>" class="<%= i === results.page ? 'active' : '' %>"><%= i %></a>
+  <% } %>
+</div>
+<% } %>
+<% } %>
+
+<%- include('layout_end') %>

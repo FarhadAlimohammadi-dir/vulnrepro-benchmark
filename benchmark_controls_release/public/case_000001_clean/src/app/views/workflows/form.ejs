@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= workflow ? 'Edit' : 'New' %> Workflow — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows" class="active">Workflows</a>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <a href="/workflows" class="breadcrumb">← Workflows</a>
+      <h1><%= workflow ? 'Edit' : 'New' %> Workflow</h1>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="<%= workflow ? '/workflows/' + workflow.id : '/workflows' %>" class="form-narrow">
+      <div class="form-group">
+        <label>Name <span class="req">*</span></label>
+        <input type="text" name="name" value="<%= workflow ? workflow.name : '' %>" required placeholder="e.g. Morning Digest" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="What does this workflow do?"><%= workflow ? workflow.description : '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>Trigger Type</label>
+        <select name="trigger_type">
+          <% ['manual','schedule','webhook'].forEach(t => { %>
+          <option value="<%= t %>" <%= (workflow && workflow.trigger_type === t) ? 'selected' : '' %>><%= t %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Schedule (cron expression)</label>
+        <input type="text" name="schedule" value="<%= workflow ? (workflow.schedule || '') : '' %>" placeholder="0 8 * * 1-5" />
+      </div>
+      <% if (workflow) { %>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="active" <%= workflow.status === 'active' ? 'selected' : '' %>>active</option>
+          <option value="paused" <%= workflow.status === 'paused' ? 'selected' : '' %>>paused</option>
+        </select>
+      </div>
+      <% } %>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><%= workflow ? 'Save Changes' : 'Create Workflow' %></button>
+        <a href="/workflows" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

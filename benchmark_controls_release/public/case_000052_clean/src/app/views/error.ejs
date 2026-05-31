@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Error' %> — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <% if (user) { %>
+        <a href="/profile">Profile</a>
+        <form action="/logout" method="post" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="nav-logout" type="submit">Logout (<%= user %>)</button></form>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="error-page">
+      <div class="error-code"><%= code || 500 %></div>
+      <h1><%= title || 'An Error Occurred' %></h1>
+      <p class="error-message"><%= message %></p>
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">&#8592; Back to Home</a>
+        <a href="/login" class="btn">Login</a>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

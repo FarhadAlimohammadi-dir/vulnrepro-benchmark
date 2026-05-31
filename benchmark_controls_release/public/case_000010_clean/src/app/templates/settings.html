@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Settings — NexusAI Workspace{% endblock %}
+{% block content %}
+<div class="container container-narrow">
+  <h1>Workspace Settings</h1>
+
+  {% if user.role != 'admin' %}
+    <div class="alert alert-info">You have read-only access to settings. Contact an admin to make changes.</div>
+  {% endif %}
+
+  <div class="card">
+    <h3>Ingestion &amp; Retention</h3>
+    <form method="POST" action="/settings/update">
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="allow_external" {% if cfg and cfg.allow_external %}checked{% endif %} {% if user.role != 'admin' %}disabled{% endif %}>
+          Allow external / partner document contributions
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Maximum document body size (characters)</label>
+        <input type="number" name="max_doc_size" value="{{ cfg.max_doc_size if cfg else 5000 }}" min="500" max="10000" {% if user.role != 'admin' %}disabled{% endif %}>
+      </div>
+      <div class="form-group">
+        <label>Data retention period (days)</label>
+        <input type="number" name="retention_days" value="{{ cfg.retention_days if cfg else 90 }}" min="30" max="365" {% if user.role != 'admin' %}disabled{% endif %}>
+      </div>
+      {% if user.role == 'admin' %}
+        <button type="submit" class="btn-primary">Save Settings</button>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>API Integration</h3>
+    <p>Partner integrations POST to <code>/api/documents/share</code> with a JSON body.</p>
+    <p>Internal uploads go to <code>/api/documents/upload</code> (authentication required).</p>
+    <p>Contact <a href="mailto:integrations@nexus.internal">integrations@nexus.internal</a> for webhook configuration.</p>
+  </div>
+</div>
+{% endblock %}

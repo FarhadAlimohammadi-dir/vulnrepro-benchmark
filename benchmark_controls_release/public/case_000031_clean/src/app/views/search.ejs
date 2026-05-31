@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Search — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/search" class="active">Search</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>Search Posts</h2>
+  <form method="GET" action="/search" class="search-form">
+    <div class="search-row">
+      <input type="text" name="q" value="<%= q %>" placeholder="Search by title or content…" class="search-input" autofocus>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <% if (q) { %>
+    <p class="results-summary"><%= results.length %> result(s) for "<strong><%= q %></strong>"</p>
+    <% if (results.length === 0) { %>
+      <p class="empty-state">No posts matched your query.</p>
+    <% } else { %>
+      <ul class="post-list">
+        <% results.forEach(post => { %>
+        <li class="post-item">
+          <a href="/posts/<%= post.id %>" class="post-title"><%= post.title %></a>
+          <span class="post-meta">by <%= post.username %> &middot; <%= new Date(post.created_at).toLocaleDateString() %></span>
+        </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  <% } %>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

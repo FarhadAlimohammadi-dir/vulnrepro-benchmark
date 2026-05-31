@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – Audit Log</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/audit" class="active">Audit Log</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Audit Log</h1>
+      <span class="muted"><%= total %> total events</span>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th><th>When</th></tr></thead>
+      <tbody>
+        <% rows.forEach(function(r) { %>
+        <tr>
+          <td><%= r.id %></td>
+          <td><%= r.username || ('uid:' + r.user_id) %></td>
+          <td><code><%= r.action %></code></td>
+          <td class="muted small"><%= r.detail || '' %></td>
+          <td class="muted small"><%= r.ip || '—' %></td>
+          <td class="muted small"><%= new Date(r.created_at).toLocaleString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/admin/audit?page=<%= page - 1 %>" class="btn btn-sm btn-ghost">&larr; Prev</a><% } %>
+      <span class="page-info">Page <%= page %> of <%= totalPages %></span>
+      <% if (page < totalPages) { %><a href="/admin/audit?page=<%= page + 1 %>" class="btn btn-sm btn-ghost">Next &rarr;</a><% } %>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

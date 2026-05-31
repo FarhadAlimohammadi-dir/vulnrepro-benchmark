@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 800px; }
+    input { padding: 5px; margin: 5px 0; }
+    button { padding: 8px 16px; background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    #output { background: #f5f5f5; padding: 10px; margin-top: 20px; min-height: 50px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><%= title %></h1>
+    <h2>Demo Account</h2>
+    <p>Username: <code>alice</code> | Password: <code>pass123</code></p>
+    
+    <input type="text" id="username" placeholder="Username" value="alice">
+    <input type="password" id="password" placeholder="Password" value="pass123">
+    <button onclick="login()">Login</button>
+    
+    <h2>WebSocket Commands (after login)</h2>
+    <button onclick="syncListDocuments()">List Documents</button>
+    <button onclick="syncReadDoc(1)">Read Doc #1</button>
+    <button onclick="syncGetProfile()">Get Profile</button>
+    
+    <div id="output">Ready</div>
+  </div>
+  
+  <script>
+    let ws = null;
+    let authenticated = false;
+    
+    function log(msg) {
+      document.getElementById('output').innerText += '\n' + msg;
+    }
+    
+    function login() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p })
+      }).then(r => r.json()).then(data => {
+        if (data.success) {
+          authenticated = true;
+          log('Login successful: ' + data.message);
+          connectWebSocket();
+        }
+      });
+    }
+    
+    function connectWebSocket() {
+      ws = new WebSocket('ws://localhost:9000/sync');
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        log('WS: ' + JSON.stringify(msg));
+      };
+      ws.onerror = (err) => log('WS Error: ' + err);
+    }
+    
+    function syncListDocuments() {
+      if (ws && ws.readyState === 1) {
+        ws.send(JSON.stringify({ action: 'list_documents' }));
+      }
+    }
+    
+    function syncReadDoc(docId) {
+      if (ws && ws.readyState === 1) {
+        ws.send(JSON.stringify({ action: 'read_document', doc_id: docId }));
+      }
+    }
+    
+    function syncGetProfile() {
+      if (ws && ws.readyState === 1) {
+        ws.send(JSON.stringify({ action: 'get_profile' }));
+      }
+    }
+  </script>
+</body>
+</html>

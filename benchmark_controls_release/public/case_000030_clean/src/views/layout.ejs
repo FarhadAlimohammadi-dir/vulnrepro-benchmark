@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Nexus Identity' %></title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+  <% if (typeof user !== 'undefined' && user) { %>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a10 10 0 0 1 0 20"/>
+          <path d="M2 12h20"/>
+        </svg>
+        Nexus
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <a href="/settings">Settings</a>
+      <% if (user.role === 'admin') { %>
+      <a href="/admin">Admin</a>
+      <% } %>
+    </div>
+    <div class="nav-user">
+      <span class="nav-email"><%= user.email %></span>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign out</button>
+      </form>
+    </div>
+  </nav>
+  <% } else { %>
+  <nav class="navbar navbar-public">
+    <div class="nav-brand">
+      <a href="/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a10 10 0 0 1 0 20"/>
+          <path d="M2 12h20"/>
+        </svg>
+        Nexus
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/auth/login">Sign In</a>
+      <a href="/auth/register" class="btn-primary-small">Get Started</a>
+    </div>
+  </nav>
+  <% } %>
+
+  <main class="main-content">
+    <%- body %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 Nexus Identity Platform. All rights reserved.</p>
+    <p><a href="/sso/.well-known/openid-configuration">OpenID Configuration</a> · <a href="/api/v1/health">API Status</a></p>
+  </footer>
+</body>
+</html>

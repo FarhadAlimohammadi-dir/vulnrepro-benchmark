@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — ToolForge{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-number">{{ counts.tc }}</div>
+    <div class="stat-label">Active Tools</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ counts.ic }}</div>
+    <div class="stat-label">Total Invocations</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ counts.uc }}</div>
+    <div class="stat-label">Users</div>
+  </div>
+</div>
+
+<h2>Popular Tools</h2>
+<table class="table">
+  <thead>
+    <tr><th>Name</th><th>Handler</th><th>Owner</th><th>Invocations</th></tr>
+  </thead>
+  <tbody>
+    {% for t in tools %}
+    <tr>
+      <td><a href="/tools/{{ t.name }}">{{ t.name }}</a></td>
+      <td><span class="badge badge-handler">{{ t.handler }}</span></td>
+      <td>{{ t.owner }}</td>
+      <td>{{ t.invoke_count }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="empty">No tools registered yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Recent Activity</h2>
+<table class="table">
+  <thead>
+    <tr><th>Tool</th><th>Invoked By</th><th>Status</th><th>Time</th></tr>
+  </thead>
+  <tbody>
+    {% for r in recent %}
+    <tr>
+      <td>{{ r.tool_name }}</td>
+      <td>{{ r.invoked_by }}</td>
+      <td><span class="badge badge-{{ r.status }}">{{ r.status }}</span></td>
+      <td>{{ r.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="empty">No recent activity.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= profile.username %> — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+  <% } %>
+</nav>
+<div class="container page">
+  <div class="card mb-2" style="display:flex;gap:1.5rem;align-items:center">
+    <div style="background:#2563eb;color:#fff;width:64px;height:64px;border-radius:50%;
+                display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;flex-shrink:0">
+      <%= profile.username[0].toUpperCase() %>
+    </div>
+    <div>
+      <h1 style="margin-bottom:4px"><%= profile.username %></h1>
+      <div class="text-muted"><%= profile.bio || 'No bio yet.' %></div>
+      <div class="text-muted mt-1">
+        Joined <%= new Date(profile.created_at).toLocaleDateString('en-US', {month:'long', year:'numeric'}) %>
+        &nbsp;·&nbsp; ⭐ <%= starCount %> stars received
+      </div>
+    </div>
+    <% if (locals.currentUser && locals.currentUser.username === profile.username) { %>
+      <a href="/profile/settings/edit" class="btn btn-secondary btn-sm" style="margin-left:auto">Edit Profile</a>
+    <% } %>
+  </div>
+
+  <h2 class="mb-2">Public Snippets (<%= snippets.length %>)</h2>
+  <% if (!snippets.length) { %>
+    <p class="text-muted">No public snippets yet.</p>
+  <% } %>
+  <% snippets.forEach(s => { %>
+    <div class="card">
+      <div class="flex">
+        <a href="/snippets/<%= s.id %>"><strong><%= s.title %></strong></a>
+        <span class="badge badge-blue"><%= s.language %></span>
+      </div>
+      <div class="text-muted mt-1">
+        <%= s.view_count %> views &nbsp;·&nbsp; <%= new Date(s.created_at).toLocaleDateString() %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+</body>
+</html>

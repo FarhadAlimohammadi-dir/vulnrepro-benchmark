@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NexusAI – Sign In</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+<div class="login-card">
+  <div class="login-logo">⬡ NexusAI</div>
+  <p class="login-sub">Productivity assistant platform</p>
+  <% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+  <% } %>
+  <form method="POST" action="/login" autocomplete="off">
+    <label class="field-label">Username</label>
+    <input class="field-input" name="username" type="text" placeholder="you@company.com">
+    <label class="field-label">Password</label>
+    <input class="field-input" name="password" type="password" placeholder="••••••••">
+    <button class="btn btn-primary btn-full" type="submit">Sign In</button>
+  </form>
+  <p class="login-footer">Single sign-on available for enterprise accounts.</p>
+</div>
+</body>
+</html>

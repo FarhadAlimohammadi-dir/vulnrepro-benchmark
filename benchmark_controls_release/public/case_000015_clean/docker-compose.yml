@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_PATH=/tmp/noteflow.db

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= doc.filename %> – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/docs/upload">Upload</a>
+    <a href="/docs/settings/profile">Profile</a>
+    <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+
+  <div class="page-header">
+    <h1><%= doc.filename %></h1>
+    <a href="/docs" class="btn btn-secondary">← Back</a>
+  </div>
+
+  <div class="doc-meta card">
+    <dl class="meta-grid">
+      <dt>Document ID</dt><dd class="mono small"><%= doc.id %></dd>
+      <dt>MIME Type</dt><dd><%= doc.mimetype %></dd>
+      <dt>Size</dt><dd><%= (doc.size_bytes / 1024).toFixed(2) %> KB</dd>
+      <dt>Tags</dt><dd><%= doc.tags || '—' %></dd>
+      <dt>Uploaded</dt><dd><%= new Date(doc.created_at * 1000).toLocaleString() %></dd>
+    </dl>
+  </div>
+
+  <% if (doc.mimetype === 'text/plain') { %>
+  <div class="card">
+    <h3>Content Preview</h3>
+    <pre class="doc-preview"><%= Buffer.from(doc.content, 'base64').toString('utf8').slice(0, 4096) %></pre>
+  </div>
+  <% } else if (doc.mimetype.startsWith('image/')) { %>
+  <div class="card">
+    <h3>Image Preview</h3>
+    <img src="data:<%= doc.mimetype %>;base64,<%= doc.content %>" style="max-width:100%;border-radius:4px;" alt="<%= doc.filename %>">
+  </div>
+  <% } %>
+
+  <div class="card">
+    <h3>Update Tags</h3>
+    <form method="POST" action="/docs/<%= doc.id %>/tags">
+      <div class="form-group">
+        <input type="text" name="tags" value="<%= doc.tags %>" placeholder="e.g. finance,q3,draft">
+      </div>
+      <button type="submit" class="btn btn-secondary">Save Tags</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Share Document</h3>
+    <button onclick="createShare('<%= doc.id %>')" class="btn btn-secondary">Generate Share Link</button>
+    <div id="share-result" style="margin-top:.5rem;font-size:.875rem;word-break:break-all;"></div>
+  </div>
+
+  <div class="card">
+    <h3>Comments (<%= comments.length %>)</h3>
+    <% if (comments.length > 0) { %>
+    <div class="comments-list">
+      <% comments.forEach(c => { %>
+      <div class="comment">
+        <div class="comment-meta"><strong><%= c.display_name || c.username %></strong> · <%= new Date(c.created_at * 1000).toLocaleString() %></div>
+        <div class="comment-body"><%= c.body %></div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+    <form method="POST" action="/docs/<%= doc.id %>/comments" style="margin-top:1rem;">
+      <div class="form-group">
+        <textarea name="body" rows="3" placeholder="Add a comment…" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:4px;box-sizing:border-box;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Post Comment</button>
+    </form>
+  </div>
+
+  <div class="card danger-zone">
+    <h3>Delete Document</h3>
+    <p>This action cannot be undone. All comments and share links will be removed.</p>
+    <form method="POST" action="/docs/<%= doc.id %>/delete" onsubmit="return confirm('Permanently delete this document?')">
+      <button type="submit" class="btn btn-danger">Delete Document</button>
+    </form>
+  </div>
+
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+<script>
+async function createShare(docId) {
+  const r = await fetch('/api/shares', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ doc_id: docId })
+  });
+  const j = await r.json();
+  const el = document.getElementById('share-result');
+  if (j.ok) {
+    const link = window.location.origin + '/api/shares/' + j.token;
+    el.innerHTML = 'Share link (valid 24 h): <a href="' + link + '" target="_blank">' + link + '</a>';
+  } else {
+    el.textContent = 'Error: ' + j.error;
+  }
+}
+</script>
+</body>
+</html>

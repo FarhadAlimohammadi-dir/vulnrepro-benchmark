@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>NexusChat &mdash; Sign In</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+<div class="auth-card">
+  <div class="auth-logo">&#9672; NexusChat</div>
+  <h2 class="auth-title">Sign in to your workspace</h2>
+  {% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+  {% endif %}
+  <form method="post" action="/login">
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" name="username" autocomplete="username" autofocus>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" name="password" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary btn-full" type="submit">Sign In</button>
+  </form>
+  <p class="auth-hint">Internal workspace &mdash; authorized users only.</p>
+</div>
+</body>
+</html>

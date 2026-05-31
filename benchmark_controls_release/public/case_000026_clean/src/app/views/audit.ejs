@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, notifications: notifications }) %>
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1>Audit Log</h1>
+    <p class="page-subtitle">Complete record of all platform actions. Total: <strong><%= total %></strong> events.</p>
+  </div>
+
+  <div class="content-panel">
+    <div class="panel-header">
+      <h2>Events <% if (filterActor) { %><span class="muted">— filtered by actor: <strong><%= filterActor %></strong></span><% } %></h2>
+      <div class="filter-row">
+        <form method="GET" action="/admin/audit" style="display:flex;gap:.5rem;align-items:center">
+          <input type="text" name="actor" placeholder="Filter by actor" value="<%= filterActor || '' %>" class="filter-input">
+          <button class="btn-secondary" type="submit">Filter</button>
+          <% if (filterActor) { %><a href="/admin/audit" class="btn-link">Clear</a><% } %>
+        </form>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>Actor</th><th>Action</th><th>Detail</th><th>IP</th><th>Timestamp</th></tr>
+      </thead>
+      <tbody>
+        <% rows.forEach(e => { %>
+        <tr>
+          <td class="muted"><%= e.id %></td>
+          <td><span class="user-chip-sm"><%= e.actor %></span></td>
+          <td><code class="mono small"><%= e.action %></code></td>
+          <td class="muted small"><%= e.detail || '—' %></td>
+          <td class="muted small"><%= e.ip_address || '—' %></td>
+          <td class="muted small"><%= e.ts %></td>
+        </tr>
+        <% }) %>
+        <% if (rows.length === 0) { %>
+        <tr><td colspan="6" class="empty-state">No audit events found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (page > 1) { %>
+      <a href="/admin/audit?page=<%= page - 1 %><%= filterActor ? '&actor=' + filterActor : '' %>" class="btn-secondary">&#8592; Prev</a>
+      <% } %>
+      <span class="page-info">Page <%= page %> of <%= pages %></span>
+      <% if (page < pages) { %>
+      <a href="/admin/audit?page=<%= page + 1 %><%= filterActor ? '&actor=' + filterActor : '' %>" class="btn-secondary">Next &#8594;</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <span>CloudLens IAM Analyzer &copy; 2024 &mdash; Platform Engineering</span>
+  <span class="footer-right">Build 2.0.0-stable</span>
+</footer>
+</body>
+</html>

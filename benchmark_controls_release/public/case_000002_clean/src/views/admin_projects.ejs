@@ -1,0 +1,32 @@
+<%
+  title = 'All Projects — Admin'
+  function esc(v) {
+    if (v === null || v === undefined) return ''
+    return String(v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+  }
+  const rows = projects.map(p => `
+    <tr>
+      <td>${esc(p.id)}</td>
+      <td><a href="/projects/${encodeURIComponent(p.id)}">${esc(p.name)}</a></td>
+      <td class="muted">${esc(p.workspace_name || '')}</td>
+      <td class="muted">${esc(p.owner_name)}</td>
+      <td><span class="pill">${esc(p.language || '—')}</span></td>
+      <td class="muted">${p.archived ? 'archived' : 'active'}</td>
+      <td class="muted">${esc(p.created_at)}</td>
+    </tr>
+  `).join('')
+  body = `
+<h1>All projects</h1>
+<table class="list">
+  <thead><tr><th>ID</th><th>Name</th><th>Workspace</th><th>Owner</th><th>Lang</th><th>Status</th><th>Created</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="7" class="muted">No projects</td></tr>'}</tbody>
+</table>
+<p><a href="/admin">← Back to admin</a></p>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – ContextBridge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">⚡ ContextBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/pipelines">Pipelines</a></li>
+      <li><a href="/admin" class="active">Admin</a></li>
+      <li><a href="/profile"><%= user.username %></a></li>
+      <li>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Administration</h1>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.userCount %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.pipelineCount %></div>
+        <div class="stat-label">Pipelines</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.runCount %></div>
+        <div class="stat-label">Total Runs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.connCount %></div>
+        <div class="stat-label">Connectors</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Users (<%= userTotal %>)</h2>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th>#</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(u) { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><%= u.username %></td>
+              <td><%= u.email %></td>
+              <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+              <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+              <td>
+                <button class="btn btn-sm btn-secondary"
+                  onclick="promoteUser(<%= u.id %>, '<%= u.role === 'admin' ? 'user' : 'admin' %>')">
+                  <%= u.role === 'admin' ? 'Demote' : 'Promote' %>
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><h2>Recent Audit Log</h2></div>
+      <table class="table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr>
+        </thead>
+        <tbody>
+          <% auditRows.forEach(function(a) { %>
+            <tr>
+              <td><%= new Date(a.created_at).toLocaleString() %></td>
+              <td><%= a.username || '—' %></td>
+              <td><code><%= a.action %></code></td>
+              <td class="detail-cell"><%= a.detail ? a.detail.substring(0, 80) : '—' %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <footer class="footer"><p>&copy; 2026 ContextBridge Inc.</p></footer>
+  <script>
+    async function promoteUser(id, newRole) {
+      const res = await fetch('/api/admin/users/' + id + '/role', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole })
+      });
+      if (res.ok) location.reload();
+      else alert('Failed to update role');
+    }
+  </script>
+</body>
+</html>

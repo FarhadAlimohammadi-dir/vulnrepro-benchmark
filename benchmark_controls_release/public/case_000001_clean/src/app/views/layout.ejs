@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' — NexusRelay' : 'NexusRelay' %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <a href="/dashboard" class="brand-link">&#9650; NexusRelay</a>
+    </div>
+    <% if (currentUser) { %>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows">Workflows</a>
+      <a href="/workspace/load">Workspace</a>
+      <a href="/workspace/settings">Settings</a>
+      <% if (currentRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a>
+      &nbsp;·&nbsp;
+      <a href="/logout">Sign out</a>
+    </div>
+    <% } %>
+  </nav>
+  <main class="page-content">
+    <%- body %>
+  </main>
+  <footer class="page-footer">
+    <span>NexusRelay v<%= agentVersion %></span>
+  </footer>
+</body>
+</html>

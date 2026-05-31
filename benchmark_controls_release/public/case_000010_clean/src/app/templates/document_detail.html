@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}{{ doc.title }} — NexusAI Workspace{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>{{ doc.title }}</h1>
+      <span class="badge badge-{{ doc.source }}">{{ doc.source }}</span>
+      {% if doc.tags %}
+        {% for tag in doc.tags.split(',') %}
+          <span class="tag">{{ tag.strip() }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <a href="/documents" class="btn-secondary">← Back to Library</a>
+  </div>
+
+  <div class="doc-meta">
+    <span>Indexed: {{ doc.created_at[:16].replace('T', ' ') }} UTC</span>
+    {% if doc.updated_at %}
+      &nbsp;·&nbsp; <span>Updated: {{ doc.updated_at[:16].replace('T', ' ') }} UTC</span>
+    {% endif %}
+    {% if doc.uploaded_by %}
+      &nbsp;·&nbsp; <span>Uploaded by user #{{ doc.uploaded_by }}</span>
+    {% endif %}
+  </div>
+
+  <div class="doc-body">
+    {{ doc.body | e }}
+  </div>
+
+  {% if user.role == 'admin' %}
+  <div class="doc-actions">
+    <form method="POST" action="/documents/{{ doc.id }}/delete" onsubmit="return confirm('Permanently delete this document?')">
+      <button type="submit" class="btn-danger">Delete Document</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

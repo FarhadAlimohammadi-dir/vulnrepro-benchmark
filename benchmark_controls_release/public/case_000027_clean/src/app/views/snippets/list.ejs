@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Browse Snippets — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <% if (locals.currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+    <a href="/register" class="btn btn-primary btn-sm">Register</a>
+  <% } %>
+</nav>
+<div class="container page">
+  <div class="flex mb-2">
+    <h1>Public Snippets</h1>
+    <span class="text-muted">(<%= total %> total)</span>
+    <% if (locals.currentUser) { %>
+      <a href="/snippets/new" class="btn btn-primary btn-sm" style="margin-left:auto">+ New</a>
+    <% } %>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Language</th><th>Author</th><th>Views</th><th>Date</th></tr>
+    </thead>
+    <tbody>
+      <% snippets.forEach(s => { %>
+        <tr>
+          <td><a href="/snippets/<%= s.id %>"><%= s.title %></a></td>
+          <td><span class="badge badge-blue"><%= s.language %></span></td>
+          <td><a href="/profile/<%= s.username %>"><%= s.username %></a></td>
+          <td><%= s.view_count %></td>
+          <td class="text-muted"><%= new Date(s.created_at).toLocaleDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <% if (pages > 1) { %>
+    <div class="pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/snippets?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+  <% } %>
+</div>
+</body>
+</html>

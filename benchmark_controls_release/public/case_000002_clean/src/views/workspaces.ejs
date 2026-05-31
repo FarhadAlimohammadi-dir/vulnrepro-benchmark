@@ -1,0 +1,65 @@
+<%
+  title = 'Workspaces'
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]))
+  const enc = (value) => encodeURIComponent(String(value ?? ''))
+
+  const rows = workspaces.map(w => `
+    <tr>
+      <td><a href="/workspaces/${w.id}">${esc(w.name)}</a></td>
+      <td class="muted">${esc(w.description || '')}</td>
+      <td><span class="pill">${esc(w.visibility)}</span></td>
+      <td class="muted">${w.project_count || 0} projects</td>
+      <td class="muted">${esc(w.owner_name)}</td>
+    </tr>
+  `).join('')
+
+  const pagination = pages > 1 ? `
+    <div class="page" style="margin-top:1rem">
+      ${page > 1 ? '<a href="?page='+(page-1)+'&q='+enc(q)+'">Prev</a>' : '<span></span>'}
+      <span class="muted">Page ${page} of ${pages} (${total})</span>
+      ${page < pages ? '<a href="?page='+(page+1)+'&q='+enc(q)+'">Next</a>' : '<span></span>'}
+    </div>
+  ` : ''
+
+  body = `
+<div class="hero" style="padding-bottom:1rem">
+  <h1>Workspaces</h1>
+</div>
+
+<div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem">
+  <form class="form inline" method="get">
+    <input name="q" value="${esc(q)}" placeholder="Search...">
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<form class="form" method="post" action="/workspaces" style="background:#fff;padding:1rem;border-radius:6px;margin-bottom:1.5rem">
+  <h3 style="margin-top:0">New workspace</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.5rem;align-items:end">
+    <label>Name<input name="name" required></label>
+    <label>Description<input name="description"></label>
+    <label>Visibility
+      <select name="visibility">
+        <option value="private">Private</option>
+        <option value="team">Team</option>
+        <option value="public">Public</option>
+      </select>
+    </label>
+    <div><button type="submit">Create</button></div>
+  </div>
+</form>
+
+<table class="list">
+  <thead><tr><th>Name</th><th>Description</th><th>Visibility</th><th>Projects</th><th>Owner</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="5" class="muted">No workspaces yet</td></tr>'}</tbody>
+</table>
+${pagination}
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

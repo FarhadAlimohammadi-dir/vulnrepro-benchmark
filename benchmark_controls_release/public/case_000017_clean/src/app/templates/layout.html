@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NexusChat{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <a href="/">&#9672; NexusChat</a>
+  </div>
+  <div class="topnav-links">
+    <a href="/documents">Docs</a>
+    {% if user and user.role == 'admin' %}
+    <a href="/admin/">Admin</a>
+    {% endif %}
+    <a href="/profile">{{ username }}</a>
+    <a href="/settings">Settings</a>
+    <a href="/logout" class="btn-logout">Sign out</a>
+  </div>
+</nav>
+<div class="page-wrapper">
+  {% block content %}{% endblock %}
+</div>
+<footer class="site-footer">
+  <span>NexusChat v2.4.1 &mdash; &copy; 2024 Nexus Labs</span>
+</footer>
+</body>
+</html>

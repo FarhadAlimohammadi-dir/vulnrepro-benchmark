@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Explore — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>&#127758; Explore</h1>
+  <p class="subtitle">Discover curated content across topics</p>
+</div>
+
+<div class="explore-layout">
+
+  <aside class="topic-sidebar">
+    <h3>Topics</h3>
+    <ul class="topic-list">
+      {% for t in allowed_topics %}
+      <li class="{{ 'active' if t == topic else '' }}">
+        <a href="/explore?topic={{ t }}">{{ t.capitalize() }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <div class="explore-main">
+    <h2>{{ topic.capitalize() }}</h2>
+    {% for item in feed %}
+    <div class="feed-card">
+      <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+      <p>{{ item.snippet }}</p>
+      <span class="feed-source">{{ item.source }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

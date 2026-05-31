@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Sign In</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="centered-page">
+<div class="auth-box">
+  <h2>&#9654; CodePilot</h2>
+  <p class="subtitle">AI-powered code review &amp; automation</p>
+  <% if (error) { %>
+    <p class="alert alert-error"><%= error %></p>
+  <% } %>
+  <form method="POST" action="/login">
+    <input type="hidden" name="next" value="<%= next %>">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="username" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn-primary">Sign In</button>
+  </form>
+</div>
+</body>
+</html>

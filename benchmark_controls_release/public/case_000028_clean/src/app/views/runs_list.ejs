@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralOps — Training Runs</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav', { user, role }) %>
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Training Runs</h1>
+      <a href="#new-run-form" class="btn-primary">+ New Run</a>
+    </div>
+
+    <form method="GET" action="/runs" class="filter-form">
+      <label>Status:
+        <select name="status">
+          <option value="">All</option>
+          <% ['pending','running','completed','failed'].forEach(s => { %>
+            <option value="<%= s %>" <%= filterStatus === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Model:
+        <input type="text" name="model" value="<%= filterModel %>" placeholder="e.g. neural-v1">
+      </label>
+      <button type="submit" class="btn-secondary">Filter</button>
+      <a href="/runs" class="btn-link-blue">Clear</a>
+    </form>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Model</th><th>Status</th><th>Owner</th><th>Started</th><th>Finished</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% rows.forEach(r => { %>
+        <tr>
+          <td><a href="/runs/<%= r.id %>">#<%= r.id %></a></td>
+          <td><code><%= r.model_name %></code></td>
+          <td><span class="badge badge-<%= r.status %>"><%= r.status %></span></td>
+          <td><%= r.owner_id || '—' %></td>
+          <td class="ts"><%= r.started_at %></td>
+          <td class="ts"><%= r.finished_at || '—' %></td>
+          <td><a href="/runs/<%= r.id %>" class="btn-sm">View</a></td>
+        </tr>
+        <% }) %>
+        <% if (!rows.length) { %>
+          <tr><td colspan="7" class="empty-row">No runs match the current filters.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/runs?page=<%= page - 1 %>&status=<%= filterStatus %>&model=<%= filterModel %>" class="btn-sm">← Prev</a><% } %>
+      <span>Page <%= page %> of <%= totalPages %> (<%= total %> total)</span>
+      <% if (page < totalPages) { %><a href="/runs?page=<%= page + 1 %>&status=<%= filterStatus %>&model=<%= filterModel %>" class="btn-sm">Next →</a><% } %>
+    </div>
+
+    <hr>
+    <div id="new-run-form" class="form-card">
+      <h2>Submit New Training Run</h2>
+      <form method="POST" action="/runs">
+        <label>Model Name <span class="required">*</span>
+          <input type="text" name="model_name" required pattern="[a-zA-Z0-9_-]+" placeholder="my-model-v1">
+        </label>
+        <label>Config JSON
+          <textarea name="config_json" rows="4" placeholder='{"lr":0.001,"epochs":10}'></textarea>
+        </label>
+        <label>Notes
+          <input type="text" name="notes" maxlength="500" placeholder="Optional description">
+        </label>
+        <button type="submit" class="btn-primary">Submit</button>
+      </form>
+    </div>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

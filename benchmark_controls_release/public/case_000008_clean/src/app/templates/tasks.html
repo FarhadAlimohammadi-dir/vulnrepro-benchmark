@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Tasks — PipelineForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Tasks</h1>
+</div>
+
+<div class="filters">
+  <form method="GET" action="/tasks" class="filter-form">
+    <input type="text" name="q" value="{{ search_q }}" placeholder="Search tasks...">
+    <select name="status">
+      <option value="">All statuses</option>
+      {% for s in ['open','approved','workflow_created','closed','cancelled','agent_error'] %}
+        <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+    <select name="label">
+      <option value="">All labels</option>
+      {% for l in labels|sort %}
+        <option value="{{ l }}" {% if label_filter == l %}selected{% endif %}>{{ l }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="/tasks" class="btn btn-sm btn-secondary">Clear</a>
+  </form>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Label</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in tasks %}
+    <tr>
+      <td><a href="/tasks/{{ t.id }}">{{ t.id }}</a></td>
+      <td><a href="/tasks/{{ t.id }}">{{ t.title }}</a></td>
+      <td>{{ t.author_name }}</td>
+      <td>{% if t.label %}<span class="badge">{{ t.label }}</span>{% endif %}</td>
+      <td><span class="badge status-{{ t.status }}">{{ t.status }}</span></td>
+      <td><span class="badge priority-{{ t.priority }}">{{ t.priority }}</span></td>
+      <td>{{ t.updated_at[:10] if t.updated_at else '' }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="empty">No tasks found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="?page={{ page - 1 }}&per_page={{ per_page }}&status={{ status_filter }}&label={{ label_filter }}&q={{ search_q }}">&laquo; Prev</a>
+  {% endif %}
+  <span>Page {{ page }} &mdash; {{ total }} total</span>
+  {% if (page * per_page) < total %}
+    <a href="?page={{ page + 1 }}&per_page={{ per_page }}&status={{ status_filter }}&label={{ label_filter }}&q={{ search_q }}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% endblock %}

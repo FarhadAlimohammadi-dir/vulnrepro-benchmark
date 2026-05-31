@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies">Policies</a>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile" class="active">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>My Profile</h1>
+    </div>
+
+    <% if (typeof saved !== 'undefined' && saved) { %>
+    <div class="alert alert-success">✓ Profile updated successfully.</div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <div class="detail-grid">
+      <div class="detail-main">
+        <div class="card">
+          <h3>Account Information</h3>
+          <form method="POST" action="/profile">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" value="<%= profile.username %>" disabled class="input-disabled">
+            </div>
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="full_name" value="<%= profile.full_name || '' %>" required>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" value="<%= profile.email || '' %>" required>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <input type="text" name="department" value="<%= profile.department || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <input type="text" value="<%= profile.role %>" disabled class="input-disabled">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="detail-sidebar">
+        <div class="card">
+          <h3>Account Details</h3>
+          <dl class="detail-list">
+            <dt>Member Since</dt>
+            <dd><%= new Date(profile.created_at).toLocaleDateString() %></dd>
+            <dt>Last Login</dt>
+            <dd><%= profile.last_login ? new Date(profile.last_login).toLocaleString() : 'First login' %></dd>
+            <dt>MFA Status</dt>
+            <dd><%= profile.mfa_enabled ? '✓ Enabled' : '✗ Not configured' %></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <% if (recentActivity.length === 0) { %>
+          <p class="empty-state">No recent activity.</p>
+          <% } else { %>
+          <ul class="history-list">
+            <% recentActivity.forEach(a => { %>
+            <li class="history-item">
+              <div>
+                <div class="history-user"><%= a.action %></div>
+                <div class="history-time"><%= new Date(a.created_at).toLocaleString() %></div>
+                <div class="history-detail"><%= a.details || '' %></div>
+              </div>
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

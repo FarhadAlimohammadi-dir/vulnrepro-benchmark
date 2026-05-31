@@ -1,0 +1,19 @@
+{
+  "name": "nexus-identity-platform",
+  "version": "2.1.0",
+  "description": "Nexus Identity Platform - Enterprise SSO and OAuth2 Provider",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "compression": "^1.7.4",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.0"
+  }
+}

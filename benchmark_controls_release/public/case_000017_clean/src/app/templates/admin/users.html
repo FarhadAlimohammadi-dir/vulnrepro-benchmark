@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}Users &mdash; Admin &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>User Management</h2>
+    <a class="btn btn-sm btn-outline" href="/admin/">Back to Dashboard</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Username</th><th>Display Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td><strong>{{ u.username }}</strong></td>
+        <td>{{ u.display_name or '—' }}</td>
+        <td class="text-muted">{{ u.email or '—' }}</td>
+        <td><span class="role-badge role-{{ u.role }}">{{ u.role }}</span></td>
+        <td class="text-muted">{{ u.created_at[:10] if u.created_at else '—' }}</td>
+        <td>
+          <form method="post" action="/admin/users/{{ u.id }}/role" style="display:inline">
+            <select name="role" class="form-select-sm">
+              <option {% if u.role=='admin' %}selected{% endif %}>admin</option>
+              <option {% if u.role=='mod' %}selected{% endif %}>mod</option>
+              <option {% if u.role=='member' %}selected{% endif %}>member</option>
+            </select>
+            <button class="btn btn-sm btn-outline" type="submit">Set</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for p in range(1, pages+1) %}
+    <a class="page-btn {% if p == page %}active{% endif %}" href="/admin/users?page={{ p }}">{{ p }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

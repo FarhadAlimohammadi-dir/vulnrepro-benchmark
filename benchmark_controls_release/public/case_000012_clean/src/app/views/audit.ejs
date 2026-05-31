@@ -1,0 +1,30 @@
+<%- include('layout') %>
+<% const title = 'Audit Log' %>
+
+<div class="page-header">
+  <h1>Audit Log</h1>
+  <div>
+    <a href="?limit=50" class="btn btn-sm">50</a>
+    <a href="?limit=100" class="btn btn-sm">100</a>
+    <a href="?limit=200" class="btn btn-sm">200</a>
+  </div>
+</div>
+
+<table class="data-table">
+  <thead><tr><th>#</th><th>User</th><th>Action</th><th>Detail</th><th>Timestamp</th></tr></thead>
+  <tbody>
+  <% entries.forEach(e => { %>
+  <tr>
+    <td><%= e.id %></td>
+    <td><%= e.username || 'system' %></td>
+    <td><span class="badge"><%= e.action %></span></td>
+    <td><%= e.detail %></td>
+    <td class="item-meta"><%= e.created_at %></td>
+  </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<p><a href="/admin">&larr; Back to Admin</a></p>
+
+<%- include('layout_end') %>

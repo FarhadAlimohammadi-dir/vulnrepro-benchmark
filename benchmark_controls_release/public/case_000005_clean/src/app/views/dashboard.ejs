@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, page: page }) %>
+<main class="content">
+<div class="page-header">
+  <h1>Good morning, <%= user.name %></h1>
+  <p class="subtitle">Here's what's happening with your connected tools.</p>
+</div>
+
+<div class="dash-grid">
+  <div class="dash-card span2">
+    <h2 class="card-title">Assistant</h2>
+    <textarea id="chat-msg" class="chat-textarea" rows="3" placeholder="Ask me to place a call, create an event, search contacts…"></textarea>
+    <div class="chat-actions">
+      <button class="btn btn-primary" onclick="sendChat()">Send</button>
+      <span class="chat-hint">Try: "Call mom" or "Create event Sprint Review 2025-07-21"</span>
+    </div>
+    <pre id="chat-result" class="chat-result" style="display:none"></pre>
+  </div>
+
+  <div class="dash-card">
+    <h2 class="card-title">Notifications <span class="badge"><%= notifs.length %></span></h2>
+    <ul class="notif-list">
+      <% notifs.forEach(n => { %>
+      <li class="notif-item priority-<%= n.priority %>">
+        <strong><%= n.app_name %></strong>
+        <p><%= n.body %></p>
+      </li>
+      <% }) %>
+      <% if (!notifs.length) { %><li class="notif-item muted">No new notifications.</li><% } %>
+    </ul>
+  </div>
+
+  <div class="dash-card">
+    <h2 class="card-title">Upcoming Events</h2>
+    <ul class="event-list">
+      <% upcomingEvents.forEach(e => { %>
+      <li class="event-item">
+        <span class="event-date"><%= e.event_date %></span>
+        <span class="event-title"><%= e.title %></span>
+      </li>
+      <% }) %>
+      <% if (!upcomingEvents.length) { %><li class="event-item muted">No events scheduled.</li><% } %>
+    </ul>
+    <a href="/calendar" class="link-more">View calendar →</a>
+  </div>
+</div>
+
+<div class="dash-card" style="margin-top:1.5rem">
+  <h2 class="card-title">Recent Conversations</h2>
+  <table class="data-table">
+    <thead><tr><th>Message</th><th>Reply</th><th>Time</th></tr></thead>
+    <tbody>
+      <% convos.forEach(c => { %>
+      <tr>
+        <td><%= c.message.slice(0,80) %><%= c.message.length>80?'…':'' %></td>
+        <td class="muted"><%= (c.reply||'').slice(0,60) %></td>
+        <td class="muted"><%= new Date(c.created_at).toLocaleString() %></td>
+      </tr>
+      <% }) %>
+      <% if (!convos.length) { %><tr><td colspan="3" class="muted">No conversations yet.</td></tr><% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+async function sendChat() {
+  var msg = document.getElementById('chat-msg').value.trim();
+  if (!msg) return;
+  var el = document.getElementById('chat-result');
+  el.textContent = 'Working\u2026';
+  el.style.display = 'block';
+  var r = await fetch('/api/assistant/chat', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({message: msg})
+  });
+  var d = await r.json();
+  el.textContent = JSON.stringify(d, null, 2);
+}
+</script>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — DocVault</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; }
+        .nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+        .nav .brand { font-weight: 700; font-size: 1.1rem; color: #2d3748; }
+        .nav .user-info { font-size: 0.85rem; color: #718096; }
+        .nav a { color: #4299e1; text-decoration: none; font-size: 0.85rem; margin-left: 1rem; }
+        .container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+        .welcome { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .welcome h2 { color: #2d3748; margin-bottom: 0.5rem; }
+        .badge { display: inline-block; background: #ebf8ff; color: #2b6cb0; padding: 0.125rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 500; margin-left: 0.5rem; }
+        .badge.admin { background: #fff5f5; color: #c53030; }
+        .section-title { font-size: 1rem; font-weight: 600; color: #2d3748; margin-bottom: 1rem; }
+        .doc-list { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+        .doc-item { padding: 1rem 1.5rem; border-bottom: 1px solid #f0f4f8; }
+        .doc-item:last-child { border-bottom: none; }
+        .doc-title { font-weight: 500; color: #2d3748; }
+        .doc-meta { font-size: 0.75rem; color: #a0aec0; margin-top: 0.25rem; }
+        .private-tag { color: #e53e3e; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .empty { padding: 2rem; text-align: center; color: #a0aec0; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <span class="brand">📁 DocVault</span>
+        <div>
+            <span class="user-info">{{ user.email }}</span>
+            {% if user.is_admin %}<span class="badge admin">admin</span>{% endif %}
+            <a href="/auth/logout">Sign out</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="welcome">
+            <h2>Welcome back, {{ user.username }}
+                {% if user.oauth_provider %}
+                <span class="badge">via {{ user.oauth_provider }}</span>
+                {% endif %}
+            </h2>
+            <p style="color:#718096;font-size:0.875rem;margin-top:0.25rem;">{{ user.email }}</p>
+        </div>
+        <p class="section-title">Your Documents ({{ documents|length }})</p>
+        <div class="doc-list">
+            {% if documents %}
+                {% for doc in documents %}
+                <div class="doc-item">
+                    <div class="doc-title">
+                        {{ doc.title }}
+                        {% if doc.is_private %}<span class="private-tag">private</span>{% endif %}
+                    </div>
+                    <div class="doc-meta">{{ doc.content[:80] }}{% if doc.content|length > 80 %}…{% endif %}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty">No documents yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

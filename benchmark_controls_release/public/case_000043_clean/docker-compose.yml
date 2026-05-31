@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - githost_data:/data
+    environment:
+      - DATABASE_PATH=/data/githost.db
+      - SECRET_KEY=f3a9b2c1d4e5f6a7b8c9d0e1f2a3b4c5
+      - FLASK_APP=app/main.py
+    restart: unless-stopped
+
+volumes:
+  githost_data:

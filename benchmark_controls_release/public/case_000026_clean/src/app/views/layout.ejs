@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'CloudLens' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, notifications: typeof notifications !== 'undefined' ? notifications : [] }) %>
+<div class="page-wrapper">
+  <%- body %>
+</div>
+<footer class="footer">
+  <span>CloudLens IAM Analyzer &copy; 2024 &mdash; Platform Engineering</span>
+  <span class="footer-right">Build 2.0.0-stable</span>
+</footer>
+</body>
+</html>

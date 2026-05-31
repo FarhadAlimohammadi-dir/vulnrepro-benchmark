@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>Admin Dashboard</h2>
+    <div class="admin-nav">
+      <a class="btn btn-sm btn-outline" href="/admin/users">Users</a>
+      <a class="btn btn-sm btn-outline" href="/admin/documents">Documents</a>
+      <a class="btn btn-sm btn-outline" href="/admin/audit">Audit Log</a>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.users }}</div>
+      <div class="stat-label">Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.rooms }}</div>
+      <div class="stat-label">Channels</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.messages }}</div>
+      <div class="stat-label">Messages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.documents }}</div>
+      <div class="stat-label">Documents</div>
+    </div>
+  </div>
+  <div class="section-header">
+    <h3>Recent Activity</h3>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Target</th><th>Detail</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      {% for a in actions %}
+      <tr>
+        <td class="text-muted">{{ a.created_at[:16] if a.created_at else '' }}</td>
+        <td>{{ a.username or '—' }}</td>
+        <td><code>{{ a.action }}</code></td>
+        <td>{{ a.target_type or '' }} {{ a.target_id or '' }}</td>
+        <td class="text-muted">{{ a.detail or '' }}</td>
+        <td class="text-muted">{{ a.ip_addr or '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

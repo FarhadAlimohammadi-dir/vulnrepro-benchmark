@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Settings &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page content-narrow">
+  <div class="page-header">
+    <h2>Account Settings</h2>
+  </div>
+  {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+  {% if success %}<div class="alert alert-success">{{ success }}</div>{% endif %}
+  <div class="settings-section">
+    <h3>Change Password</h3>
+    <form method="post" class="form-card">
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input class="form-input" name="current_password" type="password" autocomplete="current-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input class="form-input" name="new_password" type="password" autocomplete="new-password">
+        <span class="form-hint">Minimum 8 characters.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm New Password</label>
+        <input class="form-input" name="confirm_password" type="password" autocomplete="new-password">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Update Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

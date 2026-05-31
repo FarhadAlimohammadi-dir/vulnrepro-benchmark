@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}ModelHub — {{ user.username }}'s Profile{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ user.username }}</h1>
+  <a href="/profile/edit" class="btn btn-secondary">Edit profile</a>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Account</h3>
+    <dl class="kv-list">
+      <div class="kv"><dt>Email</dt><dd>{{ user.email or '—' }}</dd></div>
+      <div class="kv"><dt>Role</dt><dd>{{ user.role }}</dd></div>
+      <div class="kv"><dt>Member since</dt><dd>{{ user.created_at[:10] }}</dd></div>
+    </dl>
+    <p>{{ user.bio or '' }}</p>
+  </div>
+
+  <div class="card">
+    <h3>My Models ({{ my_models|length }})</h3>
+    {% for m in my_models %}
+    <div class="mini-card">
+      <a href="/models/{{ m.id }}">{{ m.name }}</a>
+      <span class="tag">{{ m.framework }}</span>
+      <span class="badge badge-{{ m.status }}">{{ m.status }}</span>
+    </div>
+    {% endfor %}
+    {% if not my_models %}<p class="muted">No models uploaded yet.</p>{% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h3>Recent Activity</h3>
+  <table class="data-table">
+    <thead><tr><th>Action</th><th>Resource</th><th>When</th></tr></thead>
+    <tbody>
+      {% for entry in activity %}
+      <tr>
+        <td>{{ entry.action }}</td>
+        <td>{{ entry.resource_type or '—' }} {{ entry.resource_id or '' }}</td>
+        <td class="muted">{{ entry.created_at[:16] }}</td>
+      </tr>
+      {% endfor %}
+      {% if not activity %}<tr><td colspan="3" class="muted">No activity recorded.</td></tr>{% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

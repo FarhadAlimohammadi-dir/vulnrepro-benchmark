@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-key-change-me-2024
+      - DATABASE_PATH=/app/data/app.db
+    volumes:
+      - app_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  app_data:

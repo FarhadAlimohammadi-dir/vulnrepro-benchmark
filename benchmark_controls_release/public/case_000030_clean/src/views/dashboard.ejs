@@ -1,0 +1,69 @@
+<%- include('partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>Welcome back, <%= user.display_name || user.email %>!</h1>
+  <p class="page-subtitle">Here's what's happening with your account.</p>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="dashboard-grid">
+  <section class="card">
+    <h2>Connected Applications</h2>
+    <% if (apps && apps.length > 0) { %>
+    <ul class="app-list">
+      <% apps.forEach(app => { %>
+      <li class="app-item">
+        <div class="app-info">
+          <strong><%= app.app_name %></strong>
+          <span class="app-scopes"><%= app.granted_scopes %></span>
+        </div>
+        <small class="muted">Connected <%= new Date(app.connected_at).toLocaleDateString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="muted">No applications connected yet.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Recent Activity</h2>
+    <% if (recentActivity && recentActivity.length > 0) { %>
+    <ul class="activity-list">
+      <% recentActivity.forEach(evt => { %>
+      <li class="activity-item">
+        <span class="activity-action"><%= evt.action.replace(/_/g, ' ') %></span>
+        <small class="muted"><%= new Date(evt.created_at).toLocaleString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="muted">No recent activity.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Account Overview</h2>
+    <dl class="detail-list">
+      <dt>Email</dt><dd><%= user.email %></dd>
+      <dt>Display Name</dt><dd><%= user.display_name || '—' %></dd>
+      <dt>Role</dt><dd><span class="badge badge-<%= user.role %>"><%= user.role %></span></dd>
+      <dt>MFA</dt><dd><%= user.mfa_enabled ? 'Enabled' : 'Not configured' %></dd>
+      <dt>Last Login</dt><dd><%= user.last_login ? new Date(user.last_login).toLocaleString() : 'First login' %></dd>
+    </dl>
+    <a href="/profile" class="btn-secondary-small">Edit Profile</a>
+  </section>
+
+  <section class="card">
+    <h2>Quick Links</h2>
+    <ul class="quick-links">
+      <li><a href="/settings">Account Settings</a></li>
+      <li><a href="/settings#api-keys">Manage API Keys</a></li>
+      <li><a href="/auth/authorize?client_id=devtools&response_type=code&scope=openid+profile&redirect_uri=http://localhost:3000/callback&state=test&code_challenge=test">Test OAuth Flow</a></li>
+      <li><a href="/api/v1/activity">Activity Log (API)</a></li>
+    </ul>
+  </section>
+</div>
+<%- include('partials/footer') %>

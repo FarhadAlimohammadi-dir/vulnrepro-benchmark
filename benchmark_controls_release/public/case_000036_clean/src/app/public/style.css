@@ -1,0 +1,94 @@
+/* Cerca Dating — base stylesheet */
+/* TODO: move to CSS custom properties for theming support */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #2d2d2d;
+  background: #fafafa;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo { font-size: 1.6rem; font-weight: 700; color: #e8445a; }
+
+nav a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #555;
+  font-size: 0.95rem;
+}
+nav a:hover { color: #e8445a; }
+
+/* Hero */
+.hero {
+  padding: 5rem 0 4rem;
+  text-align: center;
+  background: linear-gradient(135deg, #fff0f3 0%, #fff 60%);
+}
+
+.hero h2 { font-size: 3rem; color: #e8445a; margin-bottom: 1rem; }
+.tagline { font-size: 1.2rem; color: #666; margin-bottom: 2rem; }
+
+.cta-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.75rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+.btn-primary { background: #e8445a; color: #fff; }
+.btn-secondary { background: #fff; color: #e8445a; border: 2px solid #e8445a; }
+
+/* Features */
+.features { padding: 4rem 0; }
+.features .container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  text-align: center;
+}
+
+.feature-card .icon { font-size: 2.5rem; }
+.feature-card h3 { margin: 1rem 0 0.5rem; font-size: 1.2rem; }
+.feature-card p { color: #666; font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  padding: 2rem 0;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.875rem;
+  border-top: 1px solid #eee;
+}

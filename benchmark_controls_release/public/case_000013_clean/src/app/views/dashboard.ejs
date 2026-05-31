@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevForge – Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (currentUser && currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">👤 <%= currentUser ? currentUser.username : '' %></a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <a href="/projects/new" class="btn btn-primary">+ New Project</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.projectCount %></div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.taskCount %></div>
+        <div class="stat-label">Tasks Run</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Recent Projects</h2>
+      <% if (projects.length === 0) { %>
+        <p class="muted">No projects yet. <a href="/projects/new">Create one</a>.</p>
+      <% } else { %>
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Language</th><th>Updated</th><th></th></tr></thead>
+        <tbody>
+        <% projects.forEach(p => { %>
+          <tr>
+            <td><a href="/projects/<%= p.id %>"><%= p.name %></a></td>
+            <td><span class="badge"><%= p.lang %></span></td>
+            <td class="muted"><%= new Date(p.updated_at).toLocaleDateString() %></td>
+            <td><a href="/projects/<%= p.id %>/edit" class="btn btn-sm">Edit</a></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+
+    <div class="section">
+      <h2>Workspace Task Runner</h2>
+      <p class="muted">Execute approved commands in your project workspace. Select a project and enter a command.</p>
+      <div class="task-runner">
+        <select id="proj-sel" class="input-sm">
+          <% projects.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.name %> (#<%= p.id %>)</option>
+          <% }) %>
+          <% if (projects.length === 0) { %>
+          <option value="1">hello-world (#1)</option>
+          <% } %>
+        </select>
+        <input type="text" id="cmd-input" placeholder="echo devforge-ok" class="cmd-input">
+        <button class="btn btn-primary" onclick="runTask()">▶ Run</button>
+      </div>
+      <pre id="task-output" class="code-output">— output appears here —</pre>
+    </div>
+
+    <% if (recentLogs.length > 0) { %>
+    <div class="section">
+      <h2>Recent Task History</h2>
+      <table class="data-table">
+        <thead><tr><th>Project</th><th>Command</th><th>Status</th><th>When</th></tr></thead>
+        <tbody>
+        <% recentLogs.forEach(l => { %>
+          <tr>
+            <td><%= l.project_name %></td>
+            <td><code><%= l.command %></code></td>
+            <td><span class="badge badge-<%= l.status %>"><%= l.status %></span></td>
+            <td class="muted"><%= new Date(l.created_at).toLocaleString() %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+  <script>
+    async function runTask() {
+      const cmd  = document.getElementById('cmd-input').value.trim();
+      const proj = document.getElementById('proj-sel').value;
+      if (!cmd) return;
+      const out = document.getElementById('task-output');
+      out.textContent = 'Running…';
+      try {
+        const r = await fetch('/api/tasks/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: cmd, project_id: parseInt(proj, 10) })
+        });
+        const d = await r.json();
+        out.textContent = d.stdout || d.error || JSON.stringify(d, null, 2);
+      } catch (e) {
+        out.textContent = 'Network error: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

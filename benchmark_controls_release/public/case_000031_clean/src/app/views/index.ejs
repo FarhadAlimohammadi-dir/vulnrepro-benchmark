@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SocialKit — Sign In</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="auth-page">
+<div class="auth-card">
+  <div class="auth-logo">
+    <span class="logo-icon">&#9670;</span>
+    <h1>SocialKit</h1>
+    <p class="tagline">Social plugin platform for developers</p>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+  <% if (locals.flashMessage) { %>
+    <div class="alert alert-info"><%= flashMessage %></div>
+  <% } %>
+
+  <form method="POST" action="/login" class="auth-form">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" autocomplete="username" required placeholder="your username">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+  </form>
+
+  <div class="auth-footer">
+    <p class="hint">Demo accounts: alice/pass123 &middot; bob/pass456 &middot; charlie/pass789</p>
+  </div>
+</div>
+</body>
+</html>

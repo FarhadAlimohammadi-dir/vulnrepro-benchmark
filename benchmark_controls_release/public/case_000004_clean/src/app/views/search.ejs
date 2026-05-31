@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/search">Search</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header"><h2>Search Notes</h2></div>
+  <form method="get" action="/search" class="search-form">
+    <input name="q" type="search" value="<%= q %>" placeholder="Search your notes…" class="search-input" autofocus>
+    <button type="submit" class="btn">Search</button>
+  </form>
+
+  <% if (q.length >= 2) { %>
+    <p class="search-meta"><%= results.length %> result(s) for "<%= q %>"</p>
+    <% if (results.length === 0) { %>
+      <p class="empty-state">No notes matched your query.</p>
+    <% } else { %>
+    <table class="data-table">
+      <thead><tr><th>Title</th><th>Last updated</th></tr></thead>
+      <tbody>
+        <% results.forEach(n => { %>
+        <tr>
+          <td><a href="/notes/<%= n.id %>"><%= n.title %></a></td>
+          <td><%= n.updated_at %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  <% } %>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

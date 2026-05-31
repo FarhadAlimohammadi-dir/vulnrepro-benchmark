@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Collections — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>&#128193; Collections</h1>
+  <p class="subtitle">Your saved research and bookmarks</p>
+</div>
+
+<div class="collections-grid">
+  {% for col in collections %}
+  <div class="card">
+    <h3><a href="/collections/{{ col.id }}">{{ col.name }}</a></h3>
+    <p>{{ col.description or 'No description' }}</p>
+    <p class="col-meta">
+      {{ 'Public' if col.is_public else 'Private' }} &bull;
+      Created {{ col.created_at[:10] }}
+    </p>
+    <div class="card-actions">
+      <a href="/browse/view?q=&collection={{ col.name | urlencode }}"
+         class="btn btn-sm">Browse</a>
+      <a href="/collections/{{ col.id }}" class="btn btn-sm btn-outline">View</a>
+    </div>
+  </div>
+  {% else %}
+  <p class="empty-state">No collections yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

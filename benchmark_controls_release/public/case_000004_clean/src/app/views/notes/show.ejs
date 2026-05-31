@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= note.title %> — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/search">Search</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header">
+    <div>
+      <h2><%= note.title %></h2>
+      <% if (note.workspace_name) { %><p class="muted">In workspace: <%= note.workspace_name %></p><% } %>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a href="/notes/<%= note.id %>/edit" class="btn btn-sm btn-outline">Edit</a>
+      <form action="/notes/<%= note.id %>/delete" method="post" onsubmit="return confirm('Delete this note?')">
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+
+  <% if (tags.length) { %>
+  <div class="tags">
+    <% tags.forEach(t => { %><span class="badge badge-tag"><%= t.label %></span><% }) %>
+  </div>
+  <% } %>
+
+  <div class="note-body">
+    <pre style="white-space:pre-wrap;font-family:inherit"><%= note.body %></pre>
+  </div>
+
+  <p class="muted mt-sm">Last updated: <%= note.updated_at %></p>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

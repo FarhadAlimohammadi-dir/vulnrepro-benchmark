@@ -1,0 +1,33 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>Audit Log</h1>
+  <p class="page-subtitle">All authentication and authorization events across the platform.</p>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Timestamp</th><th>User</th><th>Action</th><th>IP Address</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+      <% entries.forEach(evt => { %>
+      <tr>
+        <td><%= new Date(evt.created_at).toLocaleString() %></td>
+        <td><%= evt.user_email || evt.user_id || 'system' %></td>
+        <td><code><%= evt.action %></code></td>
+        <td><%= evt.ip_address || '—' %></td>
+        <td><small class="muted"><%= evt.details ? evt.details.substring(0, 80) : '—' %></small></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="/admin/audit?page=<%= i %>" class="<%= i === page ? 'page-current' : 'page-link' %>"><%= i %></a>
+    <% } %>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

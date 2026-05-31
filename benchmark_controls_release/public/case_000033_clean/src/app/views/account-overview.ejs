@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Overview - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/account/overview" class="active">Account</a></li>
+        <li><a href="/billing_interfaces">Billing</a></li>
+        <li><a href="/audit/logs">Activity</a></li>
+        <li class="user-menu">
+          <span><%= user.first_name || user.username %></span>
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Account Settings</h1>
+    
+    <div class="settings-grid">
+      <section class="card">
+        <h2>Profile Information</h2>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Name:</strong> <%= user.first_name %> <%= user.last_name %></p>
+      </section>
+      
+      <section class="card">
+        <h2>Linked Accounts</h2>
+        <% if (linked_accounts && linked_accounts.length > 0) { %>
+          <ul class="accounts-list">
+            <% linked_accounts.forEach(account => { %>
+              <li>
+                <strong><%= account.platform %></strong>
+                <span class="user-id"><%= account.platform_user_id %></span>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p>No accounts linked</p>
+        <% } %>
+        <a href="/account/link" class="btn btn-secondary">Link New Account</a>
+      </section>
+      
+      <section class="card">
+        <h2>Security</h2>
+        <a href="/account/password" class="btn btn-secondary">Change Password</a>
+        <a href="/account/security" class="btn btn-secondary">Security Settings</a>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

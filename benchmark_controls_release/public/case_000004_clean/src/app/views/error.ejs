@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error <%= code %> — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <% if (user) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/notes">Notes</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-sm">Sign in</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main class="container main-content" style="text-align:center;padding-top:80px">
+  <h1 class="error-code"><%= code %></h1>
+  <p class="error-msg"><%= message %></p>
+  <a href="/" class="btn mt-sm">Go home</a>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

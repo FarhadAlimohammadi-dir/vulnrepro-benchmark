@@ -1,0 +1,22 @@
+<%- include('layout') %>
+<% const title = 'Resources' %>
+
+<div class="page-header"><h1>Workspace Resources</h1></div>
+
+<div class="category-filter">
+  <a href="/portal/links" class="<%= !activeCategory ? 'active' : '' %>">All</a>
+  <% categories.forEach(cat => { %>
+    <a href="/portal/links?category=<%= encodeURIComponent(cat) %>" class="<%= activeCategory === cat ? 'active' : '' %>"><%= cat %></a>
+  <% }) %>
+</div>
+
+<ul class="item-list">
+<% links.forEach(l => { %>
+  <li class="item-card">
+    <div class="item-title"><a href="<%= l.href %>" target="_blank" rel="noopener"><%= l.label %></a></div>
+    <div class="item-meta">Category: <%= l.category %></div>
+  </li>
+<% }) %>
+</ul>
+
+<%- include('layout_end') %>

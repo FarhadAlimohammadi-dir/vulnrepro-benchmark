@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies">Policies</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/admin/audit">Audit Log</a>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Admin Console</h1>
+      <p>System administration and monitoring.</p>
+    </div>
+
+    <div class="section">
+      <h2>Users</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Username</th><th>Full Name</th><th>Email</th>
+              <th>Role</th><th>Department</th><th>Last Login</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+            <tr>
+              <td>#<%= u.id %></td>
+              <td><%= u.username %></td>
+              <td><%= u.full_name || '—' %></td>
+              <td><%= u.email || '—' %></td>
+              <td><span class="badge"><%= u.role %></span></td>
+              <td><%= u.department || '—' %></td>
+              <td><%= u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never' %></td>
+              <td><span class="badge <%= u.is_active ? 'badge-ok' : 'badge-warn' %>"><%= u.is_active ? 'Active' : 'Disabled' %></span></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Recent Assumption Attempts</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Time</th><th>User</th><th>Policy</th><th>Subject</th><th>Audience</th><th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (assumptionLog.length === 0) { %>
+            <tr><td colspan="6" class="empty-state">No assumption attempts recorded.</td></tr>
+            <% } %>
+            <% assumptionLog.forEach(a => { %>
+            <tr>
+              <td><%= new Date(a.created_at).toLocaleString() %></td>
+              <td><%= a.username || '—' %></td>
+              <td><%= a.policy_name || '#' + a.policy_id %></td>
+              <td class="mono small"><%= a.subject_claim || '—' %></td>
+              <td class="mono small"><%= a.audience_claim || '—' %></td>
+              <td><span class="badge <%= a.result === 'allowed' ? 'badge-ok' : 'badge-warn' %>"><%= a.result %></span></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<%
+  title = 'Sign in'
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]))
+  body = `
+<div style="max-width:400px;margin:3rem auto">
+  <h1>Sign in</h1>
+  ${error ? '<p class="err">' + esc(error) + '</p>' : ''}
+  <form class="form" method="post" action="/auth/login">
+    <input type="hidden" name="next" value="${esc(next)}">
+    <label>Username or email
+      <input type="text" name="username" autocomplete="username" required autofocus>
+    </label>
+    <label>Password
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <br>
+    <button type="submit">Sign in</button>
+  </form>
+  <p class="muted" style="margin-top:1rem">No account? <a href="/auth/register">Register</a></p>
+</div>
+`
+%>
+<%- include('layout', { title, body, user: null, flash: null }) %>

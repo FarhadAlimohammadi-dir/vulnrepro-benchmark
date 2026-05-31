@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Management — PixelFlow Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin">Admin</a>
+      <a href="/admin/tokens" class="active">Tokens</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Token Management</h2>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr><th>Token (partial)</th><th>Owner</th><th>App ID</th><th>Scope</th><th>Status</th><th>Created</th></tr>
+      </thead>
+      <tbody>
+        <% tokens.forEach(function(t) { %>
+        <tr>
+          <td><code class="small"><%= t.token.substring(0, 20) %>...</code></td>
+          <td><strong><%= t.username %></strong></td>
+          <td><code class="small"><%= t.app_id %></code></td>
+          <td class="muted small"><%= t.scope || '—' %></td>
+          <td><span class="badge <%= t.is_revoked ? 'badge-error' : 'badge-success' %>"><%= t.is_revoked ? 'Revoked' : 'Active' %></span></td>
+          <td class="small muted"><%= new Date(t.created_at).toLocaleDateString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <% if (totalPages > 1) { %>
+      <div class="pagination">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <a href="/admin/tokens?page=<%= i %>" class="page-link <%= page === i ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

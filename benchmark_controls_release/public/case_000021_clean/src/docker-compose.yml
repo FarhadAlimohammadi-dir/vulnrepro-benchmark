@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  documind:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - DB_PATH=/data/documind.db
+    volumes:
+      - documind_data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+volumes:
+  documind_data:

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' · Claspace' : 'Claspace' %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">⬡ Claspace</a>
+  <nav>
+    <% if (user) { %>
+      <a href="/workspaces">Workspaces</a>
+      <a href="/projects">Projects</a>
+      <a href="/snippets">Snippets</a>
+      <a href="/activity">Activity</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <% } %>
+  </nav>
+  <div>
+    <% if (user) { %>
+      <a href="/profile"><%= user.username %></a>
+      <a href="/api-keys">API Keys</a>
+      <form action="/auth/logout" method="post" style="display:inline">
+        <button class="link">Sign out</button>
+      </form>
+    <% } else { %>
+      <a href="/auth/login">Sign in</a>
+      <a href="/auth/register">Register</a>
+    <% } %>
+  </div>
+</header>
+
+<div class="container">
+  <% if (flash && flash.info) { %>
+    <div class="flash flash-info"><%= flash.info %></div>
+  <% } %>
+  <% if (flash && flash.error) { %>
+    <div class="flash flash-error"><%= flash.error %></div>
+  <% } %>
+
+  <%- body %>
+</div>
+
+<footer>
+  <span class="muted">Claspace — workspace manager for AI coding assistants</span>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>

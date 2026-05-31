@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVault — <%= bucket.name %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/dashboard" class="logo">☁ CloudVault</a>
+      <nav class="main-nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/buckets" class="active">Buckets</a>
+        <a href="/search">Search</a>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="/admin">Admin</a>
+        <% } %>
+        <a href="/profile">Profile</a>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="breadcrumb">
+      <a href="/buckets">Buckets</a> › <span><%= bucket.name %></span>
+    </div>
+
+    <div class="page-header">
+      <h1><%= bucket.name %></h1>
+      <span class="badge"><%= bucket.region %></span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('objects')">Objects (<%= objects.length %>)</button>
+      <button class="tab" onclick="showTab('policy')">Bucket Policy</button>
+    </div>
+
+    <div id="tab-objects" class="tab-content">
+      <table class="data-table">
+        <thead>
+          <tr><th>Key</th><th>Content Type</th><th>Size</th><th>Last Modified</th></tr>
+        </thead>
+        <tbody>
+          <% objects.forEach(o => { %>
+            <tr>
+              <td><code><%= o.key %></code></td>
+              <td><%= o.contentType || '—' %></td>
+              <td><%= o.size %> B</td>
+              <td><%= new Date(o.createdAt).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+          <% if (objects.length === 0) { %>
+            <tr><td colspan="4" class="empty">No objects in this bucket.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab-policy" class="tab-content" style="display:none">
+      <pre class="code-block"><%= JSON.stringify(policy, null, 2) %></pre>
+      <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'engineer')) { %>
+        <p><a href="#" class="btn btn-small">Edit Policy via API</a></p>
+      <% } %>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <span>CloudVault Storage Manager v2.1.0</span>
+    </div>
+  </footer>
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + name).style.display = 'block';
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

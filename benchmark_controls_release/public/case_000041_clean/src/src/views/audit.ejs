@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies">Policies</a>
+      <a href="/admin">Admin</a>
+      <a href="/admin/audit" class="active">Audit Log</a>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Audit Log</h1>
+      <p>Comprehensive record of all system events. Total: <strong><%= total %></strong> entries.</p>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Details</th><th>IP</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% entries.forEach(e => { %>
+          <tr>
+            <td><%= new Date(e.created_at).toLocaleString() %></td>
+            <td><%= e.username || '—' %></td>
+            <td><code><%= e.action %></code></td>
+            <td><%= e.resource_type %> #<%= e.resource_id %></td>
+            <td><%= e.details || '—' %></td>
+            <td class="mono small"><%= e.ip_address || '—' %></td>
+            <td><span class="badge <%= e.status === 'success' ? 'badge-ok' : 'badge-warn' %>"><%= e.status %></span></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% if (page > 1) { %>
+      <a href="/admin/audit?page=<%= page - 1 %>" class="btn btn-sm btn-outline">← Prev</a>
+      <% } %>
+      <span class="page-info">Page <%= page %> of <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+      <a href="/admin/audit?page=<%= page + 1 %>" class="btn btn-sm btn-outline">Next →</a>
+      <% } %>
+    </div>
+    <% } %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

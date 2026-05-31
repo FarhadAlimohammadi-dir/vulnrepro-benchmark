@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log – Admin – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/admin" class="active">Admin</a>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header">
+    <h1>Audit Log</h1>
+    <a href="/admin" class="btn btn-secondary">← Back</a>
+  </div>
+  <div class="card">
+    <table class="table">
+      <thead><tr><th>#</th><th>User</th><th>Action</th><th>Target</th><th>IP</th><th>Time</th></tr></thead>
+      <tbody>
+      <% events.forEach(e => { %>
+      <tr>
+        <td><%= e.id %></td>
+        <td><%= e.username %></td>
+        <td><span class="badge"><%= e.action %></span></td>
+        <td class="mono small"><%= e.target ? e.target.slice(0,32) : '—' %></td>
+        <td><%= e.ip || '—' %></td>
+        <td><%= new Date(e.ts * 1000).toLocaleString() %></td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/admin/audit?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+    <p class="pagination-info">Showing <%= events.length %> of <%= total %> events</p>
+  </div>
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

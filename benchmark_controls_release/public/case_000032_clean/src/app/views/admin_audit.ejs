@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — PixelFlow Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin">Admin</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/audit" class="active">Audit Log</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Audit Log</h2>
+      <p class="muted">Complete record of all platform actions</p>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr><th>Timestamp</th><th>Actor</th><th>Action</th><th>Resource</th><th>Details</th><th>IP</th></tr>
+      </thead>
+      <tbody>
+        <% entries.forEach(function(entry) { %>
+        <tr>
+          <td class="small muted"><%= new Date(entry.timestamp).toLocaleString() %></td>
+          <td><code class="small"><%= entry.actor_id %></code></td>
+          <td><span class="badge badge-action"><%= entry.action %></span></td>
+          <td class="small muted"><%= entry.resource_type || '—' %> / <%= entry.resource_id ? entry.resource_id.substring(0,12) : '—' %></td>
+          <td class="small"><%= entry.details || '—' %></td>
+          <td class="small muted"><%= entry.ip_address || '—' %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <% if (totalPages > 1) { %>
+      <div class="pagination">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <a href="/admin/audit?page=<%= i %>" class="page-link <%= page === i ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

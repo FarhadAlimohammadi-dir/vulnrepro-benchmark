@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin Overview — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/posts">Posts</a>
+      <a href="/admin/audit">Audit Log</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>Administration Overview</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3><%= userCount %></h3>
+      <p>Total Users</p>
+      <a href="/admin/users" class="btn btn-sm">View All</a>
+    </div>
+    <div class="stat-card">
+      <h3><%= postCount %></h3>
+      <p>Total Posts</p>
+      <a href="/admin/posts" class="btn btn-sm">View All</a>
+    </div>
+    <div class="stat-card">
+      <h3><%= auditCount %></h3>
+      <p>Audit Entries</p>
+      <a href="/admin/audit" class="btn btn-sm">View Log</a>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

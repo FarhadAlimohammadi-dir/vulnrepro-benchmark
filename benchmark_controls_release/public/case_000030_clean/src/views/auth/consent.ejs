@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a10 10 0 0 1 0 20"/>
+        <path d="M2 12h20"/>
+      </svg>
+      <span>Nexus</span>
+    </div>
+    <h1>Authorize Application</h1>
+    <p class="consent-app"><strong><%= client.name %></strong> is requesting access to your Nexus account.</p>
+    <div class="scope-list">
+      <p class="muted">Requested permissions:</p>
+      <ul>
+        <% scope.split(' ').forEach(s => { %>
+        <li><%= s %></li>
+        <% }) %>
+      </ul>
+    </div>
+    <form action="/auth/authorize" method="POST">
+      <input type="hidden" name="client_id" value="<%= client.id %>">
+      <input type="hidden" name="redirect_uri" value="<%= redirect_uri %>">
+      <input type="hidden" name="scope" value="<%= scope %>">
+      <input type="hidden" name="state" value="<%= state %>">
+      <input type="hidden" name="code_challenge" value="<%= code_challenge %>">
+      <input type="hidden" name="code_challenge_method" value="<%= code_challenge_method %>">
+      <div class="consent-actions">
+        <button type="submit" name="action" value="allow" class="btn-primary">Allow Access</button>
+        <button type="submit" name="action" value="deny" class="btn-secondary">Deny</button>
+      </div>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>

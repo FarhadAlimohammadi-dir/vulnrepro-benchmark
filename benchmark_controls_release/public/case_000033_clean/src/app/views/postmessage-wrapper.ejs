@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Callback</title>
+</head>
+<body>
+  <script>
+    (function() {
+      const data = <%- data %>;
+      const targetOrigin = '<%= targetOrigin %>';
+
+      // Refuse to broadcast to wildcard or non-https origins.
+      if (!targetOrigin || targetOrigin === '*' || !/^https:\/\//.test(targetOrigin)) {
+        return;
+      }
+
+      if (window.opener) {
+        window.opener.postMessage(data, targetOrigin);
+      }
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(data, targetOrigin);
+      }
+    })();
+  </script>
+</body>
+</html>

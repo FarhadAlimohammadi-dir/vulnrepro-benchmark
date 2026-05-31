@@ -1,0 +1,7 @@
+<section class="section error-page">
+  <div class="error-card">
+    <h1 class="error-code"><%= typeof status !== 'undefined' ? status : 500 %></h1>
+    <p class="error-message"><%= typeof message !== 'undefined' ? message : 'Something went wrong.' %></p>
+    <a href="/" class="btn-primary">Return to Homepage</a>
+  </div>
+</section>

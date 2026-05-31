@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - docvault_data:/data
+    environment:
+      - NODE_ENV=production
+volumes:
+  docvault_data:

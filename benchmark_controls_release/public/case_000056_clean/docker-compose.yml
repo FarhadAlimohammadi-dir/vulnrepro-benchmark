@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: prismauser
+      POSTGRES_PASSWORD: prismapass
+      POSTGRES_DB: contentflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prismauser"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL: postgresql://prismauser:prismapass@db:5432/contentflow?schema=public
+      PORT: 9000
+      NODE_ENV: development
+      LOG_LEVEL: info
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "
+        npx prisma migrate deploy &&
+        node prisma/seed.js &&
+        node app.js
+      "
+
+volumes:
+  postgres_data:

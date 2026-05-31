@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Account - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/account/overview" class="active">Account</a></li>
+        <li><a href="/billing_interfaces">Billing</a></li>
+        <li class="user-menu">
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Link Account</h1>
+    
+    <div class="auth-box">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+      
+      <form method="POST" action="/account/link">
+        <div class="form-group">
+          <label for="platform">Platform</label>
+          <select id="platform" name="platform" required>
+            <option value="">Select a platform</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="threads">Threads</option>
+            <option value="whatsapp">WhatsApp</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="platform_user_id">Platform User ID</label>
+          <input type="text" id="platform_user_id" name="platform_user_id" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Link Account</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

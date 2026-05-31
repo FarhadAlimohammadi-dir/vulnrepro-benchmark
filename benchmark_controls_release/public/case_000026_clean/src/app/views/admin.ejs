@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, notifications: notifications }) %>
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1>Admin Panel</h1>
+    <p class="page-subtitle">System overview, user management, and audit controls.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card stat-card-admin">
+      <div class="stat-value"><%= users.filter(u => u.active).length %></div>
+      <div class="stat-label">Active Users</div>
+    </div>
+    <div class="stat-card stat-card-admin">
+      <div class="stat-value"><%= users.filter(u => !u.active).length %></div>
+      <div class="stat-label">Deactivated</div>
+    </div>
+    <div class="stat-card stat-card-admin">
+      <div class="stat-value"><%= recentLogs.length %></div>
+      <div class="stat-label">Recent Events</div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="content-panel">
+      <div class="panel-header">
+        <h2>User Accounts</h2>
+        <a href="/admin/users" class="btn-link">Manage &rarr;</a>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Username</th><th>Role</th><th>Department</th><th>Status</th><th>Last Login</th></tr></thead>
+        <tbody>
+          <% users.slice(0, 8).forEach(u => { %>
+          <tr>
+            <td><strong><%= u.username %></strong></td>
+            <td><span class="role-tag role-<%= u.role %>"><%= u.role %></span></td>
+            <td class="muted"><%= u.department || '—' %></td>
+            <td><span class="badge <%= u.active ? 'badge-green' : 'badge-red' %>"><%= u.active ? 'Active' : 'Disabled' %></span></td>
+            <td class="muted"><%= u.last_login || 'Never' %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-panel">
+      <div class="panel-header">
+        <h2>Recent Audit Events</h2>
+        <a href="/admin/audit" class="btn-link">Full log &rarr;</a>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Actor</th><th>Action</th><th>Time</th></tr></thead>
+        <tbody>
+          <% recentLogs.forEach(e => { %>
+          <tr>
+            <td><span class="user-chip-sm"><%= e.actor %></span></td>
+            <td><code class="mono small"><%= e.action %></code></td>
+            <td class="muted"><%= e.ts %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <span>CloudLens IAM Analyzer &copy; 2024 &mdash; Platform Engineering</span>
+  <span class="footer-right">Build 2.0.0-stable</span>
+</footer>
+</body>
+</html>

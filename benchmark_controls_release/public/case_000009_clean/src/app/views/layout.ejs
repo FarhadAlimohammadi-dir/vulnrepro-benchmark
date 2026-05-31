@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> – ContextBridge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/dashboard">⚡ ContextBridge</a>
+    </div>
+    <ul class="nav-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/pipelines">Pipelines</a></li>
+        <% if (user.role === 'admin') { %>
+          <li><a href="/admin">Admin</a></li>
+        <% } %>
+        <li><a href="/profile"><%= user.username %></a></li>
+        <li>
+          <form method="POST" action="/logout" style="display:inline">
+            <button type="submit" class="btn-link">Sign Out</button>
+          </form>
+        </li>
+      <% } else { %>
+        <li><a href="/login">Sign In</a></li>
+      <% } %>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <%- body %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 ContextBridge Inc. &middot; AI Pipeline Orchestration</p>
+  </footer>
+</body>
+</html>

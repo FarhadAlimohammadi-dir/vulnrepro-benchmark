@@ -1,0 +1,49 @@
+<%
+  title = 'Profile'
+  function esc(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+  }
+  const actRows = recentActivity.map(r => `
+    <div class="entry">
+      <span class="pill">${esc(r.kind)}</span>
+      <span class="muted"> ${esc(r.message || '')}</span>
+      <span class="muted" style="float:right;font-size:0.85rem">${esc(r.created_at)}</span>
+    </div>
+  `).join('')
+  const bioHtml = u.bio ? esc(u.bio) : '<em>No bio set</em>'
+  body = `
+<h1>Profile — ${esc(u.username)}</h1>
+<p class="muted">${esc(u.email)} · <span class="pill">${esc(u.role)}</span> · joined ${esc(u.created_at)}</p>
+<p>${bioHtml}</p>
+
+<details>
+  <summary>Edit profile</summary>
+  <form class="form" method="post" action="/profile/update" style="margin-top:0.5rem;max-width:500px">
+    <label>Bio <input name="bio" value="${esc(u.bio || '')}"></label>
+    <label>Avatar URL <input name="avatar_url" type="url" value="${esc(u.avatar_url || '')}"></label>
+    <br><button type="submit">Save</button>
+  </form>
+</details>
+
+<details style="margin-top:1rem">
+  <summary>Change password</summary>
+  <form class="form" method="post" action="/profile/password" style="margin-top:0.5rem;max-width:400px">
+    <label>Current password <input type="password" name="current_password" required></label>
+    <label>New password <input type="password" name="new_password" minlength="6" required></label>
+    <br><button type="submit">Change password</button>
+  </form>
+</details>
+
+<h2>API Keys</h2>
+<p>${esc(keyCount)} key(s) · <a href="/api-keys">Manage →</a></p>
+
+<h2>Recent activity</h2>
+${actRows || '<p class="muted">No activity yet</p>'}
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

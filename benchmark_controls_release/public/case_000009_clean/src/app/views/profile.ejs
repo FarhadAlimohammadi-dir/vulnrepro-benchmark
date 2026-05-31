@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile – ContextBridge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">⚡ ContextBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/pipelines">Pipelines</a></li>
+      <% if (user.role === 'admin') { %><li><a href="/admin">Admin</a></li><% } %>
+      <li><a href="/profile" class="active"><%= user.username %></a></li>
+      <li>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>My Profile</h1>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-avatar"><%= user.username.charAt(0).toUpperCase() %></div>
+      <div class="profile-info">
+        <h2><%= user.username %></h2>
+        <p class="text-muted"><%= user.email %></p>
+        <span class="badge badge-<%= user.role %>"><%= user.role %></span>
+        <p class="text-muted">Member since <%= new Date(user.created_at).toLocaleDateString() %></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><h2>Recent Activity</h2></div>
+      <% if (recentActivity.length === 0) { %>
+        <p class="text-muted">No activity recorded yet.</p>
+      <% } else { %>
+        <table class="table">
+          <thead><tr><th>Action</th><th>Detail</th><th>When</th></tr></thead>
+          <tbody>
+            <% recentActivity.forEach(function(a) { %>
+              <tr>
+                <td><code><%= a.action %></code></td>
+                <td><%= a.detail ? a.detail.substring(0, 60) : '—' %></td>
+                <td><%= new Date(a.created_at).toLocaleString() %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+  <footer class="footer"><p>&copy; 2026 ContextBridge Inc.</p></footer>
+</body>
+</html>

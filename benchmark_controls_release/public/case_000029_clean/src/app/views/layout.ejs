@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' – DocVault' : 'DocVault' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/docs/upload">Upload</a>
+    <a href="/docs/settings/profile">Profile</a>
+    <% if (currentUser.role === 'admin') { %>
+    <a href="/admin">Admin</a>
+    <% } %>
+    <a href="/logout" class="btn-link">Logout</a>
+    <span class="navbar-user">👤 <%= currentUser.display_name || currentUser.username %></span>
+  </div>
+  <% } %>
+</nav>
+<div class="container">
+  <%- body %>
+</div>
+<footer class="footer">
+  <span>© 2024 DocVault — Secure document management for teams</span>
+</footer>
+</body>
+</html>

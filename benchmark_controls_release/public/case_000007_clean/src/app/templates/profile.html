@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Profile — ToolForge{% endblock %}
+{% block content %}
+<h1>My Profile</h1>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <h3>Account Information</h3>
+    <table class="meta-table">
+      <tr><th>Username</th><td>{{ user.username }}</td></tr>
+      <tr><th>Display Name</th><td>{{ user.display_name or '—' }}</td></tr>
+      <tr><th>Email</th><td>{{ user.email or '—' }}</td></tr>
+      <tr><th>Role</th><td><span class="badge badge-role">{{ user.role }}</span></td></tr>
+      <tr><th>Member Since</th><td>{{ user.created_at }}</td></tr>
+      <tr><th>Last Login</th><td>{{ user.last_login or 'Not recorded' }}</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>My Tools ({{ my_tools | length }})</h2>
+<table class="table">
+  <thead>
+    <tr><th>Name</th><th>Handler</th><th>Invocations</th><th>Active</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+    {% for t in my_tools %}
+    <tr>
+      <td><a href="/tools/{{ t.name }}">{{ t.name }}</a></td>
+      <td><span class="badge badge-handler">{{ t.handler }}</span></td>
+      <td>{{ t.invoke_count }}</td>
+      <td>{{ 'Yes' if t.is_active else 'No' }}</td>
+      <td>{{ t.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="empty">You have not registered any tools yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Recent Invocations</h2>
+<table class="table">
+  <thead>
+    <tr><th>Tool</th><th>Status</th><th>Time</th></tr>
+  </thead>
+  <tbody>
+    {% for i in my_invocations %}
+    <tr>
+      <td>{{ i.tool_name }}</td>
+      <td><span class="badge badge-{{ i.status }}">{{ i.status }}</span></td>
+      <td>{{ i.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3" class="empty">No invocations recorded.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

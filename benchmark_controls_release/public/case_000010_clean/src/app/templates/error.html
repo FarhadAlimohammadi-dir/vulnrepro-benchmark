@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}Error {{ code }} — NexusAI Workspace{% endblock %}
+{% block content %}
+<div class="container container-narrow" style="text-align:center;padding-top:4rem">
+  <div style="font-size:4rem;margin-bottom:1rem">{% if code == 404 %}🔍{% elif code == 403 %}🔒{% else %}⚠️{% endif %}</div>
+  <h1>{{ code }}</h1>
+  <p style="color:#6b7280;font-size:1.1rem">{{ message }}</p>
+  <a href="/" class="btn-primary" style="margin-top:1.5rem;display:inline-block">Go to Dashboard</a>
+</div>
+{% endblock %}

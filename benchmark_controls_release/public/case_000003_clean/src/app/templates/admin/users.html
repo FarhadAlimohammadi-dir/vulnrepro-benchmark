@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block title %}Users &mdash; Admin &mdash; CodeNest{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Users</h1>
+  <a href="/admin/" class="btn btn-secondary">Back</a>
+</div>
+<table class="table">
+  <thead>
+    <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th>Last Login</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.id }}</td>
+      <td>{{ u.username }}</td>
+      <td>{{ u.email }}</td>
+      <td>
+        <select onchange="updateRole({{ u.id }}, this.value)">
+          {% for r in ['admin','member','guest'] %}
+          <option value="{{ r }}" {% if u.role == r %}selected{% endif %}>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </td>
+      <td class="mono small">{{ u.created_at }}</td>
+      <td class="mono small">{{ u.last_login or 'Never' }}</td>
+      <td><button onclick="updateRole({{ u.id }}, document.querySelector('[onchange]').value)" class="btn btn-secondary btn-sm">Save</button></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="pagination">
+  {% if page > 1 %}<a href="/admin/users?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="/admin/users?page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+</div>
+<script>
+function updateRole(uid, role) {
+  fetch('/admin/users/' + uid + '/role', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({role: role})
+  }).then(r => r.json()).then(d => {
+    if (d.ok) alert('Role updated');
+    else alert('Error: ' + d.error);
+  });
+}
+</script>
+{% endblock %}

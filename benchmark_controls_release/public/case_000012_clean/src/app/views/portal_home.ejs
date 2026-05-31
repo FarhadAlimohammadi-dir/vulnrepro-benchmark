@@ -1,0 +1,23 @@
+<%- include('layout') %>
+<% const title = 'Portal' %>
+
+<div class="page-header"><h1>Integration Portal</h1></div>
+
+<p>The NexusBoard portal provides access to external integrations, SSO click-through handling, and workspace resource directories.</p>
+
+<% if (unread > 0) { %>
+<div class="alert alert-info">You have <strong><%= unread %></strong> unread notification<%= unread !== 1 ? 's' : '' %>.</div>
+<% } %>
+
+<div class="grid-two">
+  <div class="item-card">
+    <div class="item-title"><a href="/portal/links">Resource Directory</a></div>
+    <div class="item-meta">Browse curated workspace links organised by category.</div>
+  </div>
+  <div class="item-card">
+    <div class="item-title"><a href="/portal/profile">Profile Settings</a></div>
+    <div class="item-meta">Update your display name and email address.</div>
+  </div>
+</div>
+
+<%- include('layout_end') %>

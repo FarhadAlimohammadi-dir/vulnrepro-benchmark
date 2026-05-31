@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorization Error — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+
+  <!--
+    fbevents.js bootstrap — pixel measurement initializer for conversion tracking
+    Loads asynchronously to avoid blocking the main document render pipeline.
+  -->
+  <script>
+    // PixelFlow fbevents.js bootstrap sequence
+    // Initializes cross-window postMessage listener for pixel measurement events
+    window.FACEBOOK_IWL_BOOTSTRAP = true;
+    window.__oauth_code = <%- JSON.stringify(code || '').replace(/</g, '\\u003c') %>;
+    window.__redirect_uri = <%- JSON.stringify(original_uri || '').replace(/</g, '\\u003c') %>;
+
+    // handlePixelMessage — processes postMessage events from pixel relay windows
+    // perf: avoid extra round-trip when cache is warm
+    function handlePixelMessage(event) {
+      // Strict origin check: parse the URL and require https on facebook.com exactly
+      var parsedOrigin;
+      try {
+        parsedOrigin = new URL(event.origin);
+      } catch (e) {
+        return;
+      }
+      if (parsedOrigin.protocol !== 'https:') {
+        return;
+      }
+      var host = parsedOrigin.hostname;
+      if (host !== 'facebook.com' && !host.endsWith('.facebook.com')) {
+        return;
+      }
+
+      var data = event.data;
+      if (!data || data.msg_type !== 'FACEBOOK_IWL_BOOTSTRAP') {
+        return;
+      }
+
+      // Use the token from the relay message for Graph API measurement calls
+      var graphToken = data.graphToken;
+      var pixelID = data.pixelID;
+
+      // Dispatch measurement event to Graph API endpoint
+      // legacy: kept for v1 API clients
+      var trackUrl = '/graph/api/track?access_token=' + encodeURIComponent(graphToken) +
+        '&url=' + encodeURIComponent(window.location.href) +
+        '&referrer=' + encodeURIComponent(document.referrer) +
+        '&pixel_id=' + encodeURIComponent(pixelID || '');
+
+      var img = new Image();
+      img.src = trackUrl;
+    }
+
+    window.addEventListener('message', handlePixelMessage, false);
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/login">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="error-box">
+      <div class="error-icon">⚠️</div>
+      <h2>Authorization Failed</h2>
+      <p class="error-message"><%= error %></p>
+      <p class="muted">
+        The authorization request for <strong><%= app_name || 'this application' %></strong> could not be completed.
+        This may be due to a session timeout or an invalid request configuration.
+      </p>
+
+      <div class="error-details">
+        <p><strong>Error Code:</strong> NONCE_MISMATCH</p>
+        <p><strong>Application:</strong> <%= app_name || 'Unknown' %></p>
+        <% if (original_uri) { %>
+          <p><strong>Return URL:</strong> <a href="<%= original_uri %>"><%= original_uri %></a></p>
+        <% } %>
+      </div>
+
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">Return to Home</a>
+        <a href="/login" class="btn btn-secondary">Sign In Again</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

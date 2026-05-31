@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Widget Settings — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/settings/widgets" class="active">Widgets</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>Widget Settings</h2>
+  <% if (saved) { %><div class="alert alert-success">Settings saved.</div><% } %>
+
+  <% if (widgets.length === 0) { %>
+    <p class="empty-state">You have no widgets configured. Use the <a href="/api/widgets">API</a> to add one.</p>
+  <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Config</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% widgets.forEach(w => { %>
+        <tr>
+          <td><span class="widget-type-badge"><%= w.widget_type %></span></td>
+          <td><code class="config-preview"><%= w.config_json.slice(0, 60) %><%= w.config_json.length > 60 ? '…' : '' %></code></td>
+          <td><span class="status-dot <%= w.enabled ? 'on' : 'off' %>"><%= w.enabled ? 'Enabled' : 'Disabled' %></span></td>
+          <td><%= new Date(w.created_at).toLocaleDateString() %></td>
+          <td>
+            <form method="POST" action="/settings/widgets/<%= w.id %>/toggle">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn-sm"><%= w.enabled ? 'Disable' : 'Enable' %></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

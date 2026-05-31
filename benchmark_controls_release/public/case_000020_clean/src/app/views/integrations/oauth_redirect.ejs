@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolBridge – Connecting to <%= providerName %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+  </nav>
+  <main class="main-content">
+    <div class="oauth-page">
+      <div class="oauth-card">
+        <div class="oauth-spinner">&#9696;</div>
+        <h2>Connecting to <%= providerName %></h2>
+        <p class="muted">An authorization window is opening. Please complete the login in the popup.</p>
+        <p id="status-msg" class="muted small">Preparing authorization URL…</p>
+        <div class="oauth-actions">
+          <button id="btn-retry" class="btn btn-primary" style="display:none">Open Window Again</button>
+          <a href="/integrations" class="btn btn-ghost">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+  (function () {
+    var authUrl = <%- JSON.stringify(authUrl).replace(/</g, '\\u003c') %>;
+    var providerName = <%- JSON.stringify(providerName).replace(/</g, '\\u003c') %>;
+    var isCustom = <%- JSON.stringify(!!isCustom) %>;
+    var statusEl = document.getElementById('status-msg');
+    var retryBtn = document.getElementById('btn-retry');
+
+    function openAuthWindow(url) {
+      statusEl.textContent = 'Redirecting to: ' + url;
+      var popup = window.open(url, 'tb_oauth_window', 'width=640,height=740,noopener,noreferrer');
+      if (popup) {
+        try { popup.opener = null; } catch (e) { /* ignore */ }
+      } else {
+        statusEl.textContent = 'Popup was blocked. Click the button below to try again.';
+        retryBtn.style.display = 'inline-block';
+      }
+    }
+
+    retryBtn.addEventListener('click', function () {
+      openAuthWindow(authUrl);
+    });
+
+    // Custom integrations carry user-controlled HTTPS authorization URLs.
+    // Do not auto-open them — require an explicit user click so the popup
+    // navigation is bound to a fresh user gesture, not a session ride.
+    if (isCustom) {
+      statusEl.textContent = 'Click the button below to open the authorization window.';
+      retryBtn.textContent = 'Open Authorization Window';
+      retryBtn.style.display = 'inline-block';
+    } else {
+      openAuthWindow(authUrl);
+    }
+  })();
+  </script>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

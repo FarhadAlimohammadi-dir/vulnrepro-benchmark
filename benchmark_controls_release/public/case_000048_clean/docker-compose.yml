@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  flowci:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - flowci_data:/app/data
+      - flowci_config:/app/config
+    environment:
+      - DATABASE_PATH=/app/data/flowci.db
+      - CONFIG_DIR=/app/config
+      - SECRET_KEY=flowci-secret-key-prod-2023
+      - PORT=9000
+    restart: unless-stopped
+
+volumes:
+  flowci_data:
+  flowci_config:

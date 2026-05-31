@@ -1,0 +1,30 @@
+<%
+  title = snippet ? 'Edit snippet' : 'New snippet'
+  const esc = v => String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+  const action = snippet ? '/snippets/' + snippet.id + '/update' : '/snippets'
+  body = `
+<h1>${title}</h1>
+${error ? '<p class="err">' + esc(error) + '</p>' : ''}
+<form class="form" method="post" action="${action}">
+  <label>Title <input name="title" value="${snippet ? esc(snippet.title) : ''}" required></label>
+  <label>Language <input name="language" value="${snippet ? esc(snippet.language || '') : ''}" placeholder="js, py, sql..."></label>
+  <label>Body <textarea name="body" rows="10" style="font-family:monospace">${snippet ? esc(snippet.body || '') : ''}</textarea></label>
+  <label>Visibility
+    <select name="visibility">
+      <option value="private" ${(!snippet||snippet.visibility==='private')?'selected':''}>Private</option>
+      <option value="team"    ${(snippet&&snippet.visibility==='team')?'selected':''}>Team</option>
+      <option value="public"  ${(snippet&&snippet.visibility==='public')?'selected':''}>Public</option>
+    </select>
+  </label>
+  <br>
+  <button type="submit">${snippet ? 'Save changes' : 'Create snippet'}</button>
+  <a href="/snippets" style="margin-left:1rem">Cancel</a>
+</form>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

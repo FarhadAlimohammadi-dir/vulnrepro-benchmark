@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevFlow CI</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">&#9881;</span>
+      <span class="brand-name">DevFlow CI</span>
+    </div>
+    <nav class="nav-links">
+      <a href="/api/projects">Projects</a>
+      <a href="/api/tasks/history">History</a>
+      <a href="/auth/me">Profile</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Continuous Integration Dashboard</h1>
+      <p class="subtitle">Run tasks, search code, and monitor your pipelines in one place.</p>
+    </section>
+
+    <section class="cards">
+      <div class="card">
+        <h2>Projects</h2>
+        <p>Browse repositories, view commit stats, and manage project members.</p>
+        <a class="btn" href="/api/projects">View Projects</a>
+      </div>
+      <div class="card">
+        <h2>Task Runner</h2>
+        <p>Execute approved commands against your projects and inspect results.</p>
+        <a class="btn" href="/api/tasks/history">Recent Runs</a>
+      </div>
+      <div class="card">
+        <h2>Code Search</h2>
+        <p>Search across all project files with ripgrep-powered full-text queries.</p>
+        <a class="btn" href="#search">Search Code</a>
+      </div>
+      <div class="card">
+        <h2>Audit Log</h2>
+        <p>Review platform activity and user actions. Admins only.</p>
+        <a class="btn" href="/api/audit">View Audit Log</a>
+      </div>
+    </section>
+
+    <!-- TODO: replace static tiles with live data fetched from the API -->
+    <section class="stats-bar">
+      <div class="stat">
+        <span class="stat-label">Approved Runners</span>
+        <span class="stat-value">9</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Active Projects</span>
+        <span class="stat-value">10</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Team Members</span>
+        <span class="stat-value">11</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 DevFlow CI &mdash; Internal tooling. Not for public distribution.</p>
+  </footer>
+</body>
+</html>

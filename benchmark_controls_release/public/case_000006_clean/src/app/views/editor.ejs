@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= project.name %> — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects" class="active">Projects</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>
+          <a href="/projects" style="color:#718096;font-size:0.9rem;">Projects</a>
+          <span style="color:#4a5568;"> / </span>
+          <%= project.name %>
+          <span class="badge badge-lang" style="margin-left:6px;"><%= project.language %></span>
+        </h1>
+        <div class="btn-row">
+          <button class="btn btn-secondary btn-sm" onclick="toggleSettings()">Settings</button>
+          <form method="POST" action="/projects/<%= project.id %>/delete" style="display:inline"
+                onsubmit="return confirm('Delete project?');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Settings panel (hidden by default) -->
+      <div id="settings-panel" class="card" style="display:none;margin-bottom:16px;">
+        <h2>Project Settings</h2>
+        <form method="POST" action="/projects/<%= project.id %>/settings" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+          <div class="form-group" style="flex:2;min-width:140px;margin-bottom:0;">
+            <label>Name</label>
+            <input type="text" name="name" value="<%= project.name %>" required />
+          </div>
+          <div class="form-group" style="flex:3;min-width:200px;margin-bottom:0;">
+            <label>Description</label>
+            <input type="text" name="description" value="<%= project.description %>" />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Language</label>
+            <select name="language">
+              <% langs.forEach(function(l) { %>
+              <option value="<%= l %>" <%= l === project.language ? 'selected' : '' %>><%= l %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Visibility</label>
+            <select name="visibility">
+              <option value="private" <%= project.visibility === 'private' ? 'selected' : '' %>>Private</option>
+              <option value="public"  <%= project.visibility === 'public'  ? 'selected' : '' %>>Public</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+
+      <!-- Editor layout -->
+      <div class="editor-layout">
+        <!-- File tree -->
+        <div class="file-tree">
+          <h3>Files</h3>
+          <ul>
+            <% files.forEach(function(f) { %>
+            <li>
+              <a href="/projects/<%= project.id %>?file=<%= f.id %>"
+                 class="file-link"
+                 style="<%= activeFile && f.id === activeFile.id ? 'color:#e2e8f0;font-weight:600;' : '' %>">
+                <%= f.filename %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+          <!-- New file -->
+          <form class="new-file-form" id="new-file-form">
+            <input type="text" id="new-filename" placeholder="new-file.py" />
+            <button type="button" class="btn btn-secondary btn-sm" onclick="createFile()">+</button>
+          </form>
+        </div>
+
+        <!-- Code editor panel -->
+        <div class="editor-panel">
+          <div id="editor-header">
+            <% if (activeFile) { %>
+            <span style="color:#a0aec0;font-size:0.9rem;"><%= activeFile.filename %></span>
+            <button class="btn btn-primary btn-sm" style="float:right;" onclick="saveFile()">Save</button>
+            <% } else { %>
+            <span class="muted">No file selected. Create one on the left.</span>
+            <% } %>
+          </div>
+
+          <% if (activeFile) { %>
+          <textarea id="editor" rows="20"><%= activeFile.content %></textarea>
+          <% } %>
+
+          <!-- Terminal strip -->
+          <div style="margin-top:12px;">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+              <span style="font-size:0.85rem;color:#a0aec0;">Terminal</span>
+              <input type="text" id="cmd-input" placeholder="echo hello"
+                     style="flex:1;padding:4px 8px;background:#0a0c14;border:1px solid #2d3748;border-radius:4px;color:#e2e8f0;font-family:monospace;font-size:0.85rem;" />
+              <button class="btn btn-secondary btn-sm" onclick="runCmd()">Run</button>
+            </div>
+            <div class="terminal" id="terminal-output">Ready.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %></span>
+  </footer>
+
+  <script>
+    const PROJECT_ID = '<%= project.id %>';
+    const ACTIVE_FILE_ID = '<%= activeFile ? activeFile.id : "" %>';
+
+    function toggleSettings() {
+      const p = document.getElementById('settings-panel');
+      p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function saveFile() {
+      const content  = document.getElementById('editor').value;
+      const filename = document.querySelector('#editor-header span').textContent.trim();
+      const resp = await fetch('/projects/' + PROJECT_ID + '/files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, content }),
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        document.getElementById('terminal-output').textContent = 'Saved ' + filename;
+      }
+    }
+
+    async function createFile() {
+      const name = document.getElementById('new-filename').value.trim();
+      if (!name) return;
+      const resp = await fetch('/projects/' + PROJECT_ID + '/files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: name, content: '' }),
+      });
+      const data = await resp.json();
+      if (data.ok) window.location.href = '/projects/' + PROJECT_ID + '?file=' + data.fileId;
+    }
+
+    async function runCmd() {
+      const cmd = document.getElementById('cmd-input').value.trim();
+      if (!cmd) return;
+      const out = document.getElementById('terminal-output');
+      out.textContent = '$ ' + cmd + '\nRunning…';
+      // Commands are dispatched via the LSP exec endpoint using the
+      // session-bound channel; the browser extension supplies the token.
+      // For the web terminal, we rely on the extension injecting the header.
+      out.textContent = '$ ' + cmd + '\n[Web terminal: use the IDE extension for shell access]';
+    }
+  </script>
+</body>
+</html>

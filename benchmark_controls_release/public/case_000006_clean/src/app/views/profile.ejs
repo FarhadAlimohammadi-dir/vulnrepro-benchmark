@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile" class="active">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <h1>Profile &amp; Settings</h1>
+
+      <% if (saved) { %>
+      <div class="alert" style="background:#1c4532;border:1px solid #276749;color:#68d391;">Profile saved successfully.</div>
+      <% } %>
+      <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <h2>Account Information</h2>
+          <table class="info-table">
+            <tr><th>Username</th><td><%= user.username %></td></tr>
+            <tr><th>Role</th><td><span class="badge badge-role"><%= user.role %></span></td></tr>
+            <tr><th>Member since</th><td><%= user.created_at ? user.created_at.slice(0,10) : 'N/A' %></td></tr>
+            <tr><th>Last login</th><td><%= user.last_login ? user.last_login.slice(0,16) : 'N/A' %></td></tr>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>Edit Profile</h2>
+          <form method="POST" action="/profile">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= user.email || '' %>" required />
+            </div>
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea id="bio" name="bio" rows="3"><%= user.bio || '' %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Command history -->
+      <div class="card">
+        <h2>Recent Command History</h2>
+        <% if (history.length === 0) { %>
+        <p class="muted">No commands recorded.</p>
+        <% } else { %>
+        <ul class="history-list">
+          <% history.forEach(function(h) { %>
+          <li>
+            <code><%= h.command.slice(0, 100) %></code>
+            <span class="muted"><%= h.ran_at.slice(0,16) %> — exit <%= h.exit_code %></span>
+          </li>
+          <% }); %>
+        </ul>
+        <% } %>
+      </div>
+
+      <!-- AI Sessions -->
+      <div class="card">
+        <h2>AI Sessions</h2>
+        <% if (aiSessions.length === 0) { %>
+        <p class="muted">No AI sessions started.</p>
+        <% } else { %>
+        <table class="info-table">
+          <thead><tr><th>Session Ref</th><th>Model</th><th>Started</th></tr></thead>
+          <tbody>
+            <% aiSessions.forEach(function(s) { %>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;"><%= s.session_ref.slice(0,16) %>…</td>
+              <td><%= s.model %></td>
+              <td><%= s.created_at.slice(0,16) %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ prompt.name }} — PromptForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{{ prompt.name }}</h2>
+  <div class="action-group">
+    <a href="/api/prompts/{{ prompt.id }}/export" class="btn-secondary">Export JSON</a>
+    <a href="/prompts" class="btn-secondary">← Back</a>
+  </div>
+</div>
+
+<div class="detail-card">
+  <dl class="detail-list">
+    <dt>Model</dt><dd><code>{{ prompt.model }}</code></dd>
+    <dt>Type</dt><dd>{{ prompt.prompt_type }}</dd>
+    <dt>Version</dt><dd>{{ prompt.version }}</dd>
+    <dt>Public</dt><dd>{{ 'Yes' if prompt.is_public else 'No' }}</dd>
+    <dt>Created</dt><dd>{{ prompt.created_at }}</dd>
+    <dt>Updated</dt><dd>{{ prompt.updated_at }}</dd>
+    {% if prompt.description %}
+    <dt>Description</dt><dd>{{ prompt.description }}</dd>
+    {% endif %}
+    {% if prompt.tags %}
+    <dt>Tags</dt>
+    <dd>
+      {% for tag in prompt.tags.split(',') if tag %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </dd>
+    {% endif %}
+  </dl>
+</div>
+
+{% if body %}
+<h3>Prompt Body</h3>
+<pre class="code-block">{{ body | tojson(indent=2) }}</pre>
+{% endif %}
+
+<div class="action-group" style="margin-top:1.5rem">
+  <h4>Generate Code</h4>
+  <a href="#" onclick="fetchCodegen('bash')" class="btn-primary">Generate Bash</a>
+  <a href="#" onclick="fetchCodegen('python')" class="btn-secondary">Generate Python</a>
+</div>
+<pre id="codegen-output" class="code-block" style="display:none"></pre>
+
+<script>
+function fetchCodegen(lang) {
+  fetch('/api/prompts/' + {{ prompt.id }} + '/export')
+    .then(r => r.json())
+    .then(payload => {
+      return fetch('/api/prompts/codegen?lang=' + lang, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': {{ g.csrf_token | tojson }}
+        },
+        body: JSON.stringify(payload)
+      });
+    })
+    .then(r => r.text())
+    .then(code => {
+      const el = document.getElementById('codegen-output');
+      el.textContent = code;
+      el.style.display = 'block';
+    })
+    .catch(e => alert('Error: ' + e));
+}
+</script>
+{% endblock %}

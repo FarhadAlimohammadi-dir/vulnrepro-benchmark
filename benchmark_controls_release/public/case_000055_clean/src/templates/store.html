@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CartFlow — Store</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">CartFlow</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/store">Store</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Available Plans &amp; Add-ons</h2>
+    <div class="product-grid">
+      {% for p in products %}
+      <div class="product-card">
+        <span class="category-badge">{{ p.category }}</span>
+        <h3>{{ p.name }}</h3>
+        <p class="desc">{{ p.description }}</p>
+        <div class="price">${{ "%.2f"|format(p.price) }}</div>
+        <button class="btn-primary" onclick="addToCart({{ p.id }}, {{ p.price }})">Add to cart</button>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2024 CartFlow Inc.</p>
+  </footer>
+  <script>
+    // TODO: wire up a real cart state manager; localStorage is a placeholder
+    function addToCart(productId, price) {
+      alert('Product ' + productId + ' added — price $' + price.toFixed(2));
+    }
+  </script>
+</body>
+</html>

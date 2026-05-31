@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ModelHub — Sign In</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+<div class="auth-card">
+  <h2>🧠 ModelHub</h2>
+  <p class="muted">Sign in to access the model registry</p>
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+  <div class="flash flash-{{ cat }}">{{ msg }}</div>
+  {% endfor %}
+  <form method="post">
+    <input type="hidden" name="next" value="{{ request.args.get('next','') }}">
+    <label>Username</label>
+    <input name="username" type="text" required autofocus>
+    <label>Password</label>
+    <input name="password" type="password" required>
+    <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+  </form>
+</div>
+</body>
+</html>

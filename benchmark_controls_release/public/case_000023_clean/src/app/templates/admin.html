@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>&#9881; Admin Panel</h2>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Users ({{ total_users }})</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Username</th><th>Role</th><th>Joined</th><th>Last Login</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td><span class="badge">{{ u.role }}</span></td>
+          <td>{{ u.created_at[:10] }}</td>
+          <td>{{ u.last_login[:10] if u.last_login else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Workspace Configuration</h3>
+    <dl class="detail-list">
+      {% for k, v in config.items() %}
+      <dt>{{ k }}</dt><dd><code>{{ v }}</code></dd>
+      {% endfor %}
+    </dl>
+    <hr>
+    <h4>Update Display Settings</h4>
+    <div class="form-group">
+      <label>Theme</label>
+      <select id="cfg-theme">
+        <option value="light" {% if config.theme == 'light' %}selected{% endif %}>Light</option>
+        <option value="dark"  {% if config.theme == 'dark'  %}selected{% endif %}>Dark</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Language</label>
+      <select id="cfg-lang">
+        <option value="en" {% if config.language == 'en' %}selected{% endif %}>English</option>
+        <option value="de" {% if config.language == 'de' %}selected{% endif %}>German</option>
+        <option value="fr" {% if config.language == 'fr' %}selected{% endif %}>French</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="saveConfig()">Save Config</button>
+    <div id="cfg-msg" class="form-error"></div>
+  </div>
+</div>
+
+<div class="card mt-4">
+  <h3>Recent Audit Log</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Detail</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      {% for entry in logs %}
+      <tr>
+        <td>{{ entry.created_at[:16] }}</td>
+        <td>{{ entry.username or '—' }}</td>
+        <td><code>{{ entry.action }}</code></td>
+        <td>{{ entry.resource_type or '—' }}</td>
+        <td>{{ entry.detail or '—' }}</td>
+        <td>{{ entry.ip_address or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function saveConfig() {
+    const msg = document.getElementById('cfg-msg');
+    msg.textContent = '';
+    const r = await fetch('/api/admin/config', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme:    document.getElementById('cfg-theme').value,
+        language: document.getElementById('cfg-lang').value
+      })
+    });
+    const d = await r.json();
+    if (r.ok) { msg.style.color = '#28a745'; msg.textContent = 'Config saved!'; }
+    else { msg.style.color = '#dc3545'; msg.textContent = d.error || 'Failed.'; }
+  }
+</script>
+{% endblock %}

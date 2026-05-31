@@ -1,0 +1,57 @@
+<%- include('layout') %>
+<% const title = 'Dashboard' %>
+
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <a href="/projects/new" class="btn btn-primary">+ New Project</a>
+</div>
+
+<% if (unread > 0) { %>
+<div class="alert alert-info">
+  You have <strong><%= unread %></strong> unread notification<%= unread !== 1 ? 's' : '' %>.
+  <form method="POST" action="/api/notifications/mark-all" style="display:inline">
+    <button type="submit" class="btn btn-sm">Mark all read</button>
+  </form>
+</div>
+<% } %>
+
+<div class="grid-two">
+  <section>
+    <h2>Your Projects</h2>
+    <% if (projects.length === 0) { %>
+      <p class="muted">No projects yet. <a href="/projects/new">Create one</a>.</p>
+    <% } else { %>
+    <ul class="item-list">
+    <% projects.forEach(p => { %>
+      <li class="item-card">
+        <div class="item-title"><a href="/projects/<%= p.id %>"><%= p.name %></a></div>
+        <div class="item-meta"><%= p.description || 'No description' %></div>
+        <div class="item-stats">
+          <span class="badge"><%= p.open_count %> open</span>
+          <span class="badge badge-muted"><%= p.task_count %> total tasks</span>
+        </div>
+      </li>
+    <% }) %>
+    </ul>
+    <a href="/projects" class="link-more">View all projects &rarr;</a>
+    <% } %>
+  </section>
+
+  <section>
+    <h2>Notifications</h2>
+    <% if (notifications.length === 0) { %>
+      <p class="muted">No notifications.</p>
+    <% } else { %>
+    <ul class="item-list">
+    <% notifications.forEach(n => { %>
+      <li class="item-card notif-item <%= n.read ? '' : 'notif-unread' %>">
+        <span><%= n.message %></span>
+        <span class="item-meta"><%= n.created_at %></span>
+      </li>
+    <% }) %>
+    </ul>
+    <% } %>
+  </section>
+</div>
+
+<%- include('layout_end') %>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevForge – Audit Log</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <a href="/admin">Admin</a>
+      <a href="/profile">👤 <%= currentUser ? currentUser.username : '' %></a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Audit Log <span class="muted">(<%= total %> events)</span></h1>
+      <a href="/admin" class="btn">← Back</a>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Actor</th><th>Action</th><th>Target</th><th>IP</th><th>Timestamp</th></tr></thead>
+      <tbody>
+      <% events.forEach(e => { %>
+        <tr>
+          <td><%= e.actor_name %></td>
+          <td><code><%= e.action %></code></td>
+          <td class="muted"><%= e.target || '—' %></td>
+          <td class="muted"><%= e.ip || '—' %></td>
+          <td class="muted"><%= new Date(e.created_at).toLocaleString() %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/admin/audit?page=<%= page-1 %>" class="btn btn-sm">← Prev</a><% } %>
+      <span class="muted">Page <%= page %> of <%= pages %></span>
+      <% if (page < pages) { %><a href="/admin/audit?page=<%= page+1 %>" class="btn btn-sm">Next →</a><% } %>
+    </div>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+</body>
+</html>

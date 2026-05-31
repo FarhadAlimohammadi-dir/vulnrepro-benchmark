@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — CodeFlow Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/admin" class="active">Admin</a>
+      <form action="/logout" method="post" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="nav-logout" type="submit">Logout (<%= user %>)</button></form>
+    </div>
+  </nav>
+  <main class="container">
+    <a href="/admin" class="back-link">&#8592; Admin Dashboard</a>
+    <h1>&#128203; Audit Log</h1>
+
+    <form method="GET" class="search-form">
+      <input type="text" name="action" value="<%= filterAction %>" placeholder="Filter by action...">
+      <input type="text" name="user" value="<%= filterUser %>" placeholder="Filter by user...">
+      <button type="submit" class="btn">Filter</button>
+      <a href="/admin/audit" class="btn">Clear</a>
+    </form>
+
+    <p class="muted"><%= total %> event<%= total !== 1 ? 's' : '' %></p>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Details</th><th>IP</th></tr>
+        </thead>
+        <tbody>
+          <% for (const e of entries) { %>
+            <tr>
+              <td class="muted"><%= new Date(e.created_at * 1000).toLocaleString() %></td>
+              <td><%= e.username || 'system' %></td>
+              <td><code><%= e.action %></code></td>
+              <td>
+                <% if (e.resource_type) { %>
+                  <span class="badge"><%= e.resource_type %></span>
+                  <% if (e.resource_id) { %><small><%= e.resource_id %></small><% } %>
+                <% } else { %>—<% } %>
+              </td>
+              <td class="muted"><%= e.details || '—' %></td>
+              <td class="muted"><%= e.ip_address || '—' %></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (pages > 1) { %>
+      <div class="pagination">
+        <% for (let i = 1; i <= pages; i++) { %>
+          <a href="/admin/audit?page=<%= i %>&action=<%= filterAction %>&user=<%= filterUser %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

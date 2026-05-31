@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PipelineForge{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/dashboard">⚙ PipelineForge</a>
+    </div>
+    <div class="nav-links">
+      {% if session.get('user_id') %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/tasks">Tasks</a>
+        {% if session.get('role') in ('admin', 'manager') %}
+          <a href="/admin">Admin</a>
+        {% endif %}
+        <span class="nav-user">{{ session.get('full_name') or session.get('username') }}</span>
+        <a href="/auth/logout" class="btn-sm">Sign out</a>
+      {% else %}
+        <a href="/auth/login" class="btn-sm">Sign in</a>
+      {% endif %}
+    </div>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <p>PipelineForge v2.1.0 &mdash; CI/CD Task Management</p>
+  </footer>
+</body>
+</html>

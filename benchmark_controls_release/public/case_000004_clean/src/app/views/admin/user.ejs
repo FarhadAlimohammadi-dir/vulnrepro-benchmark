@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= target.username %> — Admin — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin">Admin</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header">
+    <h2>User: <%= target.display_name || target.username %></h2>
+    <a href="/admin" class="btn btn-sm btn-outline">← Back</a>
+  </div>
+
+  <div class="two-col mb-lg">
+    <div class="card">
+      <h3>Details</h3>
+      <dl class="def-list">
+        <dt>Username</dt><dd><%= target.username %></dd>
+        <dt>Email</dt><dd><%= target.email %></dd>
+        <dt>Plan</dt><dd><%= target.plan %></dd>
+        <dt>Role</dt><dd><%= target.role %></dd>
+        <dt>Joined</dt><dd><%= target.created_at %></dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3>Change Plan</h3>
+      <form method="post" action="/admin/users/<%= target.id %>/plan" class="form-inline">
+        <select name="plan">
+          <option value="free"       <%= target.plan==='free'       ? 'selected':'' %>>free</option>
+          <option value="pro"        <%= target.plan==='pro'        ? 'selected':'' %>>pro</option>
+          <option value="enterprise" <%= target.plan==='enterprise' ? 'selected':'' %>>enterprise</option>
+        </select>
+        <button type="submit" class="btn btn-sm">Update plan</button>
+      </form>
+      <h3 class="mt-sm">Change Role</h3>
+      <form method="post" action="/admin/users/<%= target.id %>/role" class="form-inline">
+        <select name="role">
+          <option value="user"  <%= target.role==='user'  ? 'selected':'' %>>user</option>
+          <option value="admin" <%= target.role==='admin' ? 'selected':'' %>>admin</option>
+        </select>
+        <button type="submit" class="btn btn-sm">Update role</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <section>
+      <h3 class="section-title">Recent Notes</h3>
+      <table class="data-table">
+        <thead><tr><th>Title</th><th>Updated</th></tr></thead>
+        <tbody>
+          <% notes.forEach(n => { %>
+          <tr><td><%= n.title %></td><td><%= n.updated_at %></td></tr>
+          <% }) %>
+          <% if (!notes.length) { %><tr><td colspan="2" class="muted">No notes.</td></tr><% } %>
+        </tbody>
+      </table>
+    </section>
+    <section class="card">
+      <h3>Activity log</h3>
+      <table class="data-table data-table-sm">
+        <thead><tr><th>Action</th><th>Target</th><th>When</th></tr></thead>
+        <tbody>
+          <% log.forEach(e => { %>
+          <tr>
+            <td><%= e.action %></td>
+            <td><%= e.target %></td>
+            <td class="muted"><%= e.created_at %></td>
+          </tr>
+          <% }) %>
+          <% if (!log.length) { %><tr><td colspan="3" class="muted">No activity.</td></tr><% } %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

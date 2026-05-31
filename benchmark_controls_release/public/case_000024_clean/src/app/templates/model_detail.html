@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}ModelHub — {{ model.name }}{% endblock %}
+{% block content %}
+<p><a href="/dashboard">&larr; Back to registry</a></p>
+
+<div class="model-header">
+  <h1>{{ model.name }}</h1>
+  <span class="badge badge-{{ model.status }}">{{ model.status }}</span>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Details</h3>
+    <dl class="kv-list">
+      <div class="kv"><dt>Framework</dt><dd>{{ model.framework }}</dd></div>
+      <div class="kv"><dt>Owner</dt><dd>{{ model.username }}</dd></div>
+      <div class="kv"><dt>Status</dt><dd>{{ model.status }}</dd></div>
+      <div class="kv"><dt>Downloads</dt><dd>{{ model.download_count }}</dd></div>
+      <div class="kv"><dt>Created</dt><dd>{{ model.created_at }}</dd></div>
+    </dl>
+    {% if tags %}
+    <div class="tag-row">
+      {% for t in tags %}<span class="tag">{{ t }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    <p>{{ model.description or '' }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Config Summary</h3>
+    <pre class="code-block">{{ model.config_summary or 'Not available' }}</pre>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Discussion ({{ comments|length }})</h3>
+  {% for c in comments %}
+  <div class="comment">
+    <span class="comment-author">{{ c.username }}</span>
+    <span class="comment-date muted">{{ c.created_at[:16] }}</span>
+    <p>{{ c.body }}</p>
+  </div>
+  {% endfor %}
+  {% if not comments %}<p class="muted">No comments yet. Be the first!</p>{% endif %}
+
+  <form method="post" action="/models/{{ model.id }}/comment" class="comment-form">
+    <textarea name="body" rows="3" placeholder="Leave a comment…" class="form-control"></textarea>
+    <button type="submit" class="btn btn-secondary" style="margin-top:.5rem">Post comment</button>
+  </form>
+</div>
+{% endblock %}

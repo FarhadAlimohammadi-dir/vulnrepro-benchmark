@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Audit Log — Admin — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/admin">Admin</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/posts">Posts</a>
+      <a href="/admin/audit" class="active">Audit Log</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>Audit Log</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Target</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      <% entries.forEach(e => { %>
+      <tr>
+        <td class="nowrap"><%= new Date(e.created_at).toLocaleString() %></td>
+        <td><%= e.username || 'anonymous' %></td>
+        <td><code><%= e.action %></code></td>
+        <td><%= e.target || '—' %></td>
+        <td><%= e.ip || '—' %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <div class="pagination">
+    <% if (page > 1) { %><a href="/admin/audit?page=<%= page-1 %>" class="btn btn-sm">&laquo; Prev</a><% } %>
+    <span>Page <%= page %> of <%= totalPages %></span>
+    <% if (page < totalPages) { %><a href="/admin/audit?page=<%= page+1 %>" class="btn btn-sm">Next &raquo;</a><% } %>
+  </div>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

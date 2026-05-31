@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Issue</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<div class="container">
+  <a href="/issues" class="back-link">&#8592; Back to Issues</a>
+
+  <div class="issue-header">
+    <h1><%= issue.title %></h1>
+    <div>
+      <span class="badge status-<%= issue.status %>"><%= issue.status %></span>
+      <span class="badge priority-<%= issue.priority %>"><%= issue.priority %></span>
+      <span class="muted" style="margin-left:.5rem"><code><%= issue.repo %></code></span>
+    </div>
+  </div>
+
+  <div class="issue-meta muted">
+    Opened by <strong><%= issue.author %></strong>
+    on <%= new Date(issue.created_at).toLocaleString() %>
+    &nbsp;|&nbsp; Labels:
+    <% (JSON.parse(issue.labels || '[]')).forEach(l => { %>
+      <span class="label-chip"><%= l %></span>
+    <% }) %>
+  </div>
+
+  <%# Render the issue body with EJS auto-escaping. Newlines are preserved
+      via CSS white-space (see .issue-body { white-space: pre-wrap }) so we
+      do not need to inject raw <br> tags. %>
+  <% if (issue.body) { %>
+    <div class="issue-body" style="white-space: pre-wrap"><%= issue.body %></div>
+  <% } else { %>
+    <div class="issue-body"><em>No description.</em></div>
+  <% } %>
+
+  <% if (tasks.length) { %>
+  <section style="margin-top:1.5rem">
+    <h3>Automation Tasks</h3>
+    <table class="data-table">
+      <thead><tr><th>Task ID</th><th>Status</th><th>Steps</th><th>Created</th></tr></thead>
+      <tbody>
+      <% tasks.forEach(t => { %>
+        <tr>
+          <td><code><%= t.id.slice(0,8) %>…</code></td>
+          <td><span class="badge status-<%= t.status %>"><%= t.status %></span></td>
+          <td><%= JSON.parse(t.plan || '[]').length %></td>
+          <td class="muted"><%= new Date(t.created_at).toLocaleString() %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+  <% } %>
+
+  <section class="comments">
+    <h3>Comments (<%= comments.length %>)</h3>
+    <% comments.forEach(c => { %>
+      <div class="comment">
+        <div class="comment-meta"><strong><%= c.author %></strong> &middot; <span class="muted"><%= new Date(c.created_at).toLocaleString() %></span></div>
+        <div class="comment-body"><%= c.body %></div>
+      </div>
+    <% }) %>
+
+    <form method="POST" action="/issues/<%= issue.id %>/comments" class="comment-form">
+      <textarea name="body" rows="4" placeholder="Leave a comment…" required></textarea>
+      <button type="submit" class="btn-primary">Comment</button>
+    </form>
+  </section>
+</div>
+</body>
+</html>

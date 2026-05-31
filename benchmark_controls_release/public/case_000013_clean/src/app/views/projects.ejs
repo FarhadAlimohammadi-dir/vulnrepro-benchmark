@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevForge – Projects</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (currentUser && currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">👤 <%= currentUser ? currentUser.username : '' %></a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Projects <span class="muted">(<%=total%>)</span></h1>
+      <a href="/projects/new" class="btn btn-primary">+ New Project</a>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search projects…" class="input-full">
+      <button class="btn" onclick="doSearch()">Search</button>
+    </div>
+    <div id="search-results"></div>
+
+    <% if (projects.length === 0) { %>
+      <p class="muted">No projects. <a href="/projects/new">Create your first project</a>.</p>
+    <% } else { %>
+    <table class="data-table">
+      <thead><tr><th>Name</th><th>Language</th><th>Visibility</th><th>Updated</th><th></th></tr></thead>
+      <tbody>
+      <% projects.forEach(p => { %>
+        <tr>
+          <td><a href="/projects/<%= p.id %>"><strong><%= p.name %></strong></a><br><small class="muted"><%= p.description || '' %></small></td>
+          <td><span class="badge"><%= p.lang %></span></td>
+          <td><%= p.visibility %></td>
+          <td class="muted"><%= new Date(p.updated_at).toLocaleDateString() %></td>
+          <td>
+            <a href="/projects/<%= p.id %>/edit" class="btn btn-sm">Edit</a>
+            <form method="POST" action="/projects/<%= p.id %>/delete" style="display:inline" onsubmit="return confirm('Delete project?')">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/projects?page=<%= page-1 %>" class="btn btn-sm">← Prev</a><% } %>
+      <span class="muted">Page <%= page %> of <%= pages %></span>
+      <% if (page < pages) { %><a href="/projects?page=<%= page+1 %>" class="btn btn-sm">Next →</a><% } %>
+    </div>
+    <% } %>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+  <script>
+    async function doSearch() {
+      const q = document.getElementById('search-input').value.trim();
+      if (!q) return;
+      const r = await fetch('/projects/search', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ query: q })
+      });
+      const d = await r.json();
+      const el = document.getElementById('search-results');
+      el.textContent = '';
+      if (!d.results || d.results.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'muted';
+        p.textContent = 'No results.';
+        el.appendChild(p);
+        return;
+      }
+      const ul = document.createElement('ul');
+      d.results.forEach(p => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '/projects/' + encodeURIComponent(p.id);
+        a.textContent = p.name;
+        li.appendChild(a);
+        li.appendChild(document.createTextNode(' '));
+        const span = document.createElement('span');
+        span.className = 'badge';
+        span.textContent = p.lang;
+        li.appendChild(span);
+        ul.appendChild(li);
+      });
+      el.appendChild(ul);
+    }
+  </script>
+</body>
+</html>

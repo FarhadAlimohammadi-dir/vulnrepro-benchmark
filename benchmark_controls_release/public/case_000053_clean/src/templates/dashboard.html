@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — TaskFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; }
+        .navbar { background: white; padding: 0 30px; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .navbar h2 { color: #667eea; font-size: 1.4em; }
+        .navbar .user-info { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #555; }
+        .logout-btn { padding: 7px 16px; background: #ff4757; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
+        .card { background: white; border-radius: 10px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .card h3 { font-size: 1.1em; color: #444; margin-bottom: 16px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        .project-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+        .project-item:last-child { border-bottom: none; }
+        .project-name { font-weight: 600; color: #333; }
+        .project-status { font-size: 12px; padding: 2px 8px; border-radius: 12px; display: inline-block; margin-top: 4px; }
+        .status-active { background: #e8f5e9; color: #2e7d32; }
+        .status-archived { background: #f3f3f3; color: #888; }
+        .task-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between; align-items: flex-start; }
+        .task-item:last-child { border-bottom: none; }
+        .task-title { font-weight: 500; color: #333; font-size: 14px; }
+        .task-meta { font-size: 12px; color: #888; margin-top: 3px; }
+        .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .badge-high { background: #ffe0e0; color: #c33; }
+        .badge-medium { background: #fff3e0; color: #e65100; }
+        .badge-low { background: #e8f5e9; color: #2e7d32; }
+        .badge-todo { background: #f3f3f3; color: #666; }
+        .badge-in_progress { background: #e3f2fd; color: #1565c0; }
+        .badge-done { background: #e8f5e9; color: #2e7d32; }
+        .welcome-banner { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 24px; border-radius: 10px; margin-bottom: 24px; }
+        .welcome-banner h2 { font-size: 1.5em; margin-bottom: 5px; }
+        .empty-state { text-align: center; color: #aaa; padding: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2>⚡ TaskFlow</h2>
+    <div class="user-info">
+        <span>{{ user.username }}</span>
+        <span style="background:#f0f0f0; padding:3px 10px; border-radius:10px; font-size:12px;">{{ user.role }}</span>
+        <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="welcome-banner">
+        <h2>Welcome back, {{ user.username }}! 👋</h2>
+        <p>You have {{ tasks|length }} task(s) assigned to you across your projects.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>📁 Your Projects</h3>
+            {% if projects %}
+                {% for project in projects %}
+                <div class="project-item">
+                    <div class="project-name">{{ project.name }}</div>
+                    <span class="project-status status-{{ project.status }}">{{ project.status }}</span>
+                    <div style="font-size:12px; color:#aaa; margin-top:4px;">{{ project.description[:60] if project.description else 'No description' }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">No projects yet</div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3>✅ Assigned Tasks</h3>
+            {% if tasks %}
+                {% for task in tasks %}
+                <div class="task-item">
+                    <div>
+                        <div class="task-title">{{ task.title }}</div>
+                        <div class="task-meta">{{ task.project_name }} · Due: {{ task.due_date or 'No date' }}</div>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-direction:column; align-items:flex-end;">
+                        <span class="badge badge-{{ task.priority }}">{{ task.priority }}</span>
+                        <span class="badge badge-{{ task.status }}">{{ task.status }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">No tasks assigned</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+async function doLogout() {
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/';
+}
+</script>
+</body>
+</html>

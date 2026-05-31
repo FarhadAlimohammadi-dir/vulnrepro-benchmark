@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorize Application — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <% if (user) { %>
+        <a href="/profile">Profile</a>
+        <form action="/logout" method="post" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="nav-logout" type="submit">Logout (<%= user %>)</button></form>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="auth-page">
+      <div class="consent-box">
+        <div class="consent-header">
+          <div class="app-icon">&#128196;</div>
+          <h1><%= client_name || client_id %></h1>
+          <p class="muted">is requesting access to your CodeFlow account</p>
+        </div>
+
+        <div class="consent-user">
+          <span>Signed in as</span>
+          <strong><%= user %></strong>
+        </div>
+
+        <div class="permissions-block">
+          <h3>Requested Permissions</h3>
+          <ul class="scope-list">
+            <% for (const s of requestedScopes) { %>
+              <li>
+                <% if (s === 'read') { %>
+                  &#128065; Read your profile information
+                <% } else if (s === 'write') { %>
+                  &#9997; Create and modify resources
+                <% } else if (s === 'profile') { %>
+                  &#128100; Access your profile and settings
+                <% } else if (s === 'deploy') { %>
+                  &#128640; Deploy and manage pipelines
+                <% } else { %>
+                  &#128274; <%= s %>
+                <% } %>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+
+        <div class="redirect-info">
+          <p class="label">Redirect destination:</p>
+          <code class="uri-display"><%= redirect_uri %></code>
+        </div>
+
+        <% if (existingConsent) { %>
+          <div class="alert alert-info">You have previously authorized this application.</div>
+        <% } %>
+
+        <form method="POST" action="/authorize" class="consent-form">
+          <input type="hidden" name="_csrf" value="<%= csrf %>">
+          <input type="hidden" name="client_id" value="<%= client_id %>">
+          <input type="hidden" name="redirect_uri" value="<%= redirect_uri %>">
+          <input type="hidden" name="state" value="<%= state %>">
+          <input type="hidden" name="scope" value="<%= scope %>">
+
+          <div class="consent-actions">
+            <button type="submit" name="action" value="approve" class="btn btn-primary">
+              &#10003; Authorize
+            </button>
+            <button type="submit" name="action" value="deny" class="btn btn-danger">
+              &#10007; Deny
+            </button>
+          </div>
+        </form>
+
+        <p class="consent-footer">
+          By authorizing, you agree to share the requested information with <strong><%= client_name || client_id %></strong>.
+          You can revoke access at any time from your <a href="/profile">profile settings</a>.
+        </p>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

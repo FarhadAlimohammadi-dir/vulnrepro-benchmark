@@ -1,0 +1,45 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>Users</h1>
+  <form action="/admin/users" method="GET" class="search-form">
+    <input type="text" name="q" value="<%= q %>" placeholder="Search by email or name&hellip;" class="input">
+    <button type="submit" class="btn-secondary">Search</button>
+    <% if (q) { %><a href="/admin/users" class="btn-link">Clear</a><% } %>
+  </form>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="card">
+  <p class="muted"><%= total %> user<%= total !== 1 ? 's' : '' %> found</p>
+  <table class="data-table">
+    <thead>
+      <tr><th>Email</th><th>Display Name</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+      <tr>
+        <td><a href="/admin/users/<%= u.id %>"><%= u.email %></a></td>
+        <td><%= u.display_name || '—' %></td>
+        <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+        <td><span class="badge <%= u.is_active ? 'badge-active' : 'badge-inactive' %>"><%= u.is_active ? 'Active' : 'Inactive' %></span></td>
+        <td><%= u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never' %></td>
+        <td>
+          <a href="/admin/users/<%= u.id %>" class="btn-link">View</a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="/admin/users?page=<%= i %><%= q ? '&q='+q : '' %>" class="<%= i === page ? 'page-current' : 'page-link' %>"><%= i %></a>
+    <% } %>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/apps">My Apps</a>
+      <a href="/profile">Profile</a>
+      <% if (user.role === 'admin') { %>
+        <a href="/admin" class="nav-admin">Admin</a>
+      <% } %>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Welcome back, <%= user.username %></h2>
+      <p class="muted">Here's an overview of your analytics activity.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value"><%= apps.length %></div>
+        <div class="stat-label">Applications</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= tokenCount %></div>
+        <div class="stat-label">Active Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= eventCount %></div>
+        <div class="stat-label">Pixel Events</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <h3>Your Applications</h3>
+          <a href="/apps" class="btn btn-sm">View All</a>
+        </div>
+        <% if (apps.length > 0) { %>
+          <table class="table">
+            <thead>
+              <tr><th>Name</th><th>Pixel ID</th><th>Scopes</th></tr>
+            </thead>
+            <tbody>
+              <% apps.forEach(function(app) { %>
+              <tr>
+                <td><strong><%= app.name %></strong></td>
+                <td><code><%= app.pixel_id %></code></td>
+                <td><span class="badge"><%= app.scopes %></span></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p class="muted">No applications yet. Create your first app to get started.</p>
+        <% } %>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Recent Activity</h3>
+        </div>
+        <% if (recentActivity.length > 0) { %>
+          <ul class="activity-list">
+            <% recentActivity.forEach(function(entry) { %>
+              <li>
+                <span class="badge badge-action"><%= entry.action %></span>
+                <span class="activity-detail"><%= entry.details || entry.resource_type %></span>
+                <span class="muted small"><%= new Date(entry.timestamp).toLocaleDateString() %></span>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p class="muted">No recent activity to display.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

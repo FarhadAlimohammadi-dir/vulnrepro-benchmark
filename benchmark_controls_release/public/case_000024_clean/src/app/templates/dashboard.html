@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}ModelHub — Explore{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Model Registry</h1>
+  <span class="muted">{{ total }} public model{% if total != 1 %}s{% endif %}</span>
+</div>
+
+<form class="search-bar" method="get" action="/dashboard">
+  <input name="q" value="{{ search }}" placeholder="Search models…" class="search-input">
+  <button type="submit" class="btn btn-secondary">Search</button>
+</form>
+
+<div class="upload-panel">
+  <h3>Upload a new model</h3>
+  <form action="/api/models/upload" method="post" enctype="multipart/form-data" class="upload-form">
+    <div class="form-row">
+      <input type="text" name="model_name" placeholder="Model name" required class="form-control">
+      <select name="framework" class="form-control">
+        <option value="keras">Keras</option>
+        <option value="pytorch">PyTorch</option>
+        <option value="sklearn">scikit-learn</option>
+        <option value="onnx">ONNX</option>
+      </select>
+      <input type="text" name="tags" placeholder="Tags (comma-separated)" class="form-control">
+    </div>
+    <div class="form-row">
+      <input type="text" name="description" placeholder="Short description" class="form-control" style="flex:2">
+      <input type="file" name="file" accept=".keras" required class="form-control">
+      <button type="submit" class="btn btn-primary">Upload &amp; Preview</button>
+    </div>
+  </form>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Name</th><th>Framework</th><th>Owner</th>
+      <th>Status</th><th>Downloads</th><th>Uploaded</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in models %}
+    <tr>
+      <td><a href="/models/{{ m.id }}">{{ m.name }}</a></td>
+      <td><span class="tag">{{ m.framework }}</span></td>
+      <td>{{ m.username }}</td>
+      <td><span class="badge badge-{{ m.status }}">{{ m.status }}</span></td>
+      <td>{{ m.download_count }}</td>
+      <td class="muted">{{ m.created_at[:10] }}</td>
+    </tr>
+    {% endfor %}
+    {% if not models %}
+    <tr><td colspan="6" class="muted center">No models found.</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+{% if pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, pages+1) %}
+  <a href="/dashboard?page={{ p }}&q={{ search }}"
+     class="page-link {% if p == page %}active{% endif %}">{{ p }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

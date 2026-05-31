@@ -1,0 +1,33 @@
+<%
+  title = 'Projects'
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]))
+
+  const rows = projects.map(p => `
+    <tr>
+      <td><a href="/projects/${p.id}">${esc(p.name)}</a></td>
+      <td class="muted">${esc(p.workspace_name || '')}</td>
+      <td class="muted">${esc(p.description || '')}</td>
+      <td><span class="pill">${esc(p.language || '-')}</span></td>
+      <td class="muted">${esc(p.owner_name)}</td>
+    </tr>
+  `).join('')
+
+  body = `
+<h1>Projects</h1>
+<form class="form inline" method="get" style="margin-bottom:1rem">
+  <input name="q" value="${esc(q)}" placeholder="Search projects...">
+  <button type="submit">Search</button>
+</form>
+<table class="list">
+  <thead><tr><th>Name</th><th>Workspace</th><th>Description</th><th>Lang</th><th>Owner</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="5" class="muted">No projects</td></tr>'}</tbody>
+</table>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

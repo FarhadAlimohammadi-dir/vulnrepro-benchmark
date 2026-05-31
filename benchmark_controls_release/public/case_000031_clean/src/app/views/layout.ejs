@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== 'undefined' ? title + ' — SocialKit' : 'SocialKit Platform' %></title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <% if (currentUser) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/search">Search</a>
+        <a href="/settings/widgets">Widgets</a>
+        <a href="/profile">Profile</a>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin">Admin</a>
+        <% } %>
+        <a href="/logout" class="nav-logout">Sign out</a>
+      <% } else { %>
+        <a href="/login">Sign in</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+
+<% if (flashMessage) { %>
+<div class="flash-message"><%= flashMessage %></div>
+<% } %>
+
+<main class="main-content">
+  <div class="container">
+    <%- body %>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; 2024 SocialKit Platform · <a href="/health">Status</a></p>
+  </div>
+</footer>
+</body>
+</html>

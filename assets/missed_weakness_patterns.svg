@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="520" viewBox="0 0 980 520">
+<rect width="100%" height="100%" fill="#111827"/>
+<text x="44" y="48" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="28" font-weight="700">What Models Missed</text>
+<text x="44" y="75" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="15">27 exploit-confirmed cases missed by two or more frontier models.</text>
+<rect x="70" y="130.0" width="92" height="300.0" rx="8" fill="#38bdf8"/>
+<text x="116.0" y="118.0" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">7</text>
+<text x="116.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Browser/</text>
+<text x="116.0" y="476" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">XSS</text>
+<rect x="200" y="215.7" width="92" height="214.3" rx="8" fill="#a78bfa"/>
+<text x="246.0" y="203.7" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">5</text>
+<text x="246.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">AI-chain</text>
+<rect x="330" y="215.7" width="92" height="214.3" rx="8" fill="#f472b6"/>
+<text x="376.0" y="203.7" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">5</text>
+<text x="376.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Auth/</text>
+<text x="376.0" y="476" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Tenant</text>
+<rect x="460" y="301.4" width="92" height="128.6" rx="8" fill="#f59e0b"/>
+<text x="506.0" y="289.4" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">3</text>
+<text x="506.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Business/</text>
+<text x="506.0" y="476" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Cloud</text>
+<rect x="590" y="344.3" width="92" height="85.7" rx="8" fill="#34d399"/>
+<text x="636.0" y="332.3" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">2</text>
+<text x="636.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Other</text>
+<rect x="720" y="344.3" width="92" height="85.7" rx="8" fill="#fb7185"/>
+<text x="766.0" y="332.3" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">2</text>
+<text x="766.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Data Exposure</text>
+<rect x="850" y="344.3" width="92" height="85.7" rx="8" fill="#60a5fa"/>
+<text x="896.0" y="332.3" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">2</text>
+<text x="896.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Platform/</text>
+<text x="896.0" y="476" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Side-channel</text>
+<rect x="980" y="387.1" width="92" height="42.9" rx="8" fill="#38bdf8"/>
+<text x="1026.0" y="375.1" text-anchor="middle" fill="#f9fafb" font-family="Segoe UI, Arial" font-size="20" font-weight="700">1</text>
+<text x="1026.0" y="458" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">SSRF/</text>
+<text x="1026.0" y="476" text-anchor="middle" fill="#d1d5db" font-family="Segoe UI, Arial" font-size="13">Integration</text>
+</svg>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">⚡ NovaSpark IDE</div>
+      <h1 style="font-size:1.2rem;margin-bottom:20px;">Sign in to your workspace</h1>
+
+      <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/login">
+        <input type="hidden" name="next" value="<%= next %>" />
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+      </form>
+
+      <p class="muted" style="margin-top:16px;text-align:center;font-size:0.78rem;">
+        Contact your administrator if you need an account.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
