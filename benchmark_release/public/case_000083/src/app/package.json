@@ -1,0 +1,17 @@
+{
+  "name": "markethub-pro",
+  "version": "1.2.0",
+  "description": "MarketHub — multi-category online marketplace platform",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.0.0",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
+  }
+}

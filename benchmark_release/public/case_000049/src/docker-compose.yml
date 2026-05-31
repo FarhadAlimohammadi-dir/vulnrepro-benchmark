@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - SECRET_KEY=prod-secret-key-2024
+      - DATABASE_PATH=/app/data/helpdesk.db
+      - FLASK_ENV=production
+    volumes:
+      - app_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  app_data:

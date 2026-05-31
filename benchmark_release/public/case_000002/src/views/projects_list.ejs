@@ -1,0 +1,24 @@
+<%
+  title = 'Projects'
+  const rows = projects.map(p => `
+    <tr>
+      <td><a href="/projects/${p.id}">${p.name}</a></td>
+      <td class="muted">${p.workspace_name || ''}</td>
+      <td class="muted">${p.description || ''}</td>
+      <td><span class="pill">${p.language || '—'}</span></td>
+      <td class="muted">${p.owner_name}</td>
+    </tr>
+  `).join('')
+  body = `
+<h1>Projects</h1>
+<form class="form inline" method="get" style="margin-bottom:1rem">
+  <input name="q" value="${q}" placeholder="Search projects…">
+  <button type="submit">Search</button>
+</form>
+<table class="list">
+  <thead><tr><th>Name</th><th>Workspace</th><th>Description</th><th>Lang</th><th>Owner</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="5" class="muted">No projects</td></tr>'}</tbody>
+</table>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - /tmp/studio_templates:/tmp/studio_templates
+    environment:
+      NODE_ENV: development

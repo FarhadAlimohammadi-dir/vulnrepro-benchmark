@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Meridian HR – Announcements</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; }
+        .nav { background: #1a3a5c; color: #fff; padding: 14px 32px; display: flex; justify-content: space-between; }
+        .nav a { color: #aec6e8; text-decoration: none; margin-left: 18px; font-size: 14px; }
+        .container { max-width: 760px; margin: 30px auto; padding: 0 20px; }
+        .card { background: #fff; border-radius: 8px; padding: 22px 26px; margin-bottom: 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+        .card h4 { color: #1a3a5c; margin-bottom: 8px; }
+        .card p { color: #555; font-size: 14px; line-height: 1.6; }
+        .meta { font-size: 12px; color: #8a97a8; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <h2>&#127970; Meridian HR</h2>
+    <div><a href="/dashboard">Dashboard</a><a href="/logout">Sign Out</a></div>
+</div>
+<div class="container">
+    <h3 style="color:#1a3a5c;margin-bottom:20px;">Company Announcements</h3>
+    {% for ann in announcements %}
+    <div class="card">
+        <h4>{{ ann.title }}</h4>
+        <p>{{ ann.body }}</p>
+        <div class="meta">Posted: {{ ann.created_at }}</div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>

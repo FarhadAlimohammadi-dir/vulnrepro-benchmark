@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=meridian-hr-secret-2024-xk9pqr
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

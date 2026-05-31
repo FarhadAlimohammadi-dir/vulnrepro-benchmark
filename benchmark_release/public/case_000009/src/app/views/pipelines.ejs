@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipelines – ContextBridge</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">⚡ ContextBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/pipelines" class="active">Pipelines</a></li>
+      <% if (user.role === 'admin') { %><li><a href="/admin">Admin</a></li><% } %>
+      <li><a href="/profile"><%= user.username %></a></li>
+      <li>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>Pipelines</h1>
+      <button class="btn btn-primary" onclick="document.getElementById('create-modal').style.display='flex'">
+        + New Pipeline
+      </button>
+    </div>
+
+    <div class="filter-bar">
+      <span class="text-muted"><%= total %> pipeline<%= total !== 1 ? 's' : '' %> total</span>
+    </div>
+
+    <% if (pipelines.length === 0) { %>
+      <div class="empty-state">
+        <p>No pipelines yet. Click <strong>+ New Pipeline</strong> to get started.</p>
+      </div>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Connector</th><th>Schedule</th>
+            <th>Runs</th><th>Last Run</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pipelines.forEach(function(p) { %>
+            <tr>
+              <td><%= p.id %></td>
+              <td><strong><%= p.name %></strong></td>
+              <td>
+                <span class="badge badge-connector"><%= p.connector_type %></span>
+                <%= p.connector_name %>
+              </td>
+              <td><%= p.schedule || '—' %></td>
+              <td><%= p.run_count %></td>
+              <td><%= p.last_run ? new Date(p.last_run).toLocaleString() : 'Never' %></td>
+              <td class="action-cell">
+                <a href="/api/pipelines/<%= p.id %>/run" class="btn btn-sm btn-primary">▶ Run</a>
+                <a href="/api/pipelines/<%= p.id %>/export" class="btn btn-sm btn-secondary">↓ Export</a>
+                <button class="btn btn-sm btn-danger"
+                  onclick="deletePipeline(<%= p.id %>)">✕</button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <% if (page > 1) { %>
+          <a href="/pipelines?page=<%= page - 1 %>" class="btn btn-secondary btn-sm">← Prev</a>
+        <% } %>
+        <span>Page <%= page %> of <%= Math.ceil(total / limit) %></span>
+        <% if (page * limit < total) { %>
+          <a href="/pipelines?page=<%= page + 1 %>" class="btn btn-secondary btn-sm">Next →</a>
+        <% } %>
+      </div>
+    <% } %>
+  </main>
+
+  <!-- Create Pipeline Modal -->
+  <div id="create-modal" class="modal" style="display:none">
+    <div class="modal-card">
+      <h3>New Pipeline</h3>
+      <form id="create-form">
+        <div class="form-group">
+          <label>Pipeline Name</label>
+          <input type="text" id="p-name" placeholder="e.g. Daily User Sync" required />
+        </div>
+        <div class="form-group">
+          <label>Connector</label>
+          <select id="p-connector">
+            <% connectors.forEach(function(c) { %>
+              <option value="<%= c.id %>"><%= c.name %> (<%= c.type %>)</option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Query (optional)</label>
+          <textarea id="p-query" rows="3" placeholder="SELECT * FROM table"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Schedule (optional)</label>
+          <input type="text" id="p-schedule" placeholder="@daily, @hourly, or cron" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary"
+            onclick="document.getElementById('create-modal').style.display='none'">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer"><p>&copy; 2026 ContextBridge Inc.</p></footer>
+
+  <script>
+    document.getElementById('create-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const res = await fetch('/api/pipelines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:         document.getElementById('p-name').value,
+          connector_id: document.getElementById('p-connector').value,
+          query:        document.getElementById('p-query').value,
+          schedule:     document.getElementById('p-schedule').value
+        })
+      });
+      if (res.ok) location.reload();
+      else {
+        const err = await res.json();
+        alert('Error: ' + err.error);
+      }
+    });
+
+    async function deletePipeline(id) {
+      if (!confirm('Delete this pipeline?')) return;
+      const res = await fetch('/api/pipelines/' + id, { method: 'DELETE' });
+      if (res.ok) location.reload();
+    }
+  </script>
+</body>
+</html>

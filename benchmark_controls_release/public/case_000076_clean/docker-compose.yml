@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - APP_SECRET=supersecret123
+    restart: unless-stopped

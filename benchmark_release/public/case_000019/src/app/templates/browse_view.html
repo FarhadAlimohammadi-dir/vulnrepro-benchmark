@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Browse — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>&#128269; Browse &amp; Search</h1>
+  <p class="subtitle">Search the web, your notes, or a named collection</p>
+</div>
+
+<div class="browse-container">
+
+  <form method="get" action="/browse/view" class="browse-form">
+    <div class="browse-input-row">
+      <input type="text" name="q" class="browse-input"
+             placeholder="What would you like to know?"
+             value="{{ query }}" autofocus maxlength="4000">
+      <input type="text" name="collection" class="collection-input"
+             placeholder="Collection (web, news, academic…)"
+             value="{{ collection }}">
+      <input type="hidden" name="autorun" value="1">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  {% if collections %}
+  <div class="saved-collections">
+    <h3>Your collections</h3>
+    <div class="collection-chips">
+      {% for col in collections %}
+      <a href="/browse/view?q={{ query | urlencode }}&collection={{ col.name | urlencode }}&autorun=1"
+         class="chip">{{ col.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if result %}
+  <div class="browse-result">
+    <h2>Result</h2>
+    {% if result.output %}
+    <div class="result-output">{{ result.output }}</div>
+    {% elif result.answer %}
+    <div class="result-output">{{ result.answer }}</div>
+    {% endif %}
+
+    {% if result.results %}
+    <ul class="result-list">
+      {% for r in result.results %}
+      <li class="result-item">
+        <a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.title }}</a>
+        <p class="result-snippet">{{ r.snippet }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if result.context_used is defined %}
+    <p class="context-note">&#128204; {{ result.context_used }} context items used</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

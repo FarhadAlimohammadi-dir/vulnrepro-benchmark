@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Admin — PipelineForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Admin Panel</h1>
+  <span class="badge badge-admin">admin</span>
+</div>
+
+<div class="section">
+  <h2>Users ({{ users|length }})</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>#</th><th>Username</th><th>Full Name</th><th>Role</th><th>Team</th><th>Last Login</th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.full_name }}</td>
+        <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
+        <td>{{ u.team }}</td>
+        <td>{{ (u.last_login or '')[:10] or 'Never' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Pipeline Secrets</h2>
+  <p class="hint">Secret values are not displayed here. Use the API for management.</p>
+  <table class="data-table">
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Description</th><th>Team</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for s in secrets_meta %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td><code>{{ s.name }}</code></td>
+        <td>{{ s.description }}</td>
+        <td>{{ s.owner_team }}</td>
+        <td>{{ s.created_at[:10] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Audit Log (last 50 events)</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>Actor</th><th>Action</th><th>Resource</th><th>Detail</th></tr>
+    </thead>
+    <tbody>
+      {% for e in audit %}
+      <tr>
+        <td>{{ e.created_at[:19] }}</td>
+        <td>{{ e.actor_name }}</td>
+        <td><code>{{ e.action }}</code></td>
+        <td>{{ e.resource }}</td>
+        <td>{{ e.detail }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty">No events yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

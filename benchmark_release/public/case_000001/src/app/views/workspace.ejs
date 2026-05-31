@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Workspace — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows">Workflows</a>
+      <a href="/workspace/load" class="active">Workspace</a>
+      <a href="/workspace/settings">Settings</a>
+      <% if (currentRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Workspace</h1>
+      <span class="badge <%= gateway.connected ? 'badge-green' : 'badge-red' %>">
+        <%= gateway.connected ? 'Connected' : 'Offline' %>
+      </span>
+    </div>
+
+    <div class="info-block mb24">
+      <div class="info-row"><span>Relay Endpoint</span><code><%= gatewayUrl %></code></div>
+      <div class="info-row"><span>Region</span><%= gateway.region %></div>
+      <div class="info-row"><span>Protocol</span>v<%= gateway.protocolVersion %></div>
+      <div class="info-row"><span>Sandbox Mode</span><%= gateway.sandboxMode ? 'On' : 'Off' %></div>
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h2>Workflows (<%= workflows.length %>)</h2>
+        <% if (workflows.length === 0) { %>
+          <p class="muted">No workflows. <a href="/workflows/new">Create one</a>.</p>
+        <% } else { %>
+          <% workflows.slice(0, 8).forEach(w => { %>
+          <div class="workflow-card">
+            <div class="wf-title"><a href="/workflows/<%= w.id %>"><%= w.name %></a></div>
+            <div class="wf-desc muted"><%= w.description %></div>
+            <div class="wf-meta">
+              <span class="badge"><%= w.trigger_type %></span>
+              <span class="muted"><%= w.run_count %> runs</span>
+            </div>
+          </div>
+          <% }) %>
+          <% if (workflows.length > 8) { %>
+          <a href="/workflows" class="link-more">View all <%= workflows.length %> workflows →</a>
+          <% } %>
+        <% } %>
+      </section>
+
+      <section>
+        <h2>Active Plugins</h2>
+        <% if (plugins.length === 0) { %>
+          <p class="muted">No plugins registered.</p>
+        <% } else { %>
+          <ul class="plain-list">
+            <% plugins.forEach(p => { %>
+            <li><strong><%= p.name %></strong> <span class="muted small"><%= p.url %></span></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <h2 class="mt24">Recent Activity</h2>
+        <% if (recentActivity.length === 0) { %>
+          <p class="muted">No recent activity.</p>
+        <% } else { %>
+          <ul class="activity-list">
+            <% recentActivity.forEach(a => { %>
+            <li>
+              <span class="badge <%= a.status === 'ok' ? 'badge-green' : 'badge-red' %>"><%= a.status %></span>
+              <strong><%= a.name %></strong>
+              <span class="muted small"><%= a.ran_at %></span>
+            </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

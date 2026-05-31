@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard — Cloud Shell</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <span class="topbar-title">Cloud Shell File Manager</span>
+  <span class="topbar-user">
+    Logged in as <strong><%= username %></strong>
+    <% if (role === 'admin') { %><span class="badge">admin</span><% } %>
+  </span>
+  <form method="POST" action="/logout" style="display:inline">
+    <button type="submit" class="btn-link">Logout</button>
+  </form>
+</header>
+
+<main class="dashboard">
+
+  <section class="card">
+    <h2>Upload File <span class="legacy-badge">v1</span></h2>
+    <p class="muted">Legacy upload — stores destination path for workspace routing.</p>
+    <form method="POST" action="/file-upload" enctype="multipart/form-data">
+      <label>Destination path
+        <input type="text" name="uri" placeholder="/home/user/myfile.txt" required>
+      </label>
+      <label>File
+        <input type="file" name="file" required>
+      </label>
+      <button type="submit">Upload</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Upload File <span class="badge">v2</span></h2>
+    <p class="muted">Returns JSON response with encoded metadata.</p>
+    <form method="POST" action="/api/upload-safe" enctype="multipart/form-data">
+      <label>Destination path
+        <input type="text" name="uri" placeholder="/tmp/safe-file.txt" required>
+      </label>
+      <label>File
+        <input type="file" name="file" required>
+      </label>
+      <button type="submit">Upload (safe)</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Search</h2>
+    <form method="GET" action="/api/search" class="search-form">
+      <input type="text" name="q" placeholder="Search files and docs…">
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Your Files</h2>
+    <% if (files.length > 0) { %>
+      <table>
+        <thead><tr><th>Filename</th><th>Path</th><th>Created</th><th></th></tr></thead>
+        <tbody>
+          <% files.forEach(function(file) { %>
+          <tr>
+            <td><%= file.filename %></td>
+            <td><%= file.path %></td>
+            <td><%= file.created_at %></td>
+            <td><a href="/api/files/<%= file.id %>">Metadata</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="muted">No files uploaded yet.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Your Documents</h2>
+    <% if (docs.length > 0) { %>
+      <table>
+        <thead><tr><th>Title</th><th>Created</th><th></th></tr></thead>
+        <tbody>
+          <% docs.forEach(function(doc) { %>
+          <tr>
+            <td><%= doc.title %></td>
+            <td><%= doc.created_at %></td>
+            <td><a href="/webview/<%= doc.id %>">View</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="muted">No documents yet.</p>
+    <% } %>
+  </section>
+
+</main>
+</body>
+</html>

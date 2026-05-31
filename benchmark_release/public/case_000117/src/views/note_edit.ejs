@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteFlow — <%= note ? 'Edit' : 'New' %> Note</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; margin: 0; }
+    header { background: #1a1a2e; color: #fff; padding: .75rem 2rem; display: flex; justify-content: space-between; }
+    header h1 { margin: 0; font-size: 1.25rem; }
+    nav a, nav button { color: #a5b4fc; text-decoration: none; margin-left: 1rem; background: none; border: none; cursor: pointer; font-size: 1rem; }
+    main { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    label { display: block; font-size: .875rem; color: #555; margin-top: 1rem; }
+    input, textarea, select { width: 100%; box-sizing: border-box; padding: .5rem .75rem; margin-top: .25rem; border: 1px solid #d0d5dd; border-radius: 4px; font-size: .95rem; }
+    textarea { min-height: 240px; font-family: monospace; }
+    .error { background: #fee2e2; color: #b91c1c; padding: .5rem .75rem; border-radius: 4px; margin-top: 1rem; }
+    button[type=submit] { margin-top: 1.5rem; padding: .6rem 1.5rem; background: #4f46e5; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✏️ NoteFlow</h1>
+    <nav>
+      <a href="/notes">← Notes</a>
+      <form method="POST" action="/auth/logout" style="display:inline">
+        <button>Logout</button>
+      </form>
+    </nav>
+  </header>
+  <main>
+    <h2><%= note ? 'Edit Note' : 'New Note' %></h2>
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="<%= note ? '/notes/' + note.id + '/edit' : '/notes' %>">
+      <label>Title
+        <input type="text" name="title" value="<%= note ? note.title : '' %>" required>
+      </label>
+      <label>Content (HTML supported)
+        <textarea name="content"><%= note ? note.raw_content : '' %></textarea>
+      </label>
+      <label>Visibility
+        <select name="visibility">
+          <option value="private" <%= (!note || note.visibility === 'private') ? 'selected' : '' %>>Private</option>
+          <option value="public"  <%= (note && note.visibility === 'public')   ? 'selected' : '' %>>Public</option>
+        </select>
+      </label>
+      <label>Tags (comma-separated)
+        <input type="text" name="tags" value="<%= note ? note.tags : '' %>" placeholder="e.g. work,reference">
+      </label>
+      <button type="submit"><%= note ? 'Save Changes' : 'Create Note' %></button>
+    </form>
+  </main>
+</body>
+</html>

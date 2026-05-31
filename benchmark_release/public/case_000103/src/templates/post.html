@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — ContentHub{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ post.title }}</h1>
+    <p class="meta">
+        By <a href="/profile/{{ post.author }}">{{ post.author }}</a>
+        &middot; <span class="tag">{{ post.category }}</span>
+        &middot; {{ post.created_at[:10] }}
+        &middot; {{ post.views }} views
+    </p>
+    <hr style="margin:1rem 0;">
+    <div id="post-body">{{ post.rendered_content | safe }}</div>
+</div>
+
+<div class="card">
+    <h2>Comments ({{ comments | length }})</h2>
+    {% for comment in comments %}
+    <div style="border-bottom:1px solid #eee;padding:.75rem 0;">
+        <strong>{{ comment.username }}</strong>
+        <span class="meta">&middot; {{ comment.created_at[:10] }}</span>
+        <div>{{ comment.body | safe }}</div>
+    </div>
+    {% endfor %}
+
+    {% if session.get('user_id') %}
+    <form method="POST" action="/posts/{{ post.slug }}/comment" style="margin-top:1rem;">
+        <label for="body">Add a comment</label>
+        <textarea name="body" id="body" rows="4" placeholder="Share your thoughts..."></textarea>
+        <button type="submit" class="btn btn-primary" style="margin-top:.5rem;">Post Comment</button>
+    </form>
+    {% else %}
+    <p style="margin-top:1rem;"><a href="/login">Log in</a> to leave a comment.</p>
+    {% endif %}
+</div>
+{% endblock %}

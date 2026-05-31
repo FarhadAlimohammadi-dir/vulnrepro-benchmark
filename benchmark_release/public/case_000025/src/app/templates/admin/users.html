@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}User Management{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>User Management</h2>
+  <a href="/admin/" class="btn btn-secondary">← Admin</a>
+</div>
+<table class="data-table">
+  <thead>
+    <tr><th>ID</th><th>Username</th><th>Full Name</th><th>Email</th><th>Role</th><th>Department</th><th>Last Login</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.full_name or '—' }}</td>
+    <td>{{ u.email or '—' }}</td>
+    <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
+    <td>{{ u.department or '—' }}</td>
+    <td>{{ u.last_login[:16] if u.last_login else 'Never' }}</td>
+    <td>{{ u.created_at[:10] if u.created_at else '—' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard" class="active">Dashboard</a></li>
+        <li><a href="/account/overview">Account</a></li>
+        <li><a href="/billing_interfaces">Billing</a></li>
+        <li><a href="/audit/logs">Activity</a></li>
+        <li class="user-menu">
+          <span><%= user.first_name || user.username %></span>
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Welcome, <%= user.first_name || user.username %></h1>
+    
+    <div class="dashboard-grid">
+      <section class="card">
+        <h2>Linked Accounts</h2>
+        <% if (linked_accounts && linked_accounts.length > 0) { %>
+          <ul class="accounts-list">
+            <% linked_accounts.forEach(account => { %>
+              <li>
+                <strong><%= account.platform %></strong>
+                <span class="user-id"><%= account.platform_user_id %></span>
+                <% if (account.verified) { %>
+                  <span class="badge verified">Verified</span>
+                <% } %>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p>No accounts linked yet</p>
+        <% } %>
+        <a href="/account/link" class="btn btn-secondary">Link Account</a>
+      </section>
+      
+      <section class="card">
+        <h2>Recent Activity</h2>
+        <% if (recent_activity && recent_activity.length > 0) { %>
+          <ul class="activity-list">
+            <% recent_activity.forEach(activity => { %>
+              <li>
+                <strong><%= activity.action %></strong>
+                <time><%= new Date(activity.created_at).toLocaleDateString() %></time>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p>No recent activity</p>
+        <% } %>
+        <a href="/audit/logs" class="btn btn-secondary">View All Activity</a>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

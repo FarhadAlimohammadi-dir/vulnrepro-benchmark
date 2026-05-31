@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ tool.name }} — ToolForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ tool.name }}</h1>
+  <span class="badge badge-handler badge-lg">{{ tool.handler }}</span>
+</div>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <h3>Details</h3>
+    <table class="meta-table">
+      <tr><th>Description</th><td>{{ tool.description or '—' }}</td></tr>
+      <tr><th>Handler</th><td>{{ tool.handler }}</td></tr>
+      <tr><th>Owner</th><td>{{ tool.owner }}</td></tr>
+      <tr><th>Tags</th><td>{{ tool.tags or '—' }}</td></tr>
+      <tr><th>Invocations</th><td>{{ tool.invoke_count }}</td></tr>
+      <tr><th>Created</th><td>{{ tool.created_at }}</td></tr>
+      <tr><th>Updated</th><td>{{ tool.updated_at }}</td></tr>
+      <tr><th>Active</th><td>{{ 'Yes' if tool.is_active else 'No' }}</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>Invocation History</h2>
+<table class="table">
+  <thead>
+    <tr><th>Invoked By</th><th>Status</th><th>Duration (ms)</th><th>Result Snippet</th><th>Time</th></tr>
+  </thead>
+  <tbody>
+    {% for h in history %}
+    <tr>
+      <td>{{ h.invoked_by }}</td>
+      <td><span class="badge badge-{{ h.status }}">{{ h.status }}</span></td>
+      <td>{{ h.duration_ms or '—' }}</td>
+      <td class="snippet">{{ h.result_snippet or '—' }}</td>
+      <td>{{ h.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="empty">No invocations yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div style="margin-top:1.5rem">
+  <a href="/tools" class="btn btn-secondary">← Back to Tools</a>
+</div>
+{% endblock %}

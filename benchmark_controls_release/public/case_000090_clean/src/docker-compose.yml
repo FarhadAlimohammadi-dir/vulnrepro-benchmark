@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - uploads_data:/app/uploads
+      - db_data:/app/data
+    environment:
+      - FLASK_SECRET_KEY=super-secret-theme-marketplace-key-2024
+      - DATABASE_PATH=/app/data/themes.db
+      - UPLOAD_FOLDER=/app/uploads
+    restart: unless-stopped
+
+volumes:
+  uploads_data:
+  db_data:

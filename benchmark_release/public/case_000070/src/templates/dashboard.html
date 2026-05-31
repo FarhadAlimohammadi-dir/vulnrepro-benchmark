@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — DocFlow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; margin: 0; }
+        header { background: #1a1f36; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 1.3rem; }
+        .user-info { font-size: .9rem; color: #a0aec0; }
+        main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+        .welcome { background: #fff; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+        .welcome h2 { margin: 0 0 .25rem; font-size: 1.2rem; color: #1a1f36; }
+        .welcome .role-badge { display: inline-block; padding: .2rem .6rem; border-radius: 4px; font-size: .75rem; font-weight: 700; background: #e8f4fd; color: #2980b9; }
+        .welcome .role-badge.admin { background: #fdecea; color: #c0392b; }
+        .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+        .doc-card { background: #fff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+        .doc-card h3 { margin: 0 0 .5rem; font-size: 1rem; color: #1a1f36; }
+        .doc-card .meta { font-size: .78rem; color: #888; }
+        .badge-public { display: inline-block; background: #d4edda; color: #155724; border-radius: 3px; padding: .1rem .4rem; font-size: .7rem; font-weight: 600; margin-left: .4rem; }
+        pre { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📄 DocFlow</h1>
+        <div class="user-info" id="header-user">Loading…</div>
+    </header>
+    <main>
+        <div class="welcome" id="welcome-box">
+            <h2 id="welcome-title">Loading…</h2>
+            <span id="role-badge" class="role-badge"></span>
+        </div>
+        <h3 style="color:#1a1f36; margin-bottom:.75rem;">Documents</h3>
+        <div class="doc-grid" id="doc-grid">
+            {% for doc in documents %}
+            <div class="doc-card">
+                <h3>{{ doc.title }}{% if doc.is_public %}<span class="badge-public">public</span>{% endif %}</h3>
+                <div class="meta">By {{ doc.owner_name }} &middot; {{ doc.updated_at }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Application hydration state (populated by server-side render) -->
+    <script id="__APP_STATE__" type="application/json">{{ app_state_json | safe }}</script>
+    <script>
+        (function () {
+            try {
+                var stateEl = document.getElementById('__APP_STATE__');
+                var state = JSON.parse(stateEl.textContent);
+                window.__APP_STATE__ = state;
+
+                var headerUser = document.getElementById('header-user');
+                var welcomeTitle = document.getElementById('welcome-title');
+                var roleBadge = document.getElementById('role-badge');
+
+                if (state.authenticated && state.user) {
+                    headerUser.textContent = state.user.username + ' (' + state.user.email + ')';
+                    welcomeTitle.textContent = 'Welcome back, ' + state.user.username + '!';
+                    roleBadge.textContent = state.user.role;
+                    if (state.user.role === 'admin') roleBadge.classList.add('admin');
+                } else {
+                    headerUser.textContent = 'Guest';
+                    welcomeTitle.textContent = 'Welcome to DocFlow';
+                    roleBadge.textContent = 'guest';
+                }
+            } catch (e) {
+                console.error('State hydration failed:', e);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings — Community Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/dashboard">Home</a>
+      <a href="/dashboard/cases">Cases</a>
+      <a href="/dashboard/settings">Settings</a>
+      <a href="/logout" class="nav-right">Log Out</a>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Account Settings</h1>
+    <% if (saved) { %>
+      <p class="alert alert-success">Preferences saved.</p>
+    <% } %>
+    <form method="POST" action="/dashboard/settings" class="form-narrow">
+      <label>Display Name
+        <input type="text" name="displayName" maxlength="64">
+      </label>
+      <label>Timezone
+        <select name="timezone">
+          <option value="UTC">UTC</option>
+          <option value="America/New_York">America/New_York</option>
+          <option value="America/Los_Angeles">America/Los_Angeles</option>
+          <option value="Europe/London">Europe/London</option>
+          <option value="Asia/Tokyo">Asia/Tokyo</option>
+        </select>
+      </label>
+      <label>Language
+        <!-- TODO: wire up i18n bundles once translations are ready — PORTAL-201 -->
+        <select name="language">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+        </select>
+      </label>
+      <button type="submit" class="btn-primary">Save Preferences</button>
+    </form>
+  </main>
+</body>
+</html>

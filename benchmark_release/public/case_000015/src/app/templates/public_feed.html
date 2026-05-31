@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Explore – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Public Notes</h2>
+  <a href="/notes/new" class="btn-primary">+ New Note</a>
+</div>
+
+{% if notes %}
+<div class="note-list">
+  {% for n in notes %}
+  <div class="card">
+    <div class="card-title">
+      <a href="/notes/{{ n.id }}">{{ n.title | e }}</a>
+    </div>
+    <div class="card-meta">
+      By <a href="/users/{{ n.owner_name }}">{{ n.owner_name | e }}</a>
+      {% if n.tags %}&nbsp;·&nbsp; <span class="tags">{{ n.tags | e }}</span>{% endif %}
+      &nbsp;·&nbsp; {{ n.updated_at }}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}<a href="/public?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="/public?page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p class="muted">No public notes yet.</p>
+{% endif %}
+{% endblock %}

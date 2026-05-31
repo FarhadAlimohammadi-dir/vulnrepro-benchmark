@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-docflow-2024
+      - DATABASE_PATH=/app/data/docflow.db
+    volumes:
+      - docflow_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  docflow_data:

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Tools — ToolForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Tools Registry</h1>
+  <a href="/tools/new" class="btn btn-primary">+ New Tool</a>
+</div>
+
+<form class="search-bar" method="get" action="/tools">
+  <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search tools…"/>
+  <input type="text" name="tag" value="{{ tag }}" class="form-control" placeholder="Filter by tag…"/>
+  <button type="submit" class="btn btn-secondary">Search</button>
+</form>
+
+<table class="table">
+  <thead>
+    <tr><th>Name</th><th>Description</th><th>Handler</th><th>Owner</th><th>Tags</th><th>Runs</th></tr>
+  </thead>
+  <tbody>
+    {% for t in paged.items %}
+    <tr>
+      <td><a href="/tools/{{ t.name }}">{{ t.name }}</a></td>
+      <td>{{ t.description or '—' }}</td>
+      <td><span class="badge badge-handler">{{ t.handler }}</span></td>
+      <td>{{ t.owner }}</td>
+      <td>{{ t.tags or '—' }}</td>
+      <td>{{ t.invoke_count }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty">No tools match your search.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if paged.has_prev %}
+  <a href="?page={{ paged.page - 1 }}&q={{ q }}&tag={{ tag }}" class="btn btn-sm">← Prev</a>
+  {% endif %}
+  <span>Page {{ paged.page }} of {{ paged.total_pages }} ({{ paged.total }} tools)</span>
+  {% if paged.has_next %}
+  <a href="?page={{ paged.page + 1 }}&q={{ q }}&tag={{ tag }}" class="btn btn-sm">Next →</a>
+  {% endif %}
+</div>
+{% endblock %}

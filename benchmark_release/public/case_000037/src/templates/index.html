@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocManager - Multi-Tenant Document Platform</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        header { background: #1a73e8; color: white; padding: 16px 32px; display: flex; align-items: center; gap: 12px; }
+        header h1 { font-size: 1.4rem; font-weight: 600; }
+        .badge { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; }
+        main { max-width: 960px; margin: 40px auto; padding: 0 24px; }
+        .card { background: white; border-radius: 8px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h2 { font-size: 1.1rem; color: #1a73e8; margin-bottom: 12px; }
+        .endpoint-list { list-style: none; }
+        .endpoint-list li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-family: monospace; font-size: 0.9rem; }
+        .method { display: inline-block; width: 60px; font-weight: bold; }
+        .method.get { color: #0f9d58; }
+        .method.post { color: #1a73e8; }
+        .method.put { color: #f4b400; }
+        .method.delete { color: #db4437; }
+        .path { color: #555; }
+        .desc { color: #888; font-family: sans-serif; font-size: 0.8rem; margin-left: 8px; }
+        footer { text-align: center; color: #aaa; font-size: 0.8rem; padding: 32px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>DocManager</h1>
+    <span class="badge">API v1/v2</span>
+    <span class="badge">Multi-Tenant</span>
+</header>
+<main>
+    <div class="card">
+        <h2>Authentication</h2>
+        <ul class="endpoint-list">
+            <li><span class="method post">POST</span><span class="path">/api/v1/auth/login</span><span class="desc">Authenticate and receive session token</span></li>
+            <li><span class="method post">POST</span><span class="path">/api/v1/auth/logout</span><span class="desc">Invalidate current session</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/auth/me</span><span class="desc">Get current user profile</span></li>
+            <li><span class="method post">POST</span><span class="path">/api/v2/auth/actor</span><span class="desc">Exchange actor token for session</span></li>
+        </ul>
+    </div>
+    <div class="card">
+        <h2>Documents</h2>
+        <ul class="endpoint-list">
+            <li><span class="method get">GET</span><span class="path">/api/v1/documents</span><span class="desc">List accessible documents</span></li>
+            <li><span class="method post">POST</span><span class="path">/api/v1/documents</span><span class="desc">Create a document</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/documents/:id</span><span class="desc">Get document by ID</span></li>
+            <li><span class="method post">POST</span><span class="path">/api/v1/documents/:id/share</span><span class="desc">Share with another tenant</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/documents/search?q=</span><span class="desc">Search documents</span></li>
+        </ul>
+    </div>
+    <div class="card">
+        <h2>Integration Tokens</h2>
+        <ul class="endpoint-list">
+            <li><span class="method post">POST</span><span class="path">/api/v1/integration/token</span><span class="desc">Generate cross-tenant actor token</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/integration/tokens</span><span class="desc">List tokens (admin)</span></li>
+            <li><span class="method post">POST</span><span class="path">/api/v1/integration/tokens/:id/revoke</span><span class="desc">Revoke a token (admin)</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/integration/relationships</span><span class="desc">List tenant integrations</span></li>
+        </ul>
+    </div>
+    <div class="card">
+        <h2>Administration</h2>
+        <ul class="endpoint-list">
+            <li><span class="method get">GET</span><span class="path">/api/v1/admin/users</span><span class="desc">List tenant users (admin)</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/admin/audit</span><span class="desc">View audit logs (admin)</span></li>
+            <li><span class="method get">GET</span><span class="path">/api/v1/admin/settings</span><span class="desc">Tenant settings (admin)</span></li>
+        </ul>
+    </div>
+</main>
+<footer>DocManager Platform &copy; 2024 &mdash; Multi-tenant document management</footer>
+</body>
+</html>

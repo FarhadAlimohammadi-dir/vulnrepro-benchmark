@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= ws.name %> — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/search">Search</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header">
+    <h2><%= ws.name %></h2>
+    <a href="/notes/new" class="btn btn-sm">+ Add note</a>
+  </div>
+
+  <div class="two-col">
+    <section>
+      <h3 class="section-title">Notes</h3>
+      <% if (notes.length === 0) { %>
+        <p class="empty-state">No notes in this workspace yet.</p>
+      <% } else { %>
+      <table class="data-table">
+        <thead><tr><th>Title</th><th>Author</th><th>Updated</th></tr></thead>
+        <tbody>
+          <% notes.forEach(n => { %>
+          <tr>
+            <td><a href="/notes/<%= n.id %>"><%= n.title %></a></td>
+            <td><%= n.author %></td>
+            <td><%= n.updated_at %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <% } %>
+    </section>
+
+    <section class="card">
+      <h3>Members</h3>
+      <table class="data-table data-table-sm">
+        <thead><tr><th>User</th><th>Role</th></tr></thead>
+        <tbody>
+          <% members.forEach(m => { %>
+          <tr>
+            <td><%= m.display_name || m.username %></td>
+            <td class="muted"><%= m.role %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

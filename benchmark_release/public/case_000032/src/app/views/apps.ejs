@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Applications — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/apps" class="active">My Apps</a>
+      <a href="/profile">Profile</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>My Applications</h2>
+      <a href="#" class="btn btn-primary" onclick="showCreateModal()">+ New Application</a>
+    </div>
+
+    <div class="search-bar">
+      <form action="/apps" method="GET">
+        <input type="text" name="q" placeholder="Search applications..." value="<%= search %>" class="form-control search-input">
+        <button type="submit" class="btn btn-secondary">Search</button>
+        <% if (search) { %><a href="/apps" class="btn btn-link">Clear</a><% } %>
+      </form>
+    </div>
+
+    <% if (apps.length > 0) { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>App ID</th>
+            <th>Pixel ID</th>
+            <th>Scopes</th>
+            <th>Redirect URI</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% apps.forEach(function(app) { %>
+          <tr>
+            <td><strong><%= app.name %></strong><br><span class="muted small"><%= app.description || '' %></span></td>
+            <td><code class="small"><%= app.id %></code></td>
+            <td><code class="small"><%= app.pixel_id %></code></td>
+            <td><span class="badge"><%= app.scopes %></span></td>
+            <td class="small muted"><%= app.redirect_uri %></td>
+            <td>
+              <a href="/pixel/analytics/<%= app.pixel_id %>" class="btn btn-sm">Analytics</a>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <% if (totalPages > 1) { %>
+        <div class="pagination">
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="/apps?page=<%= i %><%= search ? '&q=' + encodeURIComponent(search) : '' %>"
+               class="page-link <%= page === i ? 'active' : '' %>"><%= i %></a>
+          <% } %>
+        </div>
+      <% } %>
+    <% } else { %>
+      <div class="empty-state">
+        <p>No applications found. <a href="#" onclick="showCreateModal()">Create your first app</a>.</p>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+
+  <script>
+  function showCreateModal() {
+    var name = prompt('Application name:');
+    if (!name) return;
+    var redirectUri = prompt('Redirect URI:', 'https://');
+    if (!redirectUri) return;
+
+    fetch('/api/apps', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, redirect_uri: redirectUri, scopes: 'user_profile' }),
+      credentials: 'include'
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.app_id) {
+        alert('App created!\nApp ID: ' + d.app_id + '\nPixel ID: ' + d.pixel_id);
+        location.reload();
+      } else {
+        alert('Error: ' + (d.error || 'Unknown error'));
+      }
+    });
+  }
+  </script>
+</body>
+</html>

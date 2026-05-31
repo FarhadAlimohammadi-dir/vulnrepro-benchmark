@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocFlow — Sign In</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               background: #f5f7fa; display: flex; align-items: center;
+               justify-content: center; min-height: 100vh; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,.1);
+                padding: 40px; width: 360px; }
+        h1 { font-size: 1.5rem; color: #1a1a2e; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: .9rem; margin-bottom: 28px; }
+        label { display: block; font-size: .85rem; color: #444; margin-bottom: 4px; }
+        input { width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+                border-radius: 6px; font-size: 1rem; margin-bottom: 16px; }
+        input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px #1a73e820; }
+        button { width: 100%; padding: 12px; background: #1a73e8; color: #fff;
+                 border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #1558b0; }
+        .error { color: #d32f2f; font-size: .85rem; margin-top: 12px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>DocFlow</h1>
+        <p class="subtitle">Document Management Platform</p>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="your username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <button type="submit">Sign In</button>
+            <p class="error" id="errorMsg"></p>
+        </form>
+    </div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const resp = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value,
+                })
+            });
+            const data = await resp.json();
+            if (resp.ok) {
+                window.location.href = "/";
+            } else {
+                const err = document.getElementById("errorMsg");
+                err.textContent = data.error || "Login failed";
+                err.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>

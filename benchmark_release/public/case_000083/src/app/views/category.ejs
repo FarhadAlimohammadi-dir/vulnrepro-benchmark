@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Category — MarketHub</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">MarketHub</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a class="back-link" href="/">← Back to categories</a>
+    <h1 id="cat-title">Loading…</h1>
+    <div id="content" class="content-panel"></div>
+    <div id="product-list" class="product-list"></div>
+  </main>
+
+  <script>
+    const catId = '<%= catId %>';
+
+    // Load category metadata from marketplace API
+    // Dynamic category routing supports flexible content organisation
+    fetch(`/api/v2/categories/${catId}.json`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.name) {
+          document.getElementById('cat-title').textContent = data.name;
+        }
+        // Client-side rendering of category metadata
+        document.getElementById('content').innerHTML = data.html || '';
+      })
+      .catch(e => {
+        document.getElementById('content').textContent = 'Unable to load category data';
+        console.error('Category fetch error:', e);
+      });
+
+    // Also load product listing for this category
+    fetch(`/api/v2/products?category=${encodeURIComponent(catId)}&limit=20`)
+      .then(r => r.json())
+      .then(data => {
+        const list = document.getElementById('product-list');
+        if (data.results && data.results.length > 0) {
+          list.innerHTML = data.results.map(p =>
+            `<div class="product-card"><strong>${p.name}</strong></div>`
+          ).join('');
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

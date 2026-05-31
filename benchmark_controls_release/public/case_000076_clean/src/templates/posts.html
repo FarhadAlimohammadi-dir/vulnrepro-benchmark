@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Posts — OldBlog{% endblock %}
+{% block content %}
+<h1>All Posts <small>(page {{ page }})</small></h1>
+{% for post in posts %}
+<article class="post-card">
+  <h2><a href="/posts/{{ post.id }}">{{ post.title | e }}</a></h2>
+  <p class="meta">By {{ post.author | e }} &middot; {{ post.created_at }}</p>
+</article>
+{% else %}
+<p>Nothing here.</p>
+{% endfor %}
+<nav class="pager">
+  {% if page > 1 %}<a href="/posts?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <a href="/posts?page={{ page + 1 }}">Next &raquo;</a>
+</nav>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Admin — PromptForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Administration</h2>
+  <a href="/admin/audit" class="btn-secondary">Audit Log</a>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <span class="stat-number">{{ users | length }}</span>
+    <span class="stat-label">Users</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-number">{{ prompts_count }}</span>
+    <span class="stat-label">Prompts</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-number">{{ audit_count }}</span>
+    <span class="stat-label">Audit Events</span>
+  </div>
+</div>
+
+<h3>Users</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Username</th><th>Full Name</th><th>Email</th>
+      <th>Role</th><th>Created</th><th>Last Login</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.id }}</td>
+      <td>{{ u.username }}</td>
+      <td>{{ u.full_name or '—' }}</td>
+      <td>{{ u.email or '—' }}</td>
+      <td><span class="badge">{{ u.role }}</span></td>
+      <td>{{ u.created_at[:10] }}</td>
+      <td>{{ (u.last_login or 'Never')[:10] }}</td>
+      <td>
+        <button onclick="setRole({{ u.id }}, 'admin')" class="btn-sm">→ Admin</button>
+        <button onclick="setRole({{ u.id }}, 'user')" class="btn-sm">→ User</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+function setRole(uid, role) {
+  fetch('/admin/users/' + uid + '/role', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({role: role})
+  }).then(() => location.reload());
+}
+</script>
+{% endblock %}

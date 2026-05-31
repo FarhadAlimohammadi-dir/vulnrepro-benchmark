@@ -1,0 +1,37 @@
+'use strict';
+
+const router = require('express').Router();
+const projectsSvc = require('../services/projects');
+const notifsSvc = require('../services/notifications');
+
+// GET /dashboard
+router.get('/', (req, res) => {
+  const projects = projectsSvc.listForUser(req.session.userId);
+  const notifications = notifsSvc.listForUser(req.session.userId);
+  const unread = notifsSvc.unreadCount(req.session.userId);
+  res.render('dashboard', { projects, notifications, unread });
+});
+
+// Safe redirect — validates scheme before forwarding.
+// Used by dashboard widgets to navigate to pre-approved internal pages.
+router.get('/redirect', (req, res) => {
+  const next = req.query.next || '/dashboard';
+  // Only permit relative paths or standard http(s) destinations
+  const permitted = /^(\/[^/]|https?:\/\/)/i;
+  if (!permitted.test(next)) {
+    return res.redirect('/dashboard');
+  }
+  res.redirect(next);
+});
+
+// GET /dashboard/search
+router.get('/search', (req, res) => {
+  const q = (req.query.q || '').trim();
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const pageSize = 8;
+  if (!q) return res.render('search', { q: '', results: { rows: [], total: 0, page: 1, pages: 0 } });
+  const results = projectsSvc.search(q, page, pageSize);
+  res.render('search', { q, results });
+});
+
+module.exports = router;

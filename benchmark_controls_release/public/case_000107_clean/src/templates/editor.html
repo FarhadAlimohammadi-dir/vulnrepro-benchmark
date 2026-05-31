@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if note %}Edit Note{% else %}New Note{% endif %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               margin: 0; background: #f5f6fa; }
+        nav { background: #1a1a2e; color: #fff; padding: 14px 28px;
+              display: flex; justify-content: space-between; align-items: center; }
+        nav h1 { font-size: 18px; margin: 0; }
+        nav a { color: #fff; text-decoration: none; font-size: 13px;
+                background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 6px; }
+        .container { max-width: 800px; margin: 32px auto; padding: 0 20px; }
+        .card { background: #fff; border-radius: 12px; padding: 32px;
+                box-shadow: 0 2px 12px rgba(0,0,0,.07); }
+        label { display: block; font-size: 13px; font-weight: 600; color: #444;
+                margin-bottom: 6px; margin-top: 20px; }
+        input[type=text] { width: 100%; padding: 10px 14px; border: 1px solid #dde1e7;
+                border-radius: 8px; font-size: 15px; }
+        textarea { width: 100%; padding: 12px 14px; border: 1px solid #dde1e7;
+                   border-radius: 8px; font-size: 14px; font-family: monospace;
+                   resize: vertical; min-height: 200px; }
+        .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
+        .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+        button.primary { background: #4f46e5; color: #fff; border: none;
+                         padding: 11px 24px; border-radius: 8px; font-size: 14px;
+                         font-weight: 600; cursor: pointer; }
+        button.secondary { background: #f3f4f6; color: #374151; border: 1px solid #dde1e7;
+                           padding: 11px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .alert-success { background: #d1fae5; color: #065f46; padding: 10px 14px;
+                         border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>📝 Notes</h1>
+    <a href="/notes/">← Back to Notes</a>
+</nav>
+<div class="container">
+    <div class="card">
+        <h2>{% if note %}Edit Note{% else %}New Note{% endif %}</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for cat, msg in messages %}
+                <div class="alert-success">{{ msg }}</div>
+            {% endfor %}
+        {% endwith %}
+        <form method="POST" action="{% if note %}/notes/{{ note['id'] }}{% else %}/notes/{% endif %}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required
+                   value="{% if note %}{{ note['title'] }}{% endif %}">
+            <label for="content">Content (HTML)</label>
+            <textarea id="content" name="content" rows="12"
+                      placeholder="Enter rich text HTML...">{% if note %}{{ note['content'] }}{% endif %}</textarea>
+            <div class="checkbox-row">
+                <input type="checkbox" id="is_public" name="is_public"
+                       {% if note and note['is_public'] %}checked{% endif %}>
+                <label for="is_public" style="margin:0">Make this note public</label>
+            </div>
+            <div class="btn-row">
+                <button class="primary" type="submit">
+                    {% if note %}Save Changes{% else %}Create Note{% endif %}
+                </button>
+                {% if note %}
+                <a href="/notes/{{ note['id'] }}/preview" target="_blank">
+                    <button class="secondary" type="button">Preview</button>
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

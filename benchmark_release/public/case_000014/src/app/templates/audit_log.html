@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Audit Log — PromptForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Audit Log</h2>
+  <a href="/admin/" class="btn-secondary">← Admin</a>
+</div>
+<p class="result-count">{{ total }} events total</p>
+<table class="data-table">
+  <thead>
+    <tr><th>ID</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th><th>Time</th></tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.id }}</td>
+      <td>{{ log.username }}</td>
+      <td><strong>{{ log.action }}</strong></td>
+      <td>{{ log.detail }}</td>
+      <td>{{ log.ip_addr or '—' }}</td>
+      <td>{{ log.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="?page={{ page - 1 }}" class="btn-secondary">← Prev</a>
+  {% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}
+    <a href="?page={{ page + 1 }}" class="btn-secondary">Next →</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

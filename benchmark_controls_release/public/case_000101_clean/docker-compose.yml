@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  asu:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - asu_data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    # TODO: add resource limits (mem_limit, cpus) before production deployment
+
+volumes:
+  asu_data:

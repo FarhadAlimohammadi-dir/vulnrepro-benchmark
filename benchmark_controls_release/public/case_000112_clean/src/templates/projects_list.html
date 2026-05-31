@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects - TaskFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; }
+        .navbar { background: #1a73e8; color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .project-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .project-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .project-desc { font-size: 13px; color: #666; margin-bottom: 12px; }
+        .meta { font-size: 12px; color: #999; }
+        a { color: #1a73e8; text-decoration: none; }
+        h1 { font-size: 22px; margin-bottom: 20px; }
+        .new-project { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
+        .btn { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .alert { padding: 10px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-error { background: #fde8e8; color: #c0392b; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight:600;font-size:18px;">TaskFlow</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/projects">Projects</a>
+            <a href="/tasks">Tasks</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        <h1>Projects</h1>
+        <div class="new-project">
+            <h2 style="font-size:16px;margin-bottom:12px;">New Project</h2>
+            <form method="POST" action="/projects">
+                <input type="text" name="name" placeholder="Project name" required>
+                <textarea name="description" placeholder="Description (optional)" rows="2"></textarea>
+                <button type="submit" class="btn">Create Project</button>
+            </form>
+        </div>
+        <div class="grid">
+            {% for project in projects %}
+            <div class="project-card">
+                <div class="project-name"><a href="/projects/{{ project.id }}">{{ project.name }}</a></div>
+                <div class="project-desc">{{ project.description or 'No description' }}</div>
+                <div class="meta">{{ project.task_count }} tasks &bull; {{ project.member_count }} members</div>
+            </div>
+            {% else %}
+            <p style="color:#888;">No projects yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

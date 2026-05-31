@@ -1,0 +1,59 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>Administration</h1>
+  <p class="page-subtitle">Platform overview and management.</p>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="admin-stats">
+  <div class="stat-card">
+    <div class="stat-value"><%= userCount %></div>
+    <div class="stat-label">Total Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value"><%= clients.length %></div>
+    <div class="stat-label">OAuth Clients</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value"><%= orgs.length %></div>
+    <div class="stat-label">Organizations</div>
+  </div>
+</div>
+
+<div class="admin-grid">
+  <section class="card">
+    <h2>Recent Users</h2>
+    <table class="data-table">
+      <thead><tr><th>Email</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+      <tbody>
+        <% allUsers.forEach(u => { %>
+        <tr>
+          <td><a href="/admin/users/<%= u.id %>"><%= u.email %></a></td>
+          <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+          <td><span class="badge <%= u.is_active ? 'badge-active' : 'badge-inactive' %>"><%= u.is_active ? 'Active' : 'Inactive' %></span></td>
+          <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <a href="/admin/users" class="btn-secondary-small">View All Users</a>
+  </section>
+
+  <section class="card">
+    <h2>Recent Activity</h2>
+    <ul class="activity-list">
+      <% recentActivity.forEach(evt => { %>
+      <li class="activity-item">
+        <span class="activity-action"><%= evt.action.replace(/_/g, ' ') %></span>
+        <span class="muted"><%= evt.user_email || 'system' %></span>
+        <small class="muted"><%= new Date(evt.created_at).toLocaleString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <a href="/admin/audit" class="btn-secondary-small">Full Audit Log</a>
+  </section>
+</div>
+<%- include('../partials/footer') %>

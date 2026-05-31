@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TaskFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .navbar { background: #1a73e8; color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; margin-left: 16px; font-size: 14px; }
+        .badge { background: #e74c3c; border-radius: 10px; padding: 2px 6px; font-size: 11px; margin-left: 4px; }
+        .container { max-width: 1100px; margin: 32px auto; padding: 0 16px; }
+        h2 { font-size: 20px; margin-bottom: 16px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #eee; font-weight: 600; color: #555; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+        tr:last-child td { border-bottom: none; }
+        .badge-status { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-open { background: #fef3c7; color: #b45309; }
+        .badge-closed { background: #d1fae5; color: #065f46; }
+        .badge-in_progress { background: #dbeafe; color: #1d4ed8; }
+        .project-item { padding: 12px; border-bottom: 1px solid #f0f0f0; }
+        .project-item:last-child { border-bottom: none; }
+        .project-name { font-weight: 500; font-size: 14px; }
+        .project-meta { font-size: 12px; color: #888; margin-top: 2px; }
+        a { color: #1a73e8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight:600;font-size:18px;">&#9741; TaskFlow</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/projects">Projects</a>
+            <a href="/tasks">Tasks</a>
+            <a href="/notifications">
+                Notifications
+                {% if unread_count > 0 %}<span class="badge">{{ unread_count }}</span>{% endif %}
+            </a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>My Dashboard</h2>
+        <div class="grid">
+            <div class="card">
+                <h2>Recent Tasks</h2>
+                {% if tasks %}
+                <table>
+                    <thead>
+                        <tr><th>Task</th><th>Project</th><th>Status</th><th>Priority</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td><a href="/tasks/{{ task.id }}">{{ task.title }}</a></td>
+                            <td>{{ task.project_name }}</td>
+                            <td><span class="badge-status badge-{{ task.status }}">{{ task.status }}</span></td>
+                            <td>{{ task.priority }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color:#888;font-size:14px;">No tasks yet.</p>
+                {% endif %}
+            </div>
+            <div class="card">
+                <h2>My Projects</h2>
+                {% for project in projects %}
+                <div class="project-item">
+                    <div class="project-name"><a href="/projects/{{ project.id }}">{{ project.name }}</a></div>
+                    <div class="project-meta">{{ project.status }}</div>
+                </div>
+                {% else %}
+                <p style="color:#888;font-size:14px;">No projects yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

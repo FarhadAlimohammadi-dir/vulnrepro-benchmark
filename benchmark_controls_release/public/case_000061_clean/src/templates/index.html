@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <h1>People API Portal</h1>
+            <span class="version-badge">v1</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Developer Documentation</h2>
+            <p>The People API lets you look up, list, and search person resources across the platform.
+               All requests require a valid <code>X-Goog-Api-Key</code> header.</p>
+        </section>
+
+        <section class="endpoints">
+            <h3>Available Endpoints</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Path</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="method get">GET</span></td>
+                        <td><code>/$discovery/rest</code></td>
+                        <td>Retrieve the API discovery document</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method get">GET</span></td>
+                        <td><code>/v1/people</code></td>
+                        <td>List people (supports <code>pageSize</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method get">GET</span></td>
+                        <td><code>/v1/people/{resourceName}</code></td>
+                        <td>Get a single person by resource name</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method get">GET</span></td>
+                        <td><code>/v1/search/people</code></td>
+                        <td>Search people by name or email (param: <code>q</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method get">GET</span></td>
+                        <td><code>/healthz</code></td>
+                        <td>Service health check</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="auth-info">
+            <h3>Authentication</h3>
+            <p>Pass your API key via the <code>X-Goog-Api-Key</code> request header.
+               Internal tooling endpoints additionally require <code>X-Internal-Token</code>.</p>
+            <!-- TODO: add OAuth 2.0 flow documentation once SSO integration lands -->
+        </section>
+
+        <section class="rate-limits">
+            <h3>Rate Limits</h3>
+            <p>Default quota: 1,000 requests/minute per key. Contact the platform team to request increases.</p>
+            <!-- TODO: surface per-key quota usage via a /v1/quota endpoint -->
+        </section>
+    </main>
+
+    <footer>
+        <p>People Platform Team &mdash; Internal Developer Portal</p>
+    </footer>
+</body>
+</html>

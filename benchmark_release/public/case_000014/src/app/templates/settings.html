@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Settings — PromptForge{% endblock %}
+{% block content %}
+<h2>Settings</h2>
+
+{% if new_key %}
+<div class="alert alert-success">
+  <strong>API Key Created:</strong> <code>{{ new_key }}</code>
+  <br><small>Copy this now — it will not be shown again.</small>
+</div>
+{% endif %}
+
+<section class="settings-section">
+  <h3>API Keys</h3>
+  <p>Use API keys to authenticate requests from CI/CD pipelines or scripts.</p>
+  <form method="post" action="/settings/api-keys" class="inline-form">
+    <input name="label" type="text" placeholder="Key label (e.g. ci-prod)" maxlength="50">
+    <button type="submit" class="btn-primary">Create Key</button>
+  </form>
+  {% if api_keys %}
+  <table class="data-table" style="margin-top:1rem">
+    <thead>
+      <tr><th>Label</th><th>Created</th><th>Last Used</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for k in api_keys %}
+      <tr>
+        <td>{{ k.label }}</td>
+        <td>{{ k.created_at[:10] }}</td>
+        <td>{{ k.last_used or 'Never' }}</td>
+        <td>
+          <form method="post" action="/settings/api-keys/{{ k.id }}" style="display:inline">
+            <button type="submit" class="btn-danger-sm">Revoke</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No API keys yet.</p>
+  {% endif %}
+</section>
+
+<section class="settings-section">
+  <h3>Notifications</h3>
+  <form method="post" action="/settings/notifications">
+    <label><input type="checkbox" name="email_on_import"> Email on prompt import</label><br>
+    <label><input type="checkbox" name="email_on_codegen"> Email on code generation</label><br>
+    <button type="submit" class="btn-primary" style="margin-top:.5rem">Save</button>
+  </form>
+</section>
+{% endblock %}

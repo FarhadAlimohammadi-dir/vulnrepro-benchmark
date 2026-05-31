@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/login" class="active">Login</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="auth-page">
+      <div class="auth-box">
+        <div class="auth-logo">&#128279;</div>
+        <h1>Sign in to CodeFlow</h1>
+        <p class="muted">OAuth 2.0 Authorization Server</p>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/login" class="auth-form">
+          <input type="hidden" name="next" value="<%= next %>">
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter your username">
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+        </form>
+
+        <div class="demo-creds">
+          <p><strong>Demo Accounts:</strong></p>
+          <table class="creds-table">
+            <tr><th>Username</th><th>Password</th><th>Role</th></tr>
+            <tr><td>alice</td><td>alice123</td><td>admin</td></tr>
+            <tr><td>bob</td><td>bob123</td><td>user</td></tr>
+            <tr><td>charlie</td><td>charlie123</td><td>user</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

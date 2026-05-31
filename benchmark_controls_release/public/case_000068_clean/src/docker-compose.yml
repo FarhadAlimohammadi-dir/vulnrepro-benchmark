@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  contentsync:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=cs-prod-secret-2024-xK9mP2qR
+      - DATABASE_PATH=/app/data/contentsync.db
+    volumes:
+      - contentsync_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  contentsync_data:

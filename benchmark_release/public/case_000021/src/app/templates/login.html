@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocuMind AI – Sign In</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-body">
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="brand-icon-lg">&#129504;</span>
+      <h1>DocuMind AI</h1>
+      <p class="login-subtitle">HR &amp; Legal Document Intelligence</p>
+    </div>
+    <div class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <button class="btn-primary btn-full" onclick="doLogin()">Sign In</button>
+      <p class="login-error" id="login-error"></p>
+    </div>
+    <div class="login-footer">
+      <small>ACME Corp &mdash; Authorized users only. All access is logged.</small>
+    </div>
+  </div>
+</div>
+<script>
+async function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.textContent = '';
+
+  if (!username || !password) {
+    errEl.textContent = 'Please enter both username and password.';
+    return;
+  }
+
+  try {
+    const r = await fetch('/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const d = await r.json();
+    if (d.ok) {
+      window.location.href = '/';
+    } else {
+      errEl.textContent = d.error || 'Login failed. Please try again.';
+    }
+  } catch (e) {
+    errEl.textContent = 'Network error. Please try again.';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}Chat — NexusAI{% endblock %}
+{% block content %}
+<div class="chat-layout">
+
+  <!-- Sidebar -->
+  <aside class="chat-sidebar">
+    <a href="/chat" class="btn btn-primary btn-full">&#43; New conversation</a>
+    <h3>Recent</h3>
+    <ul class="sidebar-conv-list">
+      {% for conv in conversations %}
+      <li class="{{ 'active' if active_conv and active_conv.id == conv.id else '' }}">
+        <a href="/chat?conv_id={{ conv.id }}">{{ (conv.title or 'Untitled')[:40] }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <!-- Main chat area -->
+  <div class="chat-main">
+    {% if active_conv %}
+    <div class="chat-header">
+      <h2>{{ active_conv.title or 'Conversation' }}</h2>
+    </div>
+    {% endif %}
+
+    <div class="messages-area" id="messages">
+      {% if messages %}
+        {% for msg in messages %}
+        <div class="message message-{{ msg.role }}">
+          <div class="message-role">{{ 'You' if msg.role == 'user' else 'NexusAI' }}</div>
+          <div class="message-content">{{ msg.content }}</div>
+          <div class="message-time">{{ msg.created_at[11:16] }}</div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="chat-empty">
+          <div class="chat-empty-icon">&#128172;</div>
+          <p>Start a conversation with NexusAI</p>
+          <p class="chat-empty-hint">Ask anything — research, summarize, draft, explore.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <form method="post" action="/chat" class="chat-form">
+      {% if active_conv %}
+      <input type="hidden" name="conv_id" value="{{ active_conv.id }}">
+      {% endif %}
+      <div class="chat-input-row">
+        <select name="scope" class="scope-select">
+          <option value="web">Web</option>
+          <option value="news">News</option>
+          <option value="academic">Academic</option>
+          <option value="images">Images</option>
+        </select>
+        <input type="text" name="query" class="chat-input"
+               placeholder="Ask NexusAI anything…" autofocus required
+               maxlength="2000">
+        <label class="memory-toggle">
+          <input type="checkbox" name="use_memory" value="1"> Memory
+        </label>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  // Scroll to bottom of messages on load
+  var el = document.getElementById('messages');
+  if (el) el.scrollTop = el.scrollHeight;
+</script>
+{% endblock %}

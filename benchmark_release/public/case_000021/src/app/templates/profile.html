@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Profile – DocuMind AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h2>&#128100; My Profile</h2>
+    <p>Manage your account information and preferences.</p>
+  </div>
+
+  <div class="settings-grid">
+    <!-- Account Info -->
+    <div class="settings-card">
+      <h3>Account Information</h3>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" value="{{ user.get('username', '') }}" disabled class="input-disabled">
+      </div>
+      <div class="form-group">
+        <label>Display Name</label>
+        <input type="text" id="displayName" value="{{ user.get('display_name', '') }}" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" value="{{ user.get('email', '') }}" placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label>Department</label>
+        <input type="text" id="department" value="{{ user.get('department', '') }}" placeholder="e.g. Human Resources">
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <input type="text" value="{{ user.get('role', '') }}" disabled class="input-disabled">
+      </div>
+      <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
+      <p class="form-feedback" id="profileFeedback"></p>
+    </div>
+
+    <!-- Password Change -->
+    <div class="settings-card">
+      <h3>Change Password</h3>
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" id="currentPw" placeholder="Enter current password">
+      </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="newPw" placeholder="Minimum 8 characters">
+      </div>
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPw" placeholder="Repeat new password">
+      </div>
+      <button class="btn-primary" onclick="changePassword()">Update Password</button>
+      <p class="form-feedback" id="pwFeedback"></p>
+    </div>
+
+    <!-- Preferences -->
+    <div class="settings-card">
+      <h3>Preferences</h3>
+      <div class="form-group">
+        <label>Theme</label>
+        <select id="theme">
+          <option value="light" {% if settings.get('theme') == 'light' %}selected{% endif %}>Light</option>
+          <option value="dark" {% if settings.get('theme') == 'dark' %}selected{% endif %}>Dark</option>
+          <option value="auto" {% if settings.get('theme') == 'auto' %}selected{% endif %}>Auto</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Default AI Persona</label>
+        <select id="aiPersona">
+          <option value="professional" {% if settings.get('ai_persona') == 'professional' %}selected{% endif %}>Professional</option>
+          <option value="friendly" {% if settings.get('ai_persona') == 'friendly' %}selected{% endif %}>Friendly</option>
+          <option value="detailed" {% if settings.get('ai_persona') == 'detailed' %}selected{% endif %}>Detailed</option>
+        </select>
+      </div>
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" id="notifications" {% if settings.get('notifications_enabled') %}checked{% endif %}>
+          Email notifications
+        </label>
+      </div>
+      <button class="btn-primary" onclick="saveSettings()">Save Preferences</button>
+      <p class="form-feedback" id="settingsFeedback"></p>
+    </div>
+
+    <!-- Account Activity -->
+    <div class="settings-card">
+      <h3>Account Activity</h3>
+      <table class="info-table">
+        <tr><td>Member since</td><td>{{ user.get('created_at', 'N/A') }}</td></tr>
+        <tr><td>Last login</td><td>{{ user.get('last_login', 'N/A') }}</td></tr>
+        <tr><td>Department</td><td>{{ user.get('department', 'N/A') }}</td></tr>
+        <tr><td>Role</td><td>{{ user.get('role', 'N/A') }}</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function saveProfile() {
+  const r = await fetch('/api/profile', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      display_name: document.getElementById('displayName').value,
+      email: document.getElementById('email').value,
+      department: document.getElementById('department').value
+    })
+  });
+  const d = await r.json();
+  document.getElementById('profileFeedback').textContent = d.ok ? 'Profile updated.' : (d.error || 'Error');
+}
+
+async function changePassword() {
+  const np = document.getElementById('newPw').value;
+  const cp = document.getElementById('confirmPw').value;
+  const fb = document.getElementById('pwFeedback');
+  if (np !== cp) { fb.textContent = 'Passwords do not match.'; return; }
+  const r = await fetch('/api/profile/password', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({current_password: document.getElementById('currentPw').value, new_password: np})
+  });
+  const d = await r.json();
+  fb.textContent = d.ok ? 'Password changed successfully.' : (d.error || 'Error');
+}
+
+async function saveSettings() {
+  const r = await fetch('/api/settings', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      theme: document.getElementById('theme').value,
+      ai_persona: document.getElementById('aiPersona').value,
+      notifications_enabled: document.getElementById('notifications').checked
+    })
+  });
+  const d = await r.json();
+  document.getElementById('settingsFeedback').textContent = d.ok ? 'Preferences saved.' : (d.error || 'Error');
+}
+</script>
+{% endblock %}

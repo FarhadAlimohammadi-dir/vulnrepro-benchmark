@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, notifications: [] }) %>
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1>My Profile</h1>
+    <p class="page-subtitle">Manage your account settings and view your permission summary.</p>
+  </div>
+
+  <% if (typeof req !== 'undefined' && req.query) { %>
+    <% if (req.query.success) { %><div class="alert alert-success"><%= req.query.success %></div><% } %>
+    <% if (req.query.error) { %><div class="alert alert-error"><%= req.query.error %></div><% } %>
+  <% } %>
+
+  <div class="content-grid">
+    <div class="content-panel">
+      <div class="panel-header"><h2>Account Details</h2></div>
+      <form method="POST" action="/profile/update" class="form-vertical">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" value="<%= user.username %>" disabled class="input-disabled">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <input type="text" value="<%= user.role %>" disabled class="input-disabled">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" value="<%= fullUser.email || '' %>" placeholder="you@company.com">
+        </div>
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input type="text" id="department" name="department" value="<%= fullUser.department || '' %>" placeholder="e.g. Engineering">
+        </div>
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="content-panel">
+      <div class="panel-header"><h2>Permission Summary</h2></div>
+      <div class="form-group">
+        <label>Allowed Actions (<%= permissionSummary.actions.length %>)</label>
+        <div class="tag-list">
+          <% permissionSummary.actions.forEach(a => { %>
+          <span class="tag"><%= a %></span>
+          <% }) %>
+          <% if (permissionSummary.actions.length === 0) { %>
+          <span class="muted">No actions granted</span>
+          <% } %>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Allowed Resources (<%= permissionSummary.resources.length %>)</label>
+        <div class="tag-list">
+          <% permissionSummary.resources.forEach(r => { %>
+          <span class="tag tag-resource"><%= r %></span>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-panel mt-1">
+    <div class="panel-header">
+      <h2>Notifications</h2>
+      <% if (unreadCount > 0) { %>
+      <form method="POST" action="/profile/notifications/read" style="display:inline">
+        <input type="hidden" name="notificationId" value="all">
+        <button class="btn-link" type="submit">Mark all read</button>
+      </form>
+      <% } %>
+    </div>
+    <% if (notifications.length === 0) { %>
+    <p class="empty-state">No notifications.</p>
+    <% } else { %>
+    <ul class="notif-list">
+      <% notifications.forEach(n => { %>
+      <li class="notif-item <%= n.read ? 'notif-read' : 'notif-unread' %>">
+        <span class="notif-msg"><%= n.message %></span>
+        <span class="notif-time muted"><%= n.created_at %></span>
+      </li>
+      <% }) %>
+    </ul>
+    <% } %>
+  </div>
+
+  <div class="content-panel mt-1">
+    <div class="panel-header"><h2>Activity Log</h2></div>
+    <table class="data-table">
+      <thead><tr><th>Action</th><th>Detail</th><th>Timestamp</th></tr></thead>
+      <tbody>
+        <% activityLog.forEach(e => { %>
+        <tr>
+          <td><code class="mono small"><%= e.action %></code></td>
+          <td class="muted"><%= e.detail || '—' %></td>
+          <td class="muted"><%= e.ts %></td>
+        </tr>
+        <% }) %>
+        <% if (activityLog.length === 0) { %>
+        <tr><td colspan="3" class="empty-state">No activity recorded.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<footer class="footer">
+  <span>CloudLens IAM Analyzer &copy; 2024 &mdash; Platform Engineering</span>
+  <span class="footer-right">Build 2.0.0-stable</span>
+</footer>
+</body>
+</html>

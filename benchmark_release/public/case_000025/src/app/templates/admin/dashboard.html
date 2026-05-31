@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Admin Dashboard</h2>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_tickets }}</div>
+    <div class="stat-label">Total Tickets</div>
+  </div>
+  <div class="stat-card stat-open">
+    <div class="stat-value">{{ open_tickets }}</div>
+    <div class="stat-label">Open</div>
+  </div>
+  <div class="stat-card stat-closed">
+    <div class="stat-value">{{ closed_tickets }}</div>
+    <div class="stat-label">Closed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_users }}</div>
+    <div class="stat-label">Users</div>
+  </div>
+</div>
+
+<div class="admin-nav">
+  <a href="/admin/tickets" class="btn btn-secondary">All Tickets</a>
+  <a href="/admin/users" class="btn btn-secondary">User Management</a>
+  <a href="/admin/audit" class="btn btn-secondary">Audit Log</a>
+</div>
+
+<h3>Recent Tickets</h3>
+<table class="data-table">
+  <thead>
+    <tr><th>#</th><th>Owner</th><th>Subject</th><th>Status</th><th>Priority</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+  {% for t in recent_tickets %}
+  <tr>
+    <td>#{{ t.id }}</td>
+    <td>{{ t.owner }}</td>
+    <td>{{ t.subject }}</td>
+    <td><span class="badge badge-{{ t.status }}">{{ t.status }}</span></td>
+    <td><span class="badge badge-{{ t.priority }}">{{ t.priority }}</span></td>
+    <td>{{ t.created_at[:16] if t.created_at else '—' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

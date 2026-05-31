@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffiliTrack - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+               background: #f0f2f5; }
+        .nav { background: white; padding: 0 2rem; height: 56px; display: flex; align-items: center;
+               justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .nav h1 { color: #2563eb; font-size: 1.25rem; font-weight: 700; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; }
+        .nav-right a { color: #6b7280; text-decoration: none; }
+        .main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 8px;
+                     box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card p { font-size: 2rem; font-weight: 700; color: #111827; margin-top: 0.5rem; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                overflow: hidden; }
+        .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid #f3f4f6; }
+        .card-header h2 { font-size: 1rem; font-weight: 600; color: #111827; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem;
+             color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;
+             background: #f9fafb; }
+        td { padding: 1rem 1.5rem; font-size: 0.875rem; color: #374151;
+             border-top: 1px solid #f3f4f6; }
+        .badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 9999px;
+                 font-size: 0.75rem; font-weight: 500; }
+        .badge-active { background: #d1fae5; color: #065f46; }
+        .badge-inactive { background: #f3f4f6; color: #6b7280; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .notif { background: #eff6ff; border-left: 4px solid #2563eb;
+                 padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0 6px 6px 0;
+                 font-size: 0.875rem; color: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <h1>AffiliTrack</h1>
+        <div class="nav-right">
+            <span>{{ current_user.username }}</span>
+            <a href="/auth/profile">Profile</a>
+            <a href="/auth/logout">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="main">
+        {% if notifications %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for n in notifications %}
+            <div class="notif">{{ n.message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Clicks</h3>
+                <p>{{ total_clicks }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Conversions</h3>
+                <p>{{ total_conversions }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Partners</h3>
+                <p>{{ total_partners }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Partner Programs</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Partner</th>
+                        <th>Domain</th>
+                        <th>Commission</th>
+                        <th>Status</th>
+                        <th>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in partners %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.domain }}</td>
+                        <td>{{ "%.0f"|format(p.commission_rate * 100) }}%</td>
+                        <td>
+                            <span class="badge badge-{{ p.status }}">{{ p.status }}</span>
+                        </td>
+                        <td>{{ p.owner_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

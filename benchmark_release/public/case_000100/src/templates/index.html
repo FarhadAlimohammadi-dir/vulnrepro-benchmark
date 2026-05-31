@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudImage Platform</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-icon">☁</span>
+      <span class="brand-name">CloudImage</span>
+      <span class="brand-version">v2.3</span>
+    </div>
+    <nav>
+      <a href="/healthz">Status</a>
+      <a href="#buckets">Buckets</a>
+      <a href="#jobs">Import Jobs</a>
+      <a href="#profile">Profile</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="hero">
+      <h1>Managed VM Image Import</h1>
+      <p class="subtitle">
+        Import, convert, and publish machine images to GCP — automated and
+        auditable.
+      </p>
+    </section>
+
+    <section id="buckets" class="card-grid">
+      <div class="card">
+        <h2>Buckets</h2>
+        <p>Organise your import artifacts in regional storage buckets.</p>
+        <ul class="feature-list">
+          <li>Multi-region replication</li>
+          <li>Lifecycle policies</li>
+          <li>Storage class transitions</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Import Jobs</h2>
+        <p>Track ongoing and completed image import workflows.</p>
+        <ul class="feature-list">
+          <li>Real-time status updates</li>
+          <li>Retry on transient errors</li>
+          <li>Audit trail per job</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Access Control</h2>
+        <p>Role-based access for users and service accounts.</p>
+        <ul class="feature-list">
+          <li>User / Admin roles</li>
+          <li>Per-bucket ownership</li>
+          <li>Full audit log</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="quickstart">
+      <h2>Quick Start</h2>
+      <pre><code># 1. Authenticate
+curl -s -c cookies.txt -X POST http://localhost:9000/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"alice","password":"aliceS3cure!"}'
+
+# 2. Start an import job
+curl -s -b cookies.txt -X POST http://localhost:9000/api/images/import \
+  -H 'Content-Type: application/json' \
+  -d '{"image_name":"my-ubuntu","source_image":"projects/ubuntu-os-cloud/global/images/ubuntu-2204"}'
+</code></pre>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 CloudImage Platform — <a href="/healthz">API Status</a></p>
+    <!-- TODO: add i18n locale switcher here (I18N-301) -->
+  </footer>
+</body>
+</html>

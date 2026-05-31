@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVault — Admin</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/dashboard" class="logo">☁ CloudVault</a>
+      <nav class="main-nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/buckets">Buckets</a>
+        <a href="/search">Search</a>
+        <a href="/admin" class="active">Admin</a>
+        <a href="/profile">Profile</a>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="page-header">
+      <h1>Admin Panel</h1>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.bucketCount %></div>
+        <div class="stat-label">Total Buckets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.objectCount %></div>
+        <div class="stat-label">Total Objects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= users.length %></div>
+        <div class="stat-label">Users</div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header"><h2>User Management</h2></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><%= u.username %></td>
+              <td><%= u.email || '—' %></td>
+              <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+              <td><%= new Date(u.createdAt).toLocaleDateString() %></td>
+              <td>
+                <form method="POST" action="/admin/users/<%= u.id %>/role" style="display:inline-flex;gap:4px">
+                  <select name="role">
+                    <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>admin</option>
+                    <option value="engineer" <%= u.role === 'engineer' ? 'selected' : '' %>>engineer</option>
+                    <option value="viewer" <%= u.role === 'viewer' ? 'selected' : '' %>>viewer</option>
+                  </select>
+                  <button type="submit" class="btn btn-small">Update</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header"><h2>Audit Log</h2></div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th></tr>
+        </thead>
+        <tbody>
+          <% auditLogs.forEach(log => { %>
+            <tr>
+              <td><%= new Date(log.timestamp).toLocaleString() %></td>
+              <td><%= log.username || 'system' %></td>
+              <td><code><%= log.action %></code></td>
+              <td><%= log.resource %></td>
+              <td><%= log.ipAddress || '—' %></td>
+            </tr>
+          <% }) %>
+          <% if (auditLogs.length === 0) { %>
+            <tr><td colspan="5" class="empty">No audit log entries.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container"><span>CloudVault Storage Manager v2.1.0</span></div>
+  </footer>
+</body>
+</html>

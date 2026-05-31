@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — VisionBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/"><span class="brand-icon">◈</span> VisionBoard</a>
+  <div class="navbar-links">
+    <a href="/gallery">Gallery</a>
+    <a href="/dashboard" class="active">My Images</a>
+    <a href="/settings">Settings</a>
+    <% if (isAdmin) { %><a href="/admin">Admin</a><% } %>
+    <span class="nav-user">@<%= currentUser.username %></span>
+    <form method="POST" action="/logout" style="display:inline">
+      <button class="btn btn-ghost btn-sm">Sign out</button>
+    </form>
+  </div>
+</nav>
+<main class="container">
+
+  <div class="page-header">
+    <div>
+      <h2>My Images</h2>
+      <p class="text-muted">Manage and analyse your uploaded files</p>
+    </div>
+    <div>
+      <span class="plan-badge plan-<%= currentUser.plan %>"><%= currentUser.plan %></span>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <form method="GET" action="/dashboard" class="search-bar">
+    <input name="q" type="search" placeholder="Search by filename, tag, or description…" value="<%= search %>">
+    <button class="btn btn-secondary" type="submit">Search</button>
+    <% if (search) { %><a href="/dashboard" class="btn btn-ghost">Clear</a><% } %>
+  </form>
+
+  <!-- Upload hint -->
+  <div class="callout">
+    <strong>Upload via API:</strong>
+    <code>POST /api/images/upload</code> with <code>{"filename":"photo.png","content_type":"image/png"}</code>
+  </div>
+
+  <!-- Image grid -->
+  <% if (images.length === 0) { %>
+    <div class="empty-state">
+      <p>No images yet<%= search ? ' matching your search' : '' %>.</p>
+    </div>
+  <% } else { %>
+  <div class="image-grid">
+    <% images.forEach(img => { %>
+    <div class="image-card">
+      <div class="image-thumb"><span class="mime-icon"><%= img.content_type.split('/')[1].toUpperCase() %></span></div>
+      <div class="image-meta">
+        <p class="image-filename" title="<%= img.filename %>"><%= img.filename %></p>
+        <p class="image-desc"><%= (img.ai_description || '').substring(0, 80) %><%= img.ai_description && img.ai_description.length > 80 ? '…' : '' %></p>
+        <% if (img.ocr_text) { %>
+          <p class="image-ocr"><strong>OCR:</strong> <%= img.ocr_text.substring(0, 60) %>…</p>
+        <% } %>
+        <div class="image-tags">
+          <% (img.tags||'').split(',').filter(Boolean).forEach(t => { %>
+            <span class="tag"><%= t.trim() %></span>
+          <% }) %>
+        </div>
+        <p class="image-path"><code><%= img.storage_path %></code></p>
+        <p class="image-date text-muted"><%= img.created_at %></p>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+
+  <!-- Pagination -->
+  <% if (pages > 1) { %>
+  <div class="pagination">
+    <% for (let p = 1; p <= pages; p++) { %>
+      <a href="/dashboard?page=<%= p %><%= search ? '&q='+encodeURIComponent(search) : '' %>"
+         class="<%= p === page ? 'active' : '' %>"><%= p %></a>
+    <% } %>
+  </div>
+  <% } %>
+
+  <!-- Shared with me -->
+  <% if (sharedWith.length > 0) { %>
+  <section class="shared-section">
+    <h3>Shared with me</h3>
+    <% sharedWith.forEach(img => { %>
+    <div class="share-row">
+      <strong><%= img.filename %></strong>
+      <span class="text-muted"> shared by @<%= img.owner_name %></span>
+    </div>
+    <% }) %>
+  </section>
+  <% } %>
+
+  <!-- Collections -->
+  <% if (collections.length > 0) { %>
+  <section class="shared-section">
+    <h3>Collections</h3>
+    <% collections.forEach(col => { %>
+    <div class="share-row">
+      <strong><%= col.name %></strong>
+      <span class="text-muted"> — <%= col.description || '' %></span>
+    </div>
+    <% }) %>
+  </section>
+  <% } %>
+
+</main>
+<footer class="site-footer"><p>© 2024 VisionBoard</p></footer>
+</body>
+</html>

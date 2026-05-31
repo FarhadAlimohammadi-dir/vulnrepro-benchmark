@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transfer Funds</title>
+</head>
+<body>
+  <h1>Transfer Funds</h1>
+  <form onsubmit="handleTransfer(event)">
+    <input type="text" id="recipient" placeholder="Recipient username" required>
+    <input type="number" id="amount" placeholder="Amount" min="1" max="10000" required>
+    <button type="submit">Transfer</button>
+  </form>
+  <div id="status"></div>
+
+  <script>
+    function handleTransfer(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('recipient').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      
+      fetch('/api/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient, amount })
+      }).then(r => r.json()).then(d => {
+        document.getElementById('status').textContent = d.message || 'Transfer failed';
+      });
+    }
+  </script>
+</body>
+</html>

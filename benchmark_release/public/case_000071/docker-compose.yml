@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  contentflow:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=cf-prod-secret-xK9mP2nQ7rL4
+      - DATABASE_PATH=/app/data/contentflow.db
+    volumes:
+      - contentflow_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  contentflow_data:

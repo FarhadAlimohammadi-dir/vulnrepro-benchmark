@@ -1,0 +1,49 @@
+<%- include('layout', { title: 'Admin Dashboard', body: `
+  <h2>Admin Dashboard</h2>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h4>Total Users</h4>
+      <div class="value"><%= stats.totalUsers %></div>
+    </div>
+    <div class="stat-card">
+      <h4>Total Workflows</h4>
+      <div class="value"><%= stats.totalWorkflows %></div>
+    </div>
+    <div class="stat-card">
+      <h4>Recent Audit Events</h4>
+      <div class="value"><%= stats.recentLogs %></div>
+    </div>
+  </div>
+
+  <h3>Quick Links</h3>
+  <p>
+    <a href="/admin/users" class="btn">Manage Users</a>
+  </p>
+
+  <h3>Recent Audit Log</h3>
+  <% if (logs.length === 0) { %>
+    <p>No audit events recorded.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>User</th>
+          <th>Description</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% logs.slice(0, 10).forEach(log => { %>
+          <tr>
+            <td><strong><%= log.action %></strong></td>
+            <td><%= log.user_id || 'System' %></td>
+            <td><%= log.description %></td>
+            <td><%= new Date(log.timestamp).toLocaleString() %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+` }) %>

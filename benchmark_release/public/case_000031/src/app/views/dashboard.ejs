@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/search">Search</a>
+      <a href="/settings/widgets">Widgets</a>
+      <a href="/profile">Profile</a>
+      <% if (currentUser && currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+
+<% if (flashMessage) { %>
+<div class="flash-message"><%= flashMessage %></div>
+<% } %>
+
+<main class="main-content">
+<div class="container">
+
+  <div class="page-header">
+    <h2>Welcome back, <strong><%= currentUser.username %></strong></h2>
+    <a href="/posts/new" class="btn btn-primary">New Post</a>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Posts feed -->
+    <section class="posts-section">
+      <h3>Recent Posts</h3>
+      <% if (posts.length === 0) { %>
+        <p class="empty-state">No posts yet. <a href="/posts/new">Create one</a>.</p>
+      <% } else { %>
+        <ul class="post-list">
+          <% posts.forEach(post => { %>
+          <li class="post-item">
+            <a href="/posts/<%= post.id %>" class="post-title"><%= post.title %></a>
+            <span class="post-meta">by <%= post.username %> &middot; <%= new Date(post.created_at).toLocaleDateString() %></span>
+          </li>
+          <% }) %>
+        </ul>
+        <div class="pagination">
+          <% if (page > 1) { %><a href="/dashboard?page=<%= page - 1 %>" class="btn btn-sm">&laquo; Prev</a><% } %>
+          <span>Page <%= page %> of <%= totalPages %></span>
+          <% if (page < totalPages) { %><a href="/dashboard?page=<%= page + 1 %>" class="btn btn-sm">Next &raquo;</a><% } %>
+        </div>
+      <% } %>
+    </section>
+
+    <!-- Widgets sidebar -->
+    <aside class="widgets-sidebar">
+      <h3>Your Widgets (<%= widgets.length %>)</h3>
+      <% if (widgets.length === 0) { %>
+        <p class="empty-state"><a href="/settings/widgets">Add a widget</a>.</p>
+      <% } else { %>
+        <ul class="widget-list">
+          <% widgets.forEach(w => { %>
+          <li class="widget-item <%= w.enabled ? '' : 'widget-disabled' %>">
+            <span class="widget-type"><%= w.widget_type %></span>
+            <span class="widget-status"><%= w.enabled ? '&#9679; on' : '&#9675; off' %></span>
+          </li>
+          <% }) %>
+        </ul>
+        <a href="/settings/widgets" class="btn btn-sm">Manage Widgets</a>
+      <% } %>
+
+      <!-- Embedded like button demo -->
+      <div class="widget-demo">
+        <p class="demo-label">Live Demo</p>
+        <iframe src="/plugins/like" width="120" height="44" frameborder="0" title="Like button demo"></iframe>
+      </div>
+    </aside>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="container"><p>&copy; 2024 SocialKit Platform</p></div>
+</footer>
+</body>
+</html>

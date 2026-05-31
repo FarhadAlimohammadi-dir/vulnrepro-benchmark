@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block title %}{{ ws.name }} &mdash; CodeNest{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ ws.name }}</h1>
+    <p class="ws-desc">{{ ws.description or '' }}</p>
+  </div>
+  <div class="header-actions">
+    <span class="badge badge-{{ ws.status }}">{{ ws.status }}</span>
+    <a href="/workspaces/{{ ws.id }}/settings" class="btn btn-secondary">Settings</a>
+  </div>
+</div>
+
+<div class="grid-2">
+  <section class="section">
+    <h2>Details</h2>
+    <dl class="dl">
+      <dt>Language</dt><dd>{{ context.language }}</dd>
+      <dt>Editor</dt><dd>{{ context.editor }}</dd>
+      <dt>Visibility</dt><dd>{{ ws.visibility }}</dd>
+      <dt>MCP Servers</dt><dd>{{ context.mcp_server_count }}</dd>
+      <dt>Hooks</dt><dd>{{ 'enabled' if context.hooks_enabled else 'disabled' }}</dd>
+      <dt>Created</dt><dd>{{ ws.created_at }}</dd>
+      <dt>Updated</dt><dd>{{ ws.updated_at }}</dd>
+    </dl>
+  </section>
+
+  <section class="section">
+    <h2>Members ({{ members|length }})</h2>
+    <ul class="member-list">
+      {% for m in members %}
+      <li>
+        <strong>{{ m.username }}</strong>
+        <span class="tag">{{ m.workspace_role }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<section class="section">
+  <h2>Recent Review Sessions</h2>
+  {% if sessions %}
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Initiator</th><th>Status</th><th>Model</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for s in sessions %}
+      <tr>
+        <td>#{{ s.id }}</td>
+        <td>{{ s.initiator_name }}</td>
+        <td>{{ s.status }}</td>
+        <td>{{ s.model_used }}</td>
+        <td class="mono small">{{ s.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">No review sessions yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

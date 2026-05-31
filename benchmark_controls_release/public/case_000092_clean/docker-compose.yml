@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nexus-analytics:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - nexus_data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/nexus.db
+      - USER_TEMPLATE_DATA_DIR=/app/data/user_report_templates
+    restart: unless-stopped
+
+volumes:
+  nexus_data:

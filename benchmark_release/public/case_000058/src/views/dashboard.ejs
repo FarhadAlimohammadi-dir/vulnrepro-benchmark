@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProjectSync — Dashboard</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">ProjectSync</div>
+    <nav>
+      <a href="/dashboard">Projects</a>
+      <a href="/settings">Settings</a>
+      <a href="/audit">Audit Log</a>
+      <a href="/logout" class="btn-logout">Sign out</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>My Projects</h1>
+      <a href="/projects/new" class="btn-primary">New Project</a>
+    </div>
+
+    <% if (projects.length === 0) { %>
+      <p class="empty-state">No projects yet. Create your first one!</p>
+    <% } else { %>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th><th>Slug</th><th>Status</th><th>Created</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% projects.forEach(p => { %>
+          <tr>
+            <td><%= p.name %></td>
+            <td><code><%= p.slug %></code></td>
+            <td><span class="badge badge-<%= p.status %>"><%= p.status %></span></td>
+            <td><%= p.created_at %></td>
+            <td><a href="/projects/<%= p.slug %>">View</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <% if (page > 1) { %><a href="?page=<%= page-1 %>">← Prev</a><% } %>
+        <span>Page <%= page %></span>
+        <% if (projects.length === limit) { %><a href="?page=<%= page+1 %>">Next →</a><% } %>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

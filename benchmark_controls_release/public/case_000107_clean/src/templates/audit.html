@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Log - Admin</title>
+    <style>
+        body { font-family: monospace; margin: 20px; background: #f9f9f9; }
+        table { border-collapse: collapse; width: 100%; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 8px 12px; font-size: 13px; }
+        th { background: #1a1a2e; color: #fff; }
+        tr:nth-child(even) { background: #f5f6fa; }
+    </style>
+</head>
+<body>
+    <h2>Audit Log</h2>
+    <table>
+        <tr>
+            <th>#</th><th>User</th><th>Action</th><th>Target</th><th>IP</th><th>Time</th>
+        </tr>
+        {% for ev in events %}
+        <tr>
+            <td>{{ ev['id'] }}</td>
+            <td>{{ ev['username'] | e if ev['username'] else '—' }}</td>
+            <td>{{ ev['action'] | e }}</td>
+            <td>{{ ev['target_id'] if ev['target_id'] else '—' }}</td>
+            <td>{{ ev['ip_address'] | e if ev['ip_address'] else '—' }}</td>
+            <td>{{ ev['created_at'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

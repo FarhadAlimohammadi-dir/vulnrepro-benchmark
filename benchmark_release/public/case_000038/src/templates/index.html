@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaSpark Gaming Platform</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a1a; color: #e0e0ff; margin: 0; padding: 40px; }
+        h1 { color: #7c6af7; font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .subtitle { color: #888; margin-bottom: 2rem; }
+        .card { background: #12122a; border: 1px solid #2a2a4a; border-radius: 8px; padding: 20px; margin-bottom: 16px; max-width: 600px; }
+        .endpoint { font-family: monospace; color: #7c6af7; }
+        .method { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
+        .post { background: #1a4a1a; color: #4aff4a; }
+        .get { background: #1a2a4a; color: #4a9aff; }
+        .put { background: #4a3a1a; color: #ffaa4a; }
+    </style>
+</head>
+<body>
+    <h1>🎮 NovaSpark</h1>
+    <p class="subtitle">Gaming Platform API v2.4.1</p>
+
+    <div class="card">
+        <h3>Authentication</h3>
+        <p><span class="method post">POST</span><span class="endpoint">/api/auth/login</span></p>
+        <p><span class="method post">POST</span><span class="endpoint">/api/auth/register</span></p>
+        <p><span class="method post">POST</span><span class="endpoint">/api/auth/logout</span></p>
+        <p><span class="method post">POST</span><span class="endpoint">/api/auth/request-reset</span></p>
+        <p><span class="method post">POST</span><span class="endpoint">/api/auth/reset-password</span></p>
+    </div>
+
+    <div class="card">
+        <h3>Profile</h3>
+        <p><span class="method get">GET</span><span class="endpoint">/api/profile/</span></p>
+        <p><span class="method put">PUT</span><span class="endpoint">/api/profile/update</span></p>
+        <p><span class="method get">GET</span><span class="endpoint">/api/profile/library</span></p>
+        <p><span class="method get">GET</span><span class="endpoint">/api/profile/orders</span></p>
+    </div>
+
+    <div class="card">
+        <h3>Games</h3>
+        <p><span class="method get">GET</span><span class="endpoint">/api/games/</span></p>
+        <p><span class="method get">GET</span><span class="endpoint">/api/games/search?q=...</span></p>
+        <p><span class="method get">GET</span><span class="endpoint">/api/games/:slug</span></p>
+        <p><span class="method post">POST</span><span class="endpoint">/api/games/purchase</span></p>
+    </div>
+</body>
+</html>

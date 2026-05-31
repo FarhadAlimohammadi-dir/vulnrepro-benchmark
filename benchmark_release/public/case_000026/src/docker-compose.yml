@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  cloudlens:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      - cloudlens-data:/app
+volumes:
+  cloudlens-data:

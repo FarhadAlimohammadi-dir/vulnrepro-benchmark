@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login — MarketHub</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <h1 class="brand">MarketHub</h1>
+    <div class="card">
+      <h2>Sign in</h2>
+      <% if (error) { %>
+        <p class="alert alert-error"><%= error %></p>
+      <% } %>
+      <form method="POST" action="/login">
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" placeholder="username" required autocomplete="username" />
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+      <p class="hint">Demo accounts: john/password123 · alice/secret456 · bob/pass789</p>
+    </div>
+  </div>
+</body>
+</html>

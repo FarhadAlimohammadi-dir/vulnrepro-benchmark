@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  codereview:
+    build: .
+    ports:
+      - '9000:9000'
+    environment:
+      - PORT=9000
+      - WORKSPACE=/workspace
+      - DB_PATH=/data/codereview.db
+      - SECRET_KEY=prod-secret-change-me-2024
+    volumes:
+      - workspace_data:/workspace
+      - db_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  workspace_data:
+  db_data:

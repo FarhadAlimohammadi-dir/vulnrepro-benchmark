@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contacts — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, page: 'contacts' }) %>
+<main class="content">
+<div class="page-header">
+  <h1>Contacts</h1>
+  <a href="/contacts/new" class="btn btn-primary">+ New Contact</a>
+</div>
+
+<form class="search-bar" method="GET" action="/contacts">
+  <input class="field-input search-input" name="q" value="<%= search %>" placeholder="Search by name, phone, email…">
+  <button class="btn btn-secondary" type="submit">Search</button>
+  <% if (search) { %><a href="/contacts" class="btn btn-ghost">Clear</a><% } %>
+</form>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% contacts.forEach(c => { %>
+      <tr>
+        <td><strong><%= c.name %></strong></td>
+        <td><%= c.phone || '—' %></td>
+        <td><%= c.email || '—' %></td>
+        <td class="muted"><%= (c.notes||'').slice(0,50) %></td>
+        <td class="actions">
+          <a href="/contacts/<%= c.id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+          <form method="POST" action="/contacts/<%= c.id %>/delete" style="display:inline">
+            <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this contact?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+      <% if (!contacts.length) { %>
+      <tr><td colspan="5" class="muted">No contacts found.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% var totalPages = Math.ceil(total / perPage); %>
+  <% if (page > 1) { %><a href="/contacts?page=<%= page-1 %>&q=<%= search %>" class="btn btn-ghost">← Prev</a><% } %>
+  <span class="pg-info">Page <%= page %> of <%= Math.max(1,totalPages) %> (<%= total %> records)</span>
+  <% if (page < totalPages) { %><a href="/contacts?page=<%= page+1 %>&q=<%= search %>" class="btn btn-ghost">Next →</a><% } %>
+</div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

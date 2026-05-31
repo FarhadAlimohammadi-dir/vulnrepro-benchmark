@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snippets – CodeNest</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="topnav">
+  <a class="brand" href="/">🪐 CodeNest</a>
+  <div class="nav-links">
+    <a href="/">Snippets</a>
+    <a href="/snippets/new">New</a>
+    <% if (role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <a href="/profile">Profile</a>
+    <span class="sep">|</span>
+    <span class="nav-user">👤 <%= username %></span>
+    <a href="/logout">Sign out</a>
+  </div>
+</nav>
+<% if (flash) { %>
+<div class="flash flash-<%= flash.type %>"><%- flash.msg %></div>
+<% } %>
+<main class="container">
+  <div class="page-header">
+    <h1>Code Snippets</h1>
+    <a href="/snippets/new" class="btn btn-primary">+ New Snippet</a>
+  </div>
+
+  <form class="search-bar" method="GET" action="/">
+    <input type="text" name="search" placeholder="Search snippets…" value="<%= search || '' %>">
+    <select name="language">
+      <option value="">All languages</option>
+      <% languages.forEach(l => { %>
+        <option value="<%= l %>" <%= language === l ? 'selected' : '' %>><%= l %></option>
+      <% }) %>
+    </select>
+    <button type="submit" class="btn">Filter</button>
+    <a href="/" class="btn btn-ghost">Clear</a>
+  </form>
+
+  <% if (rows.length === 0) { %>
+    <div class="empty-state">No snippets found. <a href="/snippets/new">Create one!</a></div>
+  <% } else { %>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Language</th>
+        <th>Author</th>
+        <th>Updated</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% rows.forEach(s => { %>
+      <tr>
+        <td><a href="/snippets/<%= s.id %>"><%= s.title %></a>
+          <% if (s.description) { %><br><small class="text-muted"><%= s.description.slice(0, 80) %></small><% } %>
+        </td>
+        <td><span class="badge badge-lang"><%= s.language %></span></td>
+        <td><a href="/users/<%= s.username %>"><%= s.username %></a></td>
+        <td class="text-muted"><%= s.updated_at ? s.updated_at.slice(0, 10) : '' %></td>
+        <td><a href="/snippets/<%= s.id %>" class="btn btn-sm">View</a></td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+
+  <% if (pages > 1) { %>
+  <div class="pagination">
+    <% for (let i = 1; i <= pages; i++) { %>
+      <a href="/?page=<%= i %><%= language ? '&language=' + language : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+         class="btn btn-sm <%= i === page ? 'btn-primary' : 'btn-ghost' %>"><%= i %></a>
+    <% } %>
+  </div>
+  <% } %>
+  <% } %>
+
+  <div class="info-bar">Showing <%= rows.length %> of <%= total %> snippet(s).</div>
+</main>
+<footer><span>CodeNest v2.0 &nbsp;·&nbsp; <a href="/health">Status</a></span></footer>
+</body>
+</html>

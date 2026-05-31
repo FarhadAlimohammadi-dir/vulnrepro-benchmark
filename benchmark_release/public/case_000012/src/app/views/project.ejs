@@ -1,0 +1,55 @@
+<%- include('layout') %>
+<% const title = project.name %>
+
+<div class="page-header">
+  <h1><%= project.name %></h1>
+  <div>
+    <a href="/projects/<%= project.id %>/edit" class="btn">Edit</a>
+    <a href="/projects" class="btn">All Projects</a>
+  </div>
+</div>
+
+<p class="project-desc"><%= project.description || 'No description provided.' %></p>
+<p class="item-meta">Owner: <strong><%= project.owner_name %></strong> &nbsp;|&nbsp; Created: <%= project.created_at ? project.created_at.slice(0,10) : '—' %></p>
+
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<h2>Tasks</h2>
+<% if (tasks.length === 0) { %>
+  <p class="muted">No tasks yet. Add one below.</p>
+<% } else { %>
+<table class="data-table">
+  <thead><tr><th>Title</th><th>Assignee</th><th>Priority</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  <% tasks.forEach(t => { %>
+  <tr class="<%= t.done ? 'row-done' : '' %>">
+    <td><%= t.title %></td>
+    <td><%= t.assignee || '—' %></td>
+    <td><span class="badge badge-<%= t.priority %>"><%= t.priority %></span></td>
+    <td><%= t.done ? '✓ Done' : 'Open' %></td>
+    <td>
+      <% if (!t.done) { %>
+      <form method="POST" action="/projects/<%= project.id %>/tasks/<%= t.id %>/done" style="display:inline">
+        <button type="submit" class="btn btn-sm">Mark done</button>
+      </form>
+      <% } %>
+    </td>
+  </tr>
+  <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<h2>Add Task</h2>
+<form method="POST" action="/projects/<%= project.id %>/tasks" class="form-inline">
+  <input name="title" type="text" placeholder="Task title" required maxlength="200">
+  <input name="assignee" type="text" placeholder="Assignee">
+  <select name="priority">
+    <option value="low">Low</option>
+    <option value="medium" selected>Medium</option>
+    <option value="high">High</option>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Task</button>
+</form>
+
+<%- include('layout_end') %>

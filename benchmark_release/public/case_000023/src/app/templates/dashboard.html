@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Welcome back, {{ user.username }}</h2>
+  <p class="text-muted">Here's what's happening in your workspace.</p>
+</div>
+
+<div class="grid-2">
+  <!-- Recent Snippets -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Recent Snippets</h3>
+      <a href="/snippets" class="btn btn-sm">View all</a>
+    </div>
+    {% if recent_snippets %}
+    <ul class="item-list">
+      {% for s in recent_snippets %}
+      <li class="item-row">
+        <a href="/snippets/{{ s.id }}" class="item-title">{{ s.title }}</a>
+        <span class="badge badge-lang">{{ s.language }}</span>
+        <span class="item-meta">{{ s.created_at[:10] }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No snippets yet. <a href="/snippets">Create one</a>.</p>
+    {% endif %}
+  </div>
+
+  <!-- Recent Projects -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Your Projects</h3>
+    </div>
+    {% if recent_projects %}
+    <ul class="item-list">
+      {% for p in recent_projects %}
+      <li class="item-row">
+        <span class="item-title">{{ p.name }}</span>
+        <span class="badge badge-lang">{{ p.language }}</span>
+        <span class="item-meta">{{ p.snippet_count }} snippets</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No projects yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- AI Assistant Panel -->
+<div class="card mt-4">
+  <div class="card-header">
+    <h3>&#129302; AI Assistant</h3>
+    <span class="text-muted" style="font-size:.85rem">Paste code for instant analysis</span>
+  </div>
+  <div class="assistant-panel">
+    <textarea id="ai-input" class="code-input" placeholder="Paste a code snippet or describe what you want to analyze…"></textarea>
+    <div class="assistant-actions">
+      <button class="btn btn-primary" onclick="runAnalysis()">Analyze</button>
+      <button class="btn btn-secondary" onclick="runLint()">Lint</button>
+      <button class="btn btn-secondary" onclick="runFormat()">Format</button>
+    </div>
+    <pre id="ai-output" class="code-output">Results will appear here…</pre>
+  </div>
+</div>
+
+{% if notifications %}
+<div class="card mt-4">
+  <div class="card-header">
+    <h3>&#128276; Notifications</h3>
+  </div>
+  <ul class="item-list">
+    {% for n in notifications %}
+    <li class="item-row {% if not n.read %}unread{% endif %}">
+      <span>{{ n.message }}</span>
+      <span class="item-meta">{{ n.created_at[:10] }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function runAnalysis() {
+    const content = document.getElementById('ai-input').value;
+    const out = document.getElementById('ai-output');
+    out.textContent = 'Analyzing…';
+    try {
+      const r = await fetch('/api/snippet/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+      const d = await r.json();
+      out.textContent = JSON.stringify(d, null, 2);
+    } catch { out.textContent = 'Error contacting assistant.'; }
+  }
+
+  async function runLint() {
+    const code = document.getElementById('ai-input').value;
+    const out  = document.getElementById('ai-output');
+    out.textContent = 'Linting…';
+    try {
+      const r = await fetch('/api/lint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language: 'python' })
+      });
+      const d = await r.json();
+      out.textContent = JSON.stringify(d, null, 2);
+    } catch { out.textContent = 'Error.'; }
+  }
+
+  async function runFormat() {
+    const code = document.getElementById('ai-input').value;
+    const out  = document.getElementById('ai-output');
+    out.textContent = 'Formatting…';
+    try {
+      const r = await fetch('/api/format', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+      const d = await r.json();
+      out.textContent = d.formatted || JSON.stringify(d, null, 2);
+    } catch { out.textContent = 'Error.'; }
+  }
+</script>
+{% endblock %}

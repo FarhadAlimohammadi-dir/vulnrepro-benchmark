@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CollabDocs — Dashboard</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fc; }
+    nav { background: #1a1a2e; color: #fff; padding: .75rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    nav a { color: #8ab4f8; text-decoration: none; margin-left: 1rem; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    h2 { color: #1a1a2e; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .doc-card { background: #fff; border-radius: 6px; padding: 1rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .doc-card h3 { margin: 0 0 .5rem; font-size: 1rem; }
+    .doc-card .meta { font-size: .75rem; color: #888; }
+    .btn { display: inline-block; padding: .4rem .9rem; background: #0066cc; color: #fff; border-radius: 4px; text-decoration: none; font-size: .875rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <strong>CollabDocs</strong>
+    <div>
+      <a href="/search?q=">Search</a>
+      <% if (user && user.role === 'admin') { %><a href="#" onclick="fetchUsers()">Users</a><% } %>
+      <a href="#" onclick="logout()">Sign Out</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h2>Recent Documents</h2>
+    <div class="card-grid">
+      <% cards.forEach(c => { %>
+      <div class="doc-card">
+        <h3><%= c.title %></h3>
+        <p class="meta">by <%= c.author %> &bull; <%= new Date(c.created_at).toLocaleDateString() %></p>
+        <a class="btn" href="#" onclick="previewCard(<%= c.id %>)">Preview</a>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;">
+    <div style="background:#fff;max-width:700px;margin:5% auto;padding:2rem;border-radius:8px;max-height:80vh;overflow:auto;">
+      <button onclick="closeModal()" style="float:right;border:none;background:none;font-size:1.5rem;cursor:pointer;">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    async function previewCard(id) {
+      const cardResp = await fetch(`/api/cards/${id}`);
+      if (!cardResp.ok) return alert('Cannot load card.');
+      const card = await cardResp.json();
+
+      const sanitizeResp = await fetch('/api/cards/sanitize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          html: card.content,
+          allow_custom_elements: card.allow_custom_elements,
+          template_mode: card.template_mode
+        })
+      });
+      const { sanitized } = await sanitizeResp.json();
+
+      document.getElementById('modal-content').innerHTML = sanitized;
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    async function logout() {
+      await fetch('/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    }
+
+    async function fetchUsers() {
+      const r = await fetch('/api/admin/users');
+      const users = await r.json();
+      alert(users.map(u => `${u.username} (${u.role})`).join('\n'));
+    }
+  </script>
+</body>
+</html>

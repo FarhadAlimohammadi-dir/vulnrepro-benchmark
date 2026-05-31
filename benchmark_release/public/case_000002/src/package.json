@@ -1,0 +1,22 @@
+{
+  "name": "claspace",
+  "version": "0.4.2",
+  "description": "Workspace manager for AI coding assistants",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "better-sqlite3": "^11.0.0",
+    "ejs": "^3.1.10",
+    "bcryptjs": "^2.4.3",
+    "winston": "^3.13.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

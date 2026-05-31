@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  cloudsync:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=development
+      - SECRET_KEY=dev-secret-key-change-in-prod-2024
+      - DRIVE_API_BASE=http://localhost:9000/mock/gdrive/v2
+    volumes:
+      - cloudsync_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  cloudsync_data:

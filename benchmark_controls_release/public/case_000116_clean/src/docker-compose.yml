@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=d3v-s3cr3t-k3y-ch4ng3-1n-pr0d
+    volumes:
+      - app_data:/app/data
+
+volumes:
+  app_data:

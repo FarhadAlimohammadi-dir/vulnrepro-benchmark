@@ -1,0 +1,1 @@
+console.log("Sitecore CMS Bundle System");

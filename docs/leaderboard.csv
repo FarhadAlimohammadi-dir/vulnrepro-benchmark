@@ -1,0 +1,5 @@
+model,balanced,recall,true_negative,false_positive,location,type,cwe,complete
+Claude Opus 4.7,0.6344,0.7731,0.4958,0.5042,0.7395,0.6134,0.479,True
+Claude Opus 4.8,0.5798,0.7815,0.3782,0.6218,0.7563,0.5882,0.4538,True
+GPT-5.5 medium,0.5673,0.6891,0.4454,0.5546,0.5882,0.521,0.3613,True
+Claude Sonnet 4.6,0.4538,0.7815,0.1261,0.8739,0.7059,0.6218,0.479,True

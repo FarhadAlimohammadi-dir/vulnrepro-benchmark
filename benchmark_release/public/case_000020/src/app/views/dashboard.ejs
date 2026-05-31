@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolBridge – Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard" class="active">Dashboard</a></li>
+      <li><a href="/integrations">Integrations</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/logout">Logout (<%= username %>)</a></li>
+    </ul>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Welcome back, <%= username %></h1>
+      <a href="/integrations/custom/new" class="btn btn-primary">+ Add Integration</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.total %></div>
+        <div class="stat-label">Total Integrations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.active %></div>
+        <div class="stat-label">Active</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Quick Connect</h2>
+      <div class="provider-grid">
+        <a href="/integrations/github/connect" class="provider-card">
+          <span class="provider-icon">&#128025;</span>
+          <span>GitHub</span>
+        </a>
+        <a href="/integrations/slack/connect" class="provider-card">
+          <span class="provider-icon">&#128172;</span>
+          <span>Slack</span>
+        </a>
+        <a href="/integrations/notion/connect" class="provider-card">
+          <span class="provider-icon">&#128221;</span>
+          <span>Notion</span>
+        </a>
+        <a href="/integrations/custom/new" class="provider-card">
+          <span class="provider-icon">&#10133;</span>
+          <span>Custom</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Recent Integrations</h2>
+        <a href="/integrations" class="link-subtle">View all &rarr;</a>
+      </div>
+      <% if (integrations.length === 0) { %>
+        <div class="empty-state">
+          <p>No integrations yet. <a href="/integrations/custom/new">Add one now.</a></p>
+        </div>
+      <% } else { %>
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Added</th><th></th></tr></thead>
+          <tbody>
+            <% integrations.forEach(function(i) { %>
+            <tr>
+              <td><strong><%= i.name %></strong></td>
+              <td><span class="badge badge-<%= i.provider_type %>"><%= i.provider_type %></span></td>
+              <td><span class="badge badge-status-<%= i.status %>"><%= i.status %></span></td>
+              <td><%= new Date(i.created_at).toLocaleDateString() %></td>
+              <td>
+                <% if (i.provider_type === 'custom') { %>
+                  <a href="/integrations/custom/<%= i.id %>/connect" class="btn btn-sm btn-outline">Connect</a>
+                <% } %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="section">
+      <h2>Recent Activity</h2>
+      <% if (recentLogs.length === 0) { %>
+        <p class="muted">No recent activity.</p>
+      <% } else { %>
+        <ul class="activity-list">
+          <% recentLogs.forEach(function(l) { %>
+          <li><span class="activity-action"><%= l.action %></span> <span class="muted"><%= l.detail %></span> <span class="activity-time"><%= new Date(l.created_at).toLocaleString() %></span></li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Administration</h1>
+        <div class="btn-row">
+          <a href="/admin/users" class="btn btn-secondary btn-sm" style="<%= view==='users'?'background:#3182ce;color:#fff':'' %>">Users</a>
+          <a href="/admin/audit" class="btn btn-secondary btn-sm" style="<%= view==='audit'?'background:#3182ce;color:#fff':'' %>">Audit Log</a>
+        </div>
+      </div>
+
+      <% if (view === 'users' && users) { %>
+      <div class="card">
+        <h2>Users (<%= total %>)</h2>
+        <table class="info-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th>Last Login</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(function(u) { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><%= u.username %></td>
+              <td><%= u.email %></td>
+              <td><span class="badge badge-role"><%= u.role %></span></td>
+              <td><%= u.created_at.slice(0,10) %></td>
+              <td><%= u.last_login ? u.last_login.slice(0,16) : '—' %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <% if (pages > 1) { %>
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <% for (let i = 1; i <= pages; i++) { %>
+          <a href="/admin/users?page=<%= i %>" class="btn btn-secondary btn-sm"
+             style="<%= i===page?'background:#3182ce;color:#fff':'' %>"><%= i %></a>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+
+      <% if (view === 'audit' && auditRows) { %>
+      <div class="card">
+        <h2>Audit Log (<%= total %> entries)</h2>
+        <table class="info-table" style="width:100%;">
+          <thead>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr>
+          </thead>
+          <tbody>
+            <% auditRows.forEach(function(a) { %>
+            <tr>
+              <td style="white-space:nowrap;"><%= a.created_at.slice(0,16) %></td>
+              <td><%= a.username || '—' %></td>
+              <td><code style="font-size:0.8rem;"><%= a.action %></code></td>
+              <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><%= a.detail || '' %></td>
+              <td><%= a.ip || '' %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <% if (pages > 1) { %>
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <% for (let i = 1; i <= pages; i++) { %>
+          <a href="/admin/audit?page=<%= i %>" class="btn btn-secondary btn-sm"
+             style="<%= i===page?'background:#3182ce;color:#fff':'' %>"><%= i %></a>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

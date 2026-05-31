@@ -1,0 +1,41 @@
+<%- include('layout', { title: 'Workflows', body: `
+  <div class="breadcrumb">
+    <a href="/dashboard">Dashboard</a> / Workflows
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h2>Workflows</h2>
+    <a href="/workflows/new" class="btn">+ New Workflow</a>
+  </div>
+
+  <% if (workflows.length === 0) { %>
+    <div class="alert alert-info">
+      No workflows found. <a href="/workflows/new">Create your first workflow</a>
+    </div>
+  <% } else { %>
+    <% workflows.forEach(workflow => { %>
+      <div class="workflow-card">
+        <div>
+          <h4><%= workflow.name %></h4>
+          <p><strong>URL:</strong> <%= workflow.webhook_url %></p>
+          <p style="font-size: 12px; color: #999;">Method: <%= workflow.method %> | Created: <%= new Date(workflow.created_at).toLocaleDateString() %></p>
+        </div>
+        <div class="workflow-actions">
+          <a href="/workflows/<%= workflow.id %>" class="btn">View</a>
+          <a href="/workflows/<%= workflow.id %>/edit" class="btn btn-secondary">Edit</a>
+          <button onclick="if(confirm('Delete workflow?')) { window.location='/workflows/<%= workflow.id %>/delete'; }" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    <% }); %>
+
+    <div style="margin-top: 40px; text-align: center;">
+      <% if (page > 1) { %>
+        <a href="/workflows?page=<%= page - 1 %>" class="btn btn-secondary">Previous</a>
+      <% } %>
+      <span style="margin: 0 20px;">Page <%= page %> of <%= pages %></span>
+      <% if (page < pages) { %>
+        <a href="/workflows?page=<%= page + 1 %>" class="btn btn-secondary">Next</a>
+      <% } %>
+    </div>
+  <% } %>
+` }) %>

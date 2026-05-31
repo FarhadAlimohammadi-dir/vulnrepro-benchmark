@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-f8e2a1c7d3b9e4f0
+      - DATABASE_PATH=/app/data/projecthub.db
+    volumes:
+      - projecthub_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  projecthub_data:

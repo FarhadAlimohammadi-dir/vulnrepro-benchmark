@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; }
+        .navbar { background: white; padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+        .navbar-brand { font-size: 1.3rem; font-weight: 700; color: #2563eb; }
+        .navbar-user a { color: #2563eb; text-decoration: none; font-size: 0.875rem; margin-left: 1rem; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; }
+        .profile-card { background: white; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 2rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 1.2rem; font-weight: 600; color: #111827; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.4rem; }
+        input { width: 100%; padding: 0.6rem 0.9rem; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; }
+        input:focus { border-color: #2563eb; outline: none; }
+        .btn { padding: 0.6rem 1.5rem; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+        .info-row { display: flex; margin-bottom: 0.75rem; font-size: 0.9rem; }
+        .info-label { font-weight: 500; color: #374151; width: 140px; flex-shrink: 0; }
+        .info-value { color: #6b7280; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="navbar-brand">TaskFlow</span>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <h2>Account Information</h2>
+            <div class="info-row"><span class="info-label">Username</span><span class="info-value">{{ user.username | e }}</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">{{ user.email | e }}</span></div>
+            <div class="info-row"><span class="info-label">Role</span><span class="info-value">{{ user.role | e }}</span></div>
+            <div class="info-row"><span class="info-label">Full Name</span><span class="info-value">{{ user.full_name | e }}</span></div>
+            <div class="info-row"><span class="info-label">Last Login</span><span class="info-value">{{ user.last_login or 'N/A' }}</span></div>
+        </div>
+
+        <div class="profile-card">
+            <h2>Edit Profile</h2>
+            <form method="POST" action="/profile/update">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" value="{{ user.full_name | e if user.full_name else '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" name="email" value="{{ user.email | e }}">
+                </div>
+                <div class="form-group">
+                    <label>Avatar URL</label>
+                    <input type="text" name="avatar_url" value="{{ user.avatar_url | e if user.avatar_url else '' }}">
+                </div>
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </div>
+
+        {% if tasks %}
+        <div class="profile-card">
+            <h2>My Assigned Tasks</h2>
+            <table style="width:100%;border-collapse:collapse">
+                <thead><tr>
+                    <th style="text-align:left;padding:0.5rem;font-size:0.8rem;color:#6b7280">Title</th>
+                    <th style="text-align:left;padding:0.5rem;font-size:0.8rem;color:#6b7280">Project</th>
+                    <th style="text-align:left;padding:0.5rem;font-size:0.8rem;color:#6b7280">Status</th>
+                </tr></thead>
+                <tbody>
+                {% for t in tasks %}
+                <tr>
+                    <td style="padding:0.5rem;font-size:0.875rem">{{ t.title | e }}</td>
+                    <td style="padding:0.5rem;font-size:0.875rem;color:#6b7280">{{ t.project_name | e }}</td>
+                    <td style="padding:0.5rem;font-size:0.875rem">{{ t.status }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

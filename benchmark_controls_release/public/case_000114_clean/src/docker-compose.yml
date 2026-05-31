@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - NODE_ENV=production
+      - PORT=9000
+      - SESSION_SECRET=s3cr3t-session-k3y-prod-2024
+    restart: unless-stopped

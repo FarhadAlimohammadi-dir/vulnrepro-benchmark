@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<div class="container">
+  <h1 class="page-title">Dashboard</h1>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="stat-num"><%= openCount %></span>
+      <span class="stat-label">Open Issues</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num"><%= doneCount %></span>
+      <span class="stat-label">Tasks Completed</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-header">
+      <h2>Recent Issues</h2>
+      <a href="/issues" class="btn-sm">View all</a>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Title</th><th>Repo</th><th>Status</th><th>Priority</th><th>Created</th></tr></thead>
+      <tbody>
+      <% recentIssues.forEach(i => { %>
+        <tr>
+          <td><a href="/issues/<%= i.id %>"><%= i.title %></a></td>
+          <td><code><%= i.repo || '—' %></code></td>
+          <td><span class="badge status-<%= i.status %>"><%= i.status %></span></td>
+          <td><span class="badge priority-<%= i.priority %>"><%= i.priority %></span></td>
+          <td class="muted"><%= new Date(i.created_at).toLocaleDateString() %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="margin-top:2rem">
+    <div class="section-header">
+      <h2>Task Queue</h2>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Task ID</th><th>Issue</th><th>Status</th><th>Created</th></tr></thead>
+      <tbody>
+      <% recentTasks.forEach(t => { %>
+        <tr>
+          <td><code><%= t.id.slice(0,8) %>…</code></td>
+          <td><code><%= t.issue_id ? t.issue_id.slice(0,8) : '—' %></code></td>
+          <td><span class="badge status-<%= t.status %>"><%= t.status %></span></td>
+          <td class="muted"><%= new Date(t.created_at).toLocaleDateString() %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>
+</body>
+</html>

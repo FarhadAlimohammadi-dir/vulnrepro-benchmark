@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevPortal – Repository Onboarding</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #0d1117; color: #c9d1d9; min-height: 100vh; }
+    header { background: #161b22; border-bottom: 1px solid #30363d;
+             padding: 16px 32px; display: flex; align-items: center; gap: 16px; }
+    header h1 { font-size: 1.25rem; color: #58a6ff; }
+    main { max-width: 900px; margin: 48px auto; padding: 0 24px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+            padding: 24px; margin-bottom: 24px; }
+    h2 { color: #e6edf3; margin-bottom: 16px; font-size: 1rem; }
+    label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #8b949e; }
+    input, select { width: 100%; padding: 8px 12px; background: #0d1117;
+                    border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9;
+                    font-size: 0.9rem; margin-bottom: 12px; }
+    button { padding: 8px 20px; background: #238636; color: #fff;
+             border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    button:hover { background: #2ea043; }
+    pre { background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
+          padding: 16px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 12px;
+           font-size: 0.75rem; background: #388bfd26; color: #58a6ff; margin-left: 8px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚀 DevPortal</h1>
+  <span>Repository Onboarding Platform</span>
+  <% if (user) { %><span class="tag"><%= user %></span><% } %>
+</header>
+<main>
+
+  <div class="card">
+    <h2>Login</h2>
+    <label>Username</label>
+    <input type="text" id="username" placeholder="alice">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <button onclick="doLogin()">Sign In</button>
+    <pre id="login-out" style="margin-top:12px;display:none"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Check Remote Repository Config</h2>
+    <label>Remote Repository URL or Path</label>
+    <input type="text" id="repo-name" placeholder="https://github.com/org/repo.git">
+    <button onclick="checkRepo()">Check</button>
+    <pre id="check-out" style="margin-top:12px;display:none"></pre>
+  </div>
+
+  <div class="card">
+    <h2>My Repositories</h2>
+    <button onclick="loadRepos()">Load</button>
+    <pre id="repos-out" style="margin-top:12px;display:none"></pre>
+  </div>
+
+</main>
+<script>
+async function doLogin() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const r = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  const data = await r.json();
+  const el = document.getElementById('login-out');
+  el.style.display = 'block';
+  el.textContent = JSON.stringify(data, null, 2);
+}
+
+async function checkRepo() {
+  const repoName = document.getElementById('repo-name').value;
+  const r = await fetch('/api/repo/check?repoName=' + encodeURIComponent(repoName));
+  const data = await r.json();
+  const el = document.getElementById('check-out');
+  el.style.display = 'block';
+  el.textContent = JSON.stringify(data, null, 2);
+}
+
+async function loadRepos() {
+  const r = await fetch('/api/repo/list');
+  const data = await r.json();
+  const el = document.getElementById('repos-out');
+  el.style.display = 'block';
+  el.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+</body>
+</html>

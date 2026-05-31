@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - app_data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=s3cr3t-teamhub-k3y-2024
+      - DATABASE_PATH=/app/data/teamhub.db
+    restart: unless-stopped
+
+volumes:
+  app_data:

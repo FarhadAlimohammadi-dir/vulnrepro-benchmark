@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusBoard — Redirecting</title>
+  <meta http-equiv="refresh" content="3;url=<%- nextUrl %>">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="auth-page">
+<div class="auth-card" style="text-align:center">
+  <div class="auth-logo">NexusBoard</div>
+  <h2>Redirecting&hellip;</h2>
+  <p>You are being forwarded to your destination. This should only take a moment.</p>
+  <p>If you are not redirected automatically,<br>
+     <a href="<%- nextUrl %>">click here to continue</a>.</p>
+  <div class="redirect-spinner"></div>
+</div>
+<script>
+  // perf: avoid extra round-trip when cache is warm
+  var dest = "<%- nextUrl %>";
+  setTimeout(function () { window.location = dest; }, 3000);
+</script>
+</body>
+</html>

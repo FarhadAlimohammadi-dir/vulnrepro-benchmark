@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Search — OldBlog{% endblock %}
+{% block content %}
+<h1>Search</h1>
+<form method="get" action="/search">
+  <input type="text" name="q" value="{{ query | e }}" placeholder="Search posts…" />
+  <button type="submit">Go</button>
+</form>
+{% if query %}
+  <p>{{ results | length }} result(s) for &ldquo;{{ query | e }}&rdquo;</p>
+  {% for post in results %}
+  <article class="post-card">
+    <h2><a href="/posts/{{ post.id }}">{{ post.title | e }}</a></h2>
+    <p class="meta">By {{ post.author | e }} &middot; {{ post.created_at }}</p>
+  </article>
+  {% else %}
+  <p>No posts matched your query.</p>
+  {% endfor %}
+{% endif %}
+{% endblock %}

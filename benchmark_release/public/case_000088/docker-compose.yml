@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  devportal:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - NODE_ENV=production
+      - SESSION_SECRET=s3cr3t-session-key-2024
+      - BACKEND_KEY=backend-internal-key-xK9mP2
+      - FRONTEND_PORT=9000
+      - BACKEND_PORT=8080
+    restart: unless-stopped

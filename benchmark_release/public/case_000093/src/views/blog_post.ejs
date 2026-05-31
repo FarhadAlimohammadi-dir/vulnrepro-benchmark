@@ -1,0 +1,11 @@
+<article class="blog-post">
+  <h1><%= post.title %></h1>
+  <p class="post-meta"><%= post.date %> &middot; <em><%= post.author %></em></p>
+  <div class="tags">
+    <% post.tags.forEach(function(t) { %>
+      <a class="tag" href="/blog?tag=<%= encodeURIComponent(t) %>"><%= t %></a>
+    <% }); %>
+  </div>
+  <div class="post-body"><%- post.body %></div>
+  <p><a href="/blog">&larr; Back to blog</a></p>
+</article>

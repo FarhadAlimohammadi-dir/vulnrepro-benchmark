@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block title %}All Workspaces &mdash; Admin &mdash; CodeNest{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>All Workspaces</h1>
+  <a href="/admin/" class="btn btn-secondary">Back</a>
+</div>
+<table class="table">
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Owner</th><th>Visibility</th><th>Status</th><th>Language</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+    {% for ws in workspaces %}
+    <tr>
+      <td>{{ ws.id }}</td>
+      <td><a href="/workspaces/{{ ws.id }}">{{ ws.name }}</a></td>
+      <td>{{ ws.owner_name }}</td>
+      <td>{{ ws.visibility }}</td>
+      <td><span class="badge badge-{{ ws.status }}">{{ ws.status }}</span></td>
+      <td>{{ ws.language }}</td>
+      <td class="mono small">{{ ws.created_at }}</td>
+    </tr>
+    {% endfor %}
+    {% if not workspaces %}
+    <tr><td colspan="7" class="empty-state">No workspaces.</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

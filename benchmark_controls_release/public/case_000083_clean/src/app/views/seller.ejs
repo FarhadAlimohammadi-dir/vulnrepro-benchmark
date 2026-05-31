@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= seller.username %> — Seller Profile — MarketHub</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">MarketHub</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card">
+      <h2><%= seller.display_name || seller.username %></h2>
+      <p class="hint">Member since account #<%= seller.id %></p>
+      <% if (seller.is_pro) { %>
+        <span class="badge badge-pro">Pro Seller</span>
+      <% } %>
+    </div>
+
+    <h3>Public Listings (<%= listings.length %>)</h3>
+    <% if (listings.length === 0) { %>
+      <p>This seller has no public listings yet.</p>
+    <% } else { %>
+      <ul class="listing-list">
+        <% listings.forEach(l => { %>
+          <li><%= l.filename %></li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>

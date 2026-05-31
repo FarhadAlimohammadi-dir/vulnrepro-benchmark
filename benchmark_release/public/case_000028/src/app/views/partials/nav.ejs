@@ -1,0 +1,16 @@
+<header class="topbar">
+  <div class="topbar-brand">
+    <a href="/dashboard" class="logo-link">⬡ NeuralOps</a>
+  </div>
+  <nav class="topbar-nav">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/runs">Runs</a>
+    <% if (typeof role !== 'undefined' && ['operator','admin'].includes(role)) { %>
+      <a href="/admin" style="<%= role === 'admin' ? '' : 'display:none' %>">Admin</a>
+    <% } %>
+    <a href="/profile">Profile</a>
+    <form method="POST" action="/logout" style="display:inline">
+      <button type="submit" class="btn-link">Sign out (<%= user %>)</button>
+    </form>
+  </nav>
+</header>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartLock — Sign In</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-icon">🔒</span>
+      <h1>SmartLock</h1>
+      <p class="tagline">Intelligent Access Management</p>
+    </div>
+    <form id="loginForm">
+      <div class="field-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="your.username" autocomplete="username" required>
+      </div>
+      <div class="field-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-primary">Sign In</button>
+      <div id="loginError" class="error-msg hidden"></div>
+    </form>
+    <p class="footer-note">v2.4  ·  &copy; 2024 SmartLock Inc.</p>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const body = new URLSearchParams(new FormData(form));
+      const resp = await fetch('/login', { method: 'POST', body });
+      const data = await resp.json();
+      if (resp.ok) {
+        window.location.href = '/';
+      } else {
+        const el = document.getElementById('loginError');
+        el.textContent = data.message || 'Login failed';
+        el.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

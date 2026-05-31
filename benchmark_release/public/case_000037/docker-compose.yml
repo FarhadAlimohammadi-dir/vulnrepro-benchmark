@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - docmanager_data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/docmanager.db
+      - SECRET_KEY=prod-secret-key-change-in-deployment-2024
+      - INTEGRATION_SECRET=integration-hmac-secret-xK9pL2mN
+    restart: unless-stopped
+
+volumes:
+  docmanager_data:

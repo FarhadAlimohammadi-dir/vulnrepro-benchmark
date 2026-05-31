@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=s3cr3t-pipeline-key-2024
+    volumes:
+      - pipeline_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pipeline_data:

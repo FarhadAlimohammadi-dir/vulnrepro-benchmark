@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  grpc-platform:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=s3cr3t-pr0d-k3y-2024
+      - DATABASE_PATH=/app/data/platform.db
+    volumes:
+      - platform_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  platform_data:

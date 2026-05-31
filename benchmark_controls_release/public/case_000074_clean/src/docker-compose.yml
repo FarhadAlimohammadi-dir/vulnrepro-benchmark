@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  functionforge:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=f0rg3-s3cr3t-k3y-2024
+    volumes:
+      - forge_data:/app/data
+
+volumes:
+  forge_data:

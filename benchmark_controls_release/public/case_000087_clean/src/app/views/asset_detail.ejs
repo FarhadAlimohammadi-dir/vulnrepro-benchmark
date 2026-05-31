@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AssetFlow - Asset Detail</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">AssetFlow</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+    <div class="nav-user">Welcome, <strong><%= username %></strong></div>
+  </nav>
+  <div class="container">
+    <h2>Asset Detail</h2>
+    <div class="detail-card">
+      <table class="detail-table">
+        <tr><th>ID</th><td><%= asset.id %></td></tr>
+        <tr><th>Name</th><td><%= asset.name %></td></tr>
+        <tr><th>Type</th><td><%= asset.type %></td></tr>
+        <tr><th>Status</th><td><span class="status <%= asset.status %>"><%= asset.status %></span></td></tr>
+        <tr><th>Owner</th><td><%= asset.owner || '-' %></td></tr>
+        <tr><th>Location</th><td><%= asset.location || '-' %></td></tr>
+        <tr><th>Created</th><td><%= new Date(asset.created_at).toLocaleString() %></td></tr>
+      </table>
+    </div>
+    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+</body>
+</html>

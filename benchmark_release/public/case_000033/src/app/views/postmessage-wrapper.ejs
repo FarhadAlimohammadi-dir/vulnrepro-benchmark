@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Callback</title>
+</head>
+<body>
+  <script>
+    (function() {
+      const data = <%- data %>;
+      const targetOrigin = '<%= targetOrigin %>';
+      
+      if (window.opener) {
+        window.opener.postMessage(data, targetOrigin);
+      }
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(data, targetOrigin);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContentFlow CMS</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; color: #333; }
+        h1 { color: #1a56db; }
+        .article-list { list-style: none; padding: 0; }
+        .article-list li { border-bottom: 1px solid #eee; padding: 1rem 0; }
+        .article-list a { font-size: 1.1rem; font-weight: 600; color: #1a56db; text-decoration: none; }
+        .article-list a:hover { text-decoration: underline; }
+        .meta { font-size: 0.85rem; color: #666; margin-top: 0.25rem; }
+        .badge { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <h1>ContentFlow</h1>
+    <p>A modern headless CMS for enterprise content teams.</p>
+    <hr>
+    <h2>Recent Articles</h2>
+    <ul class="article-list">
+        {% for article in articles %}
+        <li>
+            <a href="/content/{{ article['slug'] }}">{{ article['title'] }}</a>
+            <div class="meta">
+                By {{ article['author'] }} &middot;
+                {{ article['published_at'][:10] }} &middot;
+                <span class="badge">{{ article['category'] }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <p><a href="/api/v1/articles">JSON API</a> &middot; <a href="/sitemap.xml">Sitemap</a> &middot; <a href="/robots.txt">robots.txt</a></p>
+</body>
+</html>

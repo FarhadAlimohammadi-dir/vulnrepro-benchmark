@@ -1,0 +1,40 @@
+<%- include('layout', { title: 'Create Workflow', body: `
+  <div class="breadcrumb">
+    <a href="/dashboard">Dashboard</a> / <a href="/workflows">Workflows</a> / Create
+  </div>
+
+  <h2>Create New Workflow</h2>
+
+  <form action="/workflows" method="post" style="max-width: 600px;">
+    <div class="form-group">
+      <label for="name">Workflow Name</label>
+      <input type="text" id="name" name="name" required placeholder="e.g., Daily Report Export">
+    </div>
+
+    <div class="form-group">
+      <label for="webhook_url">Webhook URL</label>
+      <input type="url" id="webhook_url" name="webhook_url" required placeholder="https://example.com/webhook">
+    </div>
+
+    <div class="form-group">
+      <label for="method">HTTP Method</label>
+      <select id="method" name="method">
+        <option value="POST">POST</option>
+        <option value="GET">GET</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+        <option value="PATCH">PATCH</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="headers">Custom Headers (JSON)</label>
+      <textarea id="headers" name="headers" rows="8" placeholder='{"Authorization": "Bearer token", "X-Custom-Header": "value"}'>{ }</textarea>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button type="submit">Create Workflow</button>
+      <a href="/workflows" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+` }) %>

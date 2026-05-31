@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/policies">Policies</a>
+      <% if (userRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Welcome back, <strong><%= user %></strong>. Here's your cloud identity governance overview.</p>
+    </div>
+
+    <% if (notifications && notifications.length > 0) { %>
+    <div class="notifications-bar">
+      <% notifications.forEach(n => { %>
+      <div class="notification-item">
+        <strong><%= n.title %></strong>: <%= n.body %>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.totalPolicies %></div>
+        <div class="stat-label">Active Policies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.totalProviders %></div>
+        <div class="stat-label">OIDC Providers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.recentAssumptions %></div>
+        <div class="stat-label">Assumptions (7d)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= stats.auditEntries %></div>
+        <div class="stat-label">Audit Events (24h)</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Recent Trust Policies</h2>
+        <a href="/policies" class="btn btn-secondary btn-sm">View All</a>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Provider</th>
+              <th>Environment</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentPolicies.forEach(p => { %>
+            <tr>
+              <td><a href="/policies/<%= p.id %>"><%= p.name %></a></td>
+              <td><span class="badge badge-<%= p.provider %>"><%= p.provider %></span></td>
+              <td><span class="badge badge-env-<%= p.environment %>"><%= p.environment %></span></td>
+              <td><%= new Date(p.updated_at).toLocaleDateString() %></td>
+              <td>
+                <a href="/policies/<%= p.id %>" class="btn btn-sm btn-outline">View</a>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions">
+        <a href="/policies/new/form" class="action-card">
+          <div class="action-icon">📄</div>
+          <div class="action-label">New Policy</div>
+        </a>
+        <a href="/policies" class="action-card">
+          <div class="action-icon">🔍</div>
+          <div class="action-label">Browse Policies</div>
+        </a>
+        <a href="/profile" class="action-card">
+          <div class="action-icon">⚙️</div>
+          <div class="action-label">My Settings</div>
+        </a>
+        <% if (userRole === 'admin') { %>
+        <a href="/admin/audit" class="action-card">
+          <div class="action-icon">📋</div>
+          <div class="action-label">Audit Log</div>
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+</body>
+</html>

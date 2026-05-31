@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= policy.name %> — IAM Policy Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">🔐 IAM Policy Studio</a></div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/policies" class="active">Policies</a>
+      <% if (userRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <div class="nav-user">
+        <span class="nav-username">👤 <%= user %></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <a href="/policies" class="breadcrumb">← Policies</a>
+        <h1><%= policy.name %></h1>
+        <p><%= policy.description || 'No description provided.' %></p>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-main">
+        <div class="card">
+          <div class="card-header">
+            <h3>Trust Policy Document</h3>
+            <% if (!validation.valid) { %>
+            <span class="badge badge-warn">⚠ Issues Found</span>
+            <% } else { %>
+            <span class="badge badge-ok">✓ Valid</span>
+            <% } %>
+          </div>
+          <pre class="code-block"><%= JSON.stringify(trustPolicy, null, 2) %></pre>
+        </div>
+
+        <% if (!validation.valid) { %>
+        <div class="card card-warn">
+          <h3>⚠ Validation Issues</h3>
+          <ul>
+            <% validation.issues.forEach(issue => { %>
+            <li><%= issue %></li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } %>
+
+        <div class="card">
+          <h3>Test Role Assumption</h3>
+          <p>Provide an OIDC token payload to test whether it satisfies this policy's conditions.</p>
+          <div class="test-form">
+            <div class="form-group">
+              <label>Audience (aud)</label>
+              <input type="text" id="testAud" value="sts.amazonaws.com" placeholder="sts.amazonaws.com">
+            </div>
+            <div class="form-group">
+              <label>Subject (sub)</label>
+              <input type="text" id="testSub" placeholder="repo:YourOrg/YourRepo:ref:refs/heads/main">
+            </div>
+            <button class="btn btn-primary" onclick="testAssumption()">Test Assumption</button>
+            <div id="assumptionResult" class="result-box" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-sidebar">
+        <div class="card">
+          <h3>Policy Details</h3>
+          <dl class="detail-list">
+            <dt>ID</dt><dd>#<%= policy.id %></dd>
+            <dt>Provider</dt><dd><%= policy.provider %></dd>
+            <dt>Environment</dt><dd><span class="badge badge-env-<%= policy.environment %>"><%= policy.environment %></span></dd>
+            <dt>Owner</dt><dd><%= policy.owner_name || '—' %></dd>
+            <dt>Role ARN</dt><dd class="mono small"><%= policy.role_arn || '—' %></dd>
+            <dt>Created</dt><dd><%= new Date(policy.created_at).toLocaleString() %></dd>
+            <dt>Updated</dt><dd><%= new Date(policy.updated_at).toLocaleString() %></dd>
+          </dl>
+        </div>
+
+        <% if (policy.tags) { %>
+        <div class="card">
+          <h3>Tags</h3>
+          <div class="tag-list">
+            <% let tags = []; try { tags = JSON.parse(policy.tags); } catch(e) {} %>
+            <% tags.forEach(tag => { %>
+            <span class="tag"><%= tag %></span>
+            <% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="card">
+          <h3>Assumption History</h3>
+          <% if (history.length === 0) { %>
+          <p class="empty-state">No assumption attempts recorded.</p>
+          <% } else { %>
+          <ul class="history-list">
+            <% history.slice(0, 5).forEach(h => { %>
+            <li class="history-item <%= h.result === 'allowed' ? 'result-ok' : 'result-denied' %>">
+              <span class="history-result"><%= h.result === 'allowed' ? '✓' : '✗' %></span>
+              <div>
+                <div class="history-user"><%= h.username || 'unknown' %></div>
+                <div class="history-time"><%= new Date(h.created_at).toLocaleString() %></div>
+              </div>
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 IAM Policy Studio</p>
+  </footer>
+
+  <script>
+    function testAssumption() {
+      const aud = document.getElementById('testAud').value;
+      const sub = document.getElementById('testSub').value;
+      const resultBox = document.getElementById('assumptionResult');
+
+      fetch('/api/assume-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          policyId: <%= policy.id %>,
+          tokenPayload: { aud, sub: sub || undefined }
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        resultBox.style.display = 'block';
+        if (data.allowed) {
+          resultBox.className = 'result-box result-allowed';
+          resultBox.innerHTML = '<strong>✓ Access Granted</strong><br>' +
+            'Role: ' + (data.roleArn || '') + '<br>' +
+            'Expires: ' + (data.expiration || '');
+        } else {
+          resultBox.className = 'result-box result-denied';
+          resultBox.innerHTML = '<strong>✗ Access Denied</strong><br>' + (data.reason || '');
+        }
+      })
+      .catch(err => {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box result-denied';
+        resultBox.innerHTML = 'Request failed: ' + err.message;
+      });
+    }
+  </script>
+</body>
+</html>

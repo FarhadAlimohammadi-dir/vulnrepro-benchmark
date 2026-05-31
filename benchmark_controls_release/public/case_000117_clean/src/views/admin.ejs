@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteFlow — Admin</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; margin: 0; }
+    header { background: #1a1a2e; color: #fff; padding: .75rem 2rem; }
+    header h1 { margin: 0; font-size: 1.25rem; }
+    main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    th, td { padding: .6rem 1rem; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: .875rem; }
+    th { background: #f8f9fb; font-weight: 600; }
+    .del-btn { background: #ef4444; color: #fff; border: none; border-radius: 4px; padding: .25rem .6rem; cursor: pointer; font-size: .75rem; }
+  </style>
+</head>
+<body>
+  <header><h1>✏️ NoteFlow — Admin Dashboard</h1></header>
+  <main>
+    <h2>All Notes (<%= notes.length %>)</h2>
+    <table>
+      <thead><tr><th>Title</th><th>Owner</th><th>Visibility</th><th>Updated</th><th>Action</th></tr></thead>
+      <tbody>
+        <% notes.forEach(n => { %>
+          <tr>
+            <td><%= n.title %></td>
+            <td><%= n.username %></td>
+            <td><%= n.visibility %></td>
+            <td><%= n.updated_at %></td>
+            <td>
+              <form method="POST" action="/admin/notes/<%= n.id %>/delete">
+                <button class="del-btn">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h2>Recent Activity</h2>
+    <table>
+      <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Target</th><th>IP</th></tr></thead>
+      <tbody>
+        <% activity.forEach(a => { %>
+          <tr>
+            <td><%= a.created_at %></td>
+            <td><%= a.username || '(anon)' %></td>
+            <td><%= a.action %></td>
+            <td><%= a.target_id || '' %></td>
+            <td><%= a.ip_addr || '' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectHub - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               background: #f5f7fa; }
+        nav { background: #1e293b; color: white; padding: 0 24px;
+              display: flex; align-items: center; height: 56px;
+              justify-content: space-between; }
+        .nav-brand { font-size: 18px; font-weight: 700; color: #60a5fa; }
+        .nav-user { font-size: 14px; color: #94a3b8; }
+        .container { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+        h1 { font-size: 24px; color: #1e293b; margin-bottom: 24px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .card { background: white; border-radius: 8px; padding: 24px;
+                box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+        .card h3 { font-size: 13px; color: #6b7280; text-transform: uppercase;
+                   letter-spacing: .05em; margin-bottom: 8px; }
+        .card .value { font-size: 28px; font-weight: 700; color: #1e293b; }
+        .section { margin-top: 28px; }
+        .section h2 { font-size: 17px; font-weight: 600; color: #1e293b;
+                      margin-bottom: 14px; }
+        .api-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+                   padding: 16px; font-family: monospace; font-size: 13px; }
+        .api-label { color: #6b7280; font-size: 12px; margin-bottom: 4px; }
+        .api-val { color: #1e293b; word-break: break-all; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer;
+               font-size: 13px; font-weight: 500; }
+        .btn-danger { background: #fee2e2; color: #dc2626; }
+        .btn-danger:hover { background: #fecaca; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">⬡ ProjectHub</div>
+        <div class="nav-user" id="navUser">{{ username }}</div>
+    </nav>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <div class="grid" id="statsGrid">
+            <div class="card"><h3>Projects</h3><div class="value" id="projCount">—</div></div>
+            <div class="card"><h3>Team Members</h3><div class="value" id="memberCount">—</div></div>
+            <div class="card"><h3>Plan</h3><div class="value" id="planBadge">—</div></div>
+        </div>
+
+        <div class="section">
+            <h2>API Credentials</h2>
+            <div class="api-box" id="apiBox">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>Recent Projects</h2>
+            <div id="projectList">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadProfile() {
+            const res = await fetch('/api/user/profile');
+            if (!res.ok) { window.location.href = '/login'; return; }
+            const d = await res.json();
+            document.getElementById('planBadge').textContent = d.plan;
+            document.getElementById('apiBox').innerHTML =
+                `<div class="api-label">API Key</div>
+                 <div class="api-val">${d.api_key}</div>
+                 <div class="api-label" style="margin-top:10px">API Secret</div>
+                 <div class="api-val">${d.api_secret}</div>`;
+        }
+
+        async function loadProjects() {
+            const res = await fetch('/api/projects');
+            if (!res.ok) return;
+            const d = await res.json();
+            document.getElementById('projCount').textContent = d.count;
+            const items = d.projects.slice(0, 5).map(p =>
+                `<div style="padding:10px;border-bottom:1px solid #f1f5f9">
+                    <strong>${p.name}</strong>
+                    <span style="color:#6b7280;font-size:13px;margin-left:8px">${p.status}</span>
+                 </div>`
+            ).join('');
+            document.getElementById('projectList').innerHTML =
+                `<div style="background:white;border-radius:8px;border:1px solid #e2e8f0">${items}</div>`;
+        }
+
+        async function loadMembers() {
+            const res = await fetch('/api/team/members');
+            if (!res.ok) return;
+            const d = await res.json();
+            document.getElementById('memberCount').textContent = d.count;
+        }
+
+        loadProfile();
+        loadProjects();
+        loadMembers();
+    </script>
+</body>
+</html>

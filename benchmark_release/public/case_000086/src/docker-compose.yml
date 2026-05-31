@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - app_data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=c8f3a2b1d4e5f6a7b8c9d0e1f2a3b4c5
+      - DATABASE_PATH=/app/data/docmanager.db
+    restart: unless-stopped
+
+volumes:
+  app_data:

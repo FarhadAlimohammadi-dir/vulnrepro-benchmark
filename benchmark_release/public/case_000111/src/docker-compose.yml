@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-key-taskflow-2024
+    volumes:
+      - taskflow_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  taskflow_data:

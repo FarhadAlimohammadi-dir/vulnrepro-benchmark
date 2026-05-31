@@ -1,0 +1,102 @@
+<%
+  const layout = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>`;
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <h1>Good to see you, <%= user.username %> <span class="badge badge-role"><%= user.role %></span></h1>
+
+      <% if (notifications && notifications.length > 0) { %>
+      <div class="card" style="border-left:3px solid #f7c948;">
+        <h2>Notifications</h2>
+        <ul style="list-style:none;">
+          <% notifications.forEach(function(n) { %>
+          <li style="padding:4px 0;color:<%= n.read ? '#718096' : '#e2e8f0' %>;">
+            <%= n.message %>
+            <span class="muted" style="margin-left:8px;"><%= n.created_at.slice(0,16) %></span>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <h2>Recent Projects</h2>
+          <% if (projects.length === 0) { %>
+          <p class="muted">No projects yet. <a href="/projects">Create one.</a></p>
+          <% } else { %>
+          <ul class="project-list">
+            <% projects.forEach(function(p) { %>
+            <li>
+              <a href="/projects/<%= p.id %>"><%= p.name %></a>
+              <span class="badge badge-lang"><%= p.language %></span>
+              <span class="muted" style="margin-left:auto;"><%= p.updated_at.slice(0,10) %></span>
+            </li>
+            <% }); %>
+          </ul>
+          <a href="/projects" style="font-size:0.85rem;margin-top:8px;display:block;">View all projects →</a>
+          <% } %>
+        </div>
+
+        <div class="card">
+          <h2>Recent Commands</h2>
+          <% if (recentHistory.length === 0) { %>
+          <p class="muted">No commands run yet.</p>
+          <% } else { %>
+          <ul class="history-list">
+            <% recentHistory.forEach(function(h) { %>
+            <li>
+              <code><%= h.command.slice(0, 80) %></code>
+              <span class="muted"><%= h.ran_at.slice(0,16) %> &mdash; exit <%= h.exit_code %></span>
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h2>Quick Links</h2>
+        <div class="btn-row">
+          <a href="/projects" class="btn btn-secondary">All Projects</a>
+          <a href="/projects/search" class="btn btn-secondary">Search Public Projects</a>
+          <a href="/profile" class="btn btn-secondary">Profile &amp; Settings</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Admin – NoteFlow{% endblock %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ user_count }}</div>
+    <div class="stat-label">Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ note_count }}</div>
+    <div class="stat-label">Notes</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ comment_count }}</div>
+    <div class="stat-label">Comments</div>
+  </div>
+</div>
+
+<div class="admin-nav">
+  <a href="/admin/users" class="btn-secondary">Manage Users</a>
+  <a href="/admin/notes" class="btn-secondary">All Notes</a>
+  <a href="/admin/audit" class="btn-secondary">Audit Log</a>
+</div>
+
+<h3>Recent Activity</h3>
+<table class="data-table">
+  <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target</th></tr></thead>
+  <tbody>
+    {% for e in log_entries %}
+    <tr>
+      <td><small>{{ e.created_at }}</small></td>
+      <td>{{ e.actor | e }}</td>
+      <td>{{ e.action | e }}</td>
+      <td>{{ e.target | e }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="muted">No activity recorded yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

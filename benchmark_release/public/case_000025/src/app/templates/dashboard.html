@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}My Tickets{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>My Tickets</h2>
+  <a href="/tickets/new" class="btn btn-primary">+ New Ticket</a>
+</div>
+
+<div class="filter-bar">
+  <form method="get" action="/">
+    <input type="text" name="q" placeholder="Search tickets…" value="{{ search_query }}">
+    <select name="status">
+      <option value="">All Statuses</option>
+      <option value="open" {% if status_filter=='open' %}selected{% endif %}>Open</option>
+      <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
+      <option value="closed" {% if status_filter=='closed' %}selected{% endif %}>Closed</option>
+      <option value="resolved" {% if status_filter=='resolved' %}selected{% endif %}>Resolved</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+  </form>
+</div>
+
+{% if tickets %}
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Subject</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th>AI Summary</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for t in tickets %}
+    <tr>
+      <td><a href="/tickets/{{ t.id }}">#{{ t.id }}</a></td>
+      <td><a href="/tickets/{{ t.id }}">{{ t.subject }}</a></td>
+      <td><span class="badge badge-{{ t.status }}">{{ t.status }}</span></td>
+      <td><span class="badge badge-{{ t.priority }}">{{ t.priority }}</span></td>
+      <td class="summary-cell">{{ t.summary or '—' }}</td>
+      <td>{{ t.created_at[:16] if t.created_at else '—' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, pages + 1) %}
+    <a href="?page={{ p }}&status={{ status_filter }}&q={{ search_query }}"
+       class="{% if p == page %}active{% endif %}">{{ p }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty-state">
+  <p>No tickets found. <a href="/tickets/new">Submit your first ticket</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

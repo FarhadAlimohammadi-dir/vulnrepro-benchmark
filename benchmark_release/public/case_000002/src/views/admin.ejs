@@ -1,0 +1,32 @@
+<%
+  title = 'Admin'
+  const actRows = recentActivity.map(r => `
+    <tr>
+      <td class="muted">${r.created_at}</td>
+      <td>${r.username || '—'}</td>
+      <td><span class="pill">${r.kind}</span></td>
+      <td class="muted">${r.message || ''}</td>
+    </tr>
+  `).join('')
+  body = `
+<h1>Admin dashboard</h1>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem">
+  ${Object.entries(stats).map(([k,v]) => `
+    <div style="background:#fff;padding:1rem;border-radius:6px;text-align:center">
+      <div style="font-size:2rem;font-weight:700">${v}</div>
+      <div class="muted">${k}</div>
+    </div>
+  `).join('')}
+</div>
+
+<h2>Quick links</h2>
+<p><a href="/admin/users">Manage users</a> · <a href="/admin/projects">All projects</a> · <a href="/activity">Activity feed</a></p>
+
+<h2>Recent activity</h2>
+<table class="list">
+  <thead><tr><th>Time</th><th>User</th><th>Kind</th><th>Message</th></tr></thead>
+  <tbody>${actRows}</tbody>
+</table>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

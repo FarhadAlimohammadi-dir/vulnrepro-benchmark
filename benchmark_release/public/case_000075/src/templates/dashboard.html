@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartLock — Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand-sm">🔒 SmartLock</span>
+    <nav>
+      <span class="nav-user">Signed in as <strong>{{ username }}</strong></span>
+      <button id="logoutBtn" class="btn-sm">Sign Out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Device Overview</h2>
+    <div id="deviceGrid" class="device-grid">
+      <p class="loading">Loading devices…</p>
+    </div>
+
+    <section class="audit-section">
+      <h3>Recent Activity</h3>
+      <!-- TODO: add live-reload via SSE once telemetry pipeline is complete -->
+      <table id="auditTable" class="data-table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr>
+        </thead>
+        <tbody id="auditBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // TODO: i18n — format timestamps per user locale
+    function fmtTime(ts) {
+      return new Date(ts * 1000).toLocaleString();
+    }
+
+    async function loadDevices() {
+      const resp = await fetch('/api/devices');
+      if (!resp.ok) return;
+      const { devices } = await resp.json();
+      const grid = document.getElementById('deviceGrid');
+      grid.innerHTML = devices.map(d => `
+        <div class="device-card status-${d.status}">
+          <div class="device-name">${d.name}</div>
+          <div class="device-location">${d.location}</div>
+          <div class="device-status">${d.status}</div>
+          <div class="device-fw">${d.firmware_version}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadAudit() {
+      const resp = await fetch('/api/audit?limit=20');
+      if (!resp.ok) return;
+      const { events } = await resp.json();
+      const tbody = document.getElementById('auditBody');
+      tbody.innerHTML = events.map(e => `
+        <tr>
+          <td>${fmtTime(e.ts)}</td>
+          <td>${e.user_id ?? '—'}</td>
+          <td>${e.action}</td>
+          <td>${e.detail}</td>
+          <td>${e.ip_addr}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5">No events yet</td></tr>';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login_page';
+    });
+
+    loadDevices();
+    loadAudit();
+  </script>
+</body>
+</html>

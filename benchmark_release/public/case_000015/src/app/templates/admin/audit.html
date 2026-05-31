@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Audit Log – Admin – NoteFlow{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Audit Log</h2>
+  <a href="/admin/" class="btn-secondary">← Admin Home</a>
+</div>
+
+<table class="data-table">
+  <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target</th></tr></thead>
+  <tbody>
+    {% for e in entries %}
+    <tr>
+      <td><small>{{ e.created_at }}</small></td>
+      <td>{{ e.actor | e }}</td>
+      <td>{{ e.action | e }}</td>
+      <td>{{ e.target | e }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="muted">No entries.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}<a href="/admin/audit?page={{ page - 1 }}">&laquo; Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="/admin/audit?page={{ page + 1 }}">Next &raquo;</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

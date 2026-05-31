@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Salesforce Community Portal</h1>
+    <p>Support &amp; Knowledge Base</p>
+  </header>
+  <main class="container">
+    <% if (error) { %>
+      <p class="alert alert-error"><%= error %></p>
+    <% } %>
+    <% if (!user) { %>
+      <h2>Sign In</h2>
+      <form method="POST" action="/login" class="form-narrow">
+        <label>Username
+          <input type="text" name="username" autocomplete="username" required>
+        </label>
+        <label>Password
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" class="btn-primary">Log In</button>
+      </form>
+      <p class="hint">Or <a href="/api/cases/public">browse public cases</a> without logging in.</p>
+    <% } else { %>
+      <p>Welcome back, <strong><%= user.username %></strong>. <a href="/dashboard">Go to Dashboard</a></p>
+      <form method="POST" action="/logout"><button type="submit">Log Out</button></form>
+    <% } %>
+  </main>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebHook Relay Service</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 60px auto; padding: 0 20px; color: #333; }
+        h1 { color: #1a73e8; }
+        .endpoint { background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 8px 0; font-family: monospace; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; }
+        .post { background: #d4edda; color: #155724; }
+        .get { background: #cce5ff; color: #004085; }
+        .put { background: #fff3cd; color: #856404; }
+        .delete { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>🔗 WebHook Relay Service</h1>
+    <p>Version 2.4.1 — High-performance webhook relay and delivery platform</p>
+
+    <h2>Authentication</h2>
+    <div class="endpoint"><span class="badge post">POST</span> /api/auth/login</div>
+    <div class="endpoint"><span class="badge post">POST</span> /api/auth/logout</div>
+    <div class="endpoint"><span class="badge get">GET</span> /api/auth/me</div>
+
+    <h2>Relay Endpoints</h2>
+    <div class="endpoint"><span class="badge get">GET</span> /api/webhooks/</div>
+    <div class="endpoint"><span class="badge post">POST</span> /api/webhooks/</div>
+    <div class="endpoint"><span class="badge get">GET</span> /api/webhooks/{id}</div>
+    <div class="endpoint"><span class="badge get">GET</span> /api/webhooks/{id}/logs</div>
+    <div class="endpoint"><span class="badge put">PUT</span> /api/webhooks/{id}/secret</div>
+    <div class="endpoint"><span class="badge delete">DELETE</span> /api/webhooks/{id}</div>
+
+    <h2>Relay Operations</h2>
+    <div class="endpoint"><span class="badge post">POST</span> /api/relay/preview</div>
+    <div class="endpoint"><span class="badge post">POST</span> /api/relay/test</div>
+    <div class="endpoint"><span class="badge get">GET</span> /api/relay/stats/{id}</div>
+
+    <h2>Admin</h2>
+    <div class="endpoint"><span class="badge get">GET</span> /api/admin/events</div>
+</body>
+</html>

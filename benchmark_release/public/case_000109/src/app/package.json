@@ -1,0 +1,17 @@
+{
+  "name": "cloud-shell-file-manager",
+  "version": "1.0.0",
+  "description": "Cloud Shell file upload and markdown viewer",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "better-sqlite3": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
+    "marked": "^11.0.0",
+    "ejs": "^3.1.9"
+  }
+}

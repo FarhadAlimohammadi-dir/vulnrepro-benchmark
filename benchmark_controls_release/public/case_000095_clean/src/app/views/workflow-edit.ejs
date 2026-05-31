@@ -1,0 +1,40 @@
+<%- include('layout', { title: 'Edit ' + workflow.name, body: `
+  <div class="breadcrumb">
+    <a href="/dashboard">Dashboard</a> / <a href="/workflows">Workflows</a> / <a href="/workflows/<%= workflow.id %>"><%= workflow.name %></a> / Edit
+  </div>
+
+  <h2>Edit Workflow</h2>
+
+  <form action="/workflows/<%= workflow.id %>/update" method="post" style="max-width: 600px;">
+    <div class="form-group">
+      <label for="name">Workflow Name</label>
+      <input type="text" id="name" name="name" value="<%= workflow.name %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="webhook_url">Webhook URL</label>
+      <input type="url" id="webhook_url" name="webhook_url" value="<%= workflow.webhook_url %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="method">HTTP Method</label>
+      <select id="method" name="method">
+        <option value="POST" <% if (workflow.method === 'POST') { %>selected<% } %>>POST</option>
+        <option value="GET" <% if (workflow.method === 'GET') { %>selected<% } %>>GET</option>
+        <option value="PUT" <% if (workflow.method === 'PUT') { %>selected<% } %>>PUT</option>
+        <option value="DELETE" <% if (workflow.method === 'DELETE') { %>selected<% } %>>DELETE</option>
+        <option value="PATCH" <% if (workflow.method === 'PATCH') { %>selected<% } %>>PATCH</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="headers">Custom Headers (JSON)</label>
+      <textarea id="headers" name="headers" rows="8"><%= headersDisplay %></textarea>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button type="submit">Update Workflow</button>
+      <a href="/workflows/<%= workflow.id %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+` }) %>

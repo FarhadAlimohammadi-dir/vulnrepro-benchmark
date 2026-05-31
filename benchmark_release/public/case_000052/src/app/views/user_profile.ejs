@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profile.username %> — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/oauth/clients">Applications</a>
+      <% if (user) { %>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="nav-logout">Logout (<%= user %>)</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="profile-page">
+      <div class="profile-header">
+        <div class="profile-avatar">&#128100;</div>
+        <div>
+          <h1><%= profile.full_name || profile.username %></h1>
+          <p class="muted">@<%= profile.username %></p>
+          <span class="badge"><%= profile.role %></span>
+        </div>
+      </div>
+
+      <% if (profile.bio) { %>
+        <div class="card">
+          <h2>About</h2>
+          <p><%= profile.bio %></p>
+        </div>
+      <% } %>
+
+      <div class="card">
+        <dl class="detail-list">
+          <dt>Member since</dt>
+          <dd><%= new Date(profile.created_at * 1000).toLocaleDateString() %></dd>
+          <dt>Role</dt>
+          <dd><span class="badge"><%= profile.role %></span></dd>
+        </dl>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

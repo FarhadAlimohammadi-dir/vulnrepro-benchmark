@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Corpus — Admin — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/admin">Admin</a>
+  <span class="spacer"></span>
+  <% if (locals.currentUser) { %>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } %>
+</nav>
+<div class="container page">
+  <h1 class="mb-2">Training Corpus (<%= total %> entries)</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Language</th><th>Tags</th>
+        <th>Refs</th><th>Score</th><th>Indexed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rows.forEach(r => { %>
+        <tr>
+          <td><%= r.id %></td>
+          <td><span class="badge badge-blue"><%= r.language %></span></td>
+          <td class="text-muted" style="font-size:.82rem"><%= r.tags.slice(0,60) %></td>
+          <td><%= r.reference_count.toLocaleString() %></td>
+          <td><%= Number(r.relevance_score).toFixed(1) %></td>
+          <td class="text-muted" style="font-size:.82rem"><%= new Date(r.indexed_at).toLocaleDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% if (pages > 1) { %>
+    <div class="pagination">
+      <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/admin/corpus?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+  <% } %>
+</div>
+</body>
+</html>

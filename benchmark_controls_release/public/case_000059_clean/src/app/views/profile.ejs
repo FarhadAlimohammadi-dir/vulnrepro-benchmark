@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FileVault — Profile</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">📁 FileVault</div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile" class="active">Profile</a>
+      <a href="/settings">Settings</a>
+      <a href="/logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header"><h2>Profile</h2></div>
+    <div class="card">
+      <dl class="detail-list">
+        <dt>User ID</dt><dd><%= user_id %></dd>
+        <dt>Username</dt><dd><%= username %></dd>
+        <dt>Files Stored</dt><dd><%= fileCount %></dd>
+        <dt>Total Storage Used</dt><dd><%= totalSize %> bytes</dd>
+        <dt>Storage Quota</dt><dd><%= quota %> bytes</dd>
+      </dl>
+    </div>
+  </main>
+</body>
+</html>

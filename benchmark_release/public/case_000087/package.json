@@ -1,0 +1,19 @@
+{
+  "name": "assetflow",
+  "version": "1.2.0",
+  "description": "Enterprise asset management platform",
+  "main": "app/app.js",
+  "scripts": {
+    "start": "node app/app.js",
+    "dev": "node app/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "ejs": "^3.1.9",
+    "better-sqlite3": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,57 @@
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Welcome to ContentFlow</h1>
+    <p class="hero-sub">In-depth articles on technology, business, design, and science.</p>
+    <a href="/articles" class="btn-primary">Browse All Articles</a>
+  </div>
+</section>
+
+<% if (typeof featured !== 'undefined' && featured.length > 0) { %>
+<section class="section">
+  <div class="section-header">
+    <h2>Featured</h2>
+  </div>
+  <div class="card-grid">
+    <% featured.forEach(function(article) { %>
+    <div class="card card-featured">
+      <div class="card-category">
+        <% if (article.category) { %><span class="badge"><%= article.category.name %></span><% } %>
+        <span class="badge badge-featured">Featured</span>
+      </div>
+      <h3 class="card-title"><a href="/articles/<%= article.slug %>"><%= article.title %></a></h3>
+      <p class="card-summary"><%= article.summary || '' %></p>
+      <div class="card-meta">
+        <% if (article.createdBy) { %>
+          <span>By <a href="/authors/<%= article.createdBy.id %>"><%= article.createdBy.name %></a></span>
+        <% } %>
+        <span class="view-count"><%= article.viewCount %> views</span>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Recent Articles</h2>
+    <a href="/articles" class="view-all">View all &rarr;</a>
+  </div>
+  <div class="card-grid">
+    <% if (typeof articles !== 'undefined') { articles.forEach(function(article) { %>
+    <div class="card">
+      <div class="card-category">
+        <% if (article.category) { %><span class="badge"><%= article.category.name %></span><% } %>
+      </div>
+      <h3 class="card-title"><a href="/articles/<%= article.slug %>"><%= article.title %></a></h3>
+      <p class="card-summary"><%= article.summary || '' %></p>
+      <div class="card-meta">
+        <% if (article.createdBy) { %>
+          <span>By <a href="/authors/<%= article.createdBy.id %>"><%= article.createdBy.name %></a></span>
+        <% } %>
+        <span class="view-count"><%= article.viewCount %> views</span>
+      </div>
+    </div>
+    <% }); } %>
+  </div>
+</section>

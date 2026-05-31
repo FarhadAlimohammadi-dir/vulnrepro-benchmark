@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.username }} — ContentHub{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ profile.username }}</h1>
+    {% if profile.avatar_url %}
+    <img src="{{ profile.avatar_url | e }}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;margin:.5rem 0;">
+    {% endif %}
+    <p class="meta">Member since {{ profile.created_at[:10] }} &middot; Role: {{ profile.role }}</p>
+    {% if profile.bio %}
+    <p style="margin-top:.75rem;">{{ profile.bio }}</p>
+    {% endif %}
+    {% if session.get('username') == profile.username %}
+    <a href="/profile/edit" class="btn btn-secondary" style="margin-top:1rem;">Edit Profile</a>
+    {% endif %}
+</div>
+
+<h2>Posts by {{ profile.username }}</h2>
+{% for post in posts %}
+<div class="card">
+    <h3><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h3>
+    <p class="meta"><span class="tag">{{ post.category }}</span> &middot; {{ post.created_at[:10] }} &middot; {{ post.views }} views</p>
+</div>
+{% else %}
+<p>No published posts yet.</p>
+{% endfor %}
+{% endblock %}

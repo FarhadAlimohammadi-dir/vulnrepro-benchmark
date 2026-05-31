@@ -1,0 +1,171 @@
+/* NovaSpark IDE — stylesheet */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: #63b3ed; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 52px;
+  background: #1a1d27;
+  border-bottom: 1px solid #2d3748;
+  flex-shrink: 0;
+}
+
+.brand { font-size: 1.15rem; font-weight: 700; color: #f7c948; }
+
+.nav-links { display: flex; gap: 16px; align-items: center; }
+.nav-links a { color: #a0aec0; font-size: 0.9rem; }
+.nav-links a:hover, .nav-links a.active { color: #e2e8f0; }
+
+.btn-link { background: none; border: none; color: #a0aec0; cursor: pointer; font-size: 0.9rem; }
+.btn-link:hover { color: #e2e8f0; text-decoration: underline; }
+
+main { flex: 1; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+.card {
+  background: #1a1d27;
+  border: 1px solid #2d3748;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; }
+h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 12px; color: #a0aec0; }
+h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+
+.muted { color: #718096; font-size: 0.85rem; }
+
+.alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem; }
+.alert-error { background: #742a2a; border: 1px solid #c53030; color: #fed7d7; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #a0aec0; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0f1117;
+  border: 1px solid #2d3748;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #63b3ed;
+}
+.hint { color: #718096; font-size: 0.78rem; margin-top: 4px; }
+
+.btn {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+.btn-primary  { background: #3182ce; color: #fff; }
+.btn-primary:hover { background: #2b6cb0; }
+.btn-secondary { background: #2d3748; color: #e2e8f0; }
+.btn-secondary:hover { background: #4a5568; }
+.btn-danger   { background: #c53030; color: #fff; }
+.btn-danger:hover { background: #9b2c2c; }
+.btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+
+.btn-row { display: flex; gap: 10px; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #2d3748;
+  color: #a0aec0;
+}
+.badge-lang { background: #1a365d; color: #63b3ed; }
+.badge-role { background: #1c4532; color: #68d391; }
+
+/* Auth page */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0f1117;
+}
+.auth-card {
+  background: #1a1d27;
+  border: 1px solid #2d3748;
+  border-radius: 12px;
+  padding: 36px 40px;
+  width: 100%;
+  max-width: 400px;
+}
+.auth-logo { font-size: 1.4rem; font-weight: 700; color: #f7c948; margin-bottom: 20px; }
+
+/* Dashboard */
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+.project-list { list-style: none; }
+.project-list li { padding: 6px 0; border-bottom: 1px solid #2d3748; display: flex; align-items: center; gap: 8px; }
+
+.history-list { list-style: none; }
+.history-list li { padding: 4px 0; display: flex; flex-direction: column; border-bottom: 1px solid #2d3748; }
+.history-list code { font-size: 0.82rem; color: #68d391; }
+
+/* Projects */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.project-card { background: #1a1d27; border: 1px solid #2d3748; border-radius: 8px; padding: 16px; }
+.project-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.project-card-header a { font-weight: 600; }
+.project-desc { color: #718096; font-size: 0.85rem; margin-bottom: 8px; }
+.project-meta { color: #4a5568; font-size: 0.78rem; margin-bottom: 10px; }
+.empty-state { text-align: center; padding: 60px 20px; color: #718096; }
+
+/* Editor */
+.editor-layout { display: grid; grid-template-columns: 220px 1fr; gap: 16px; }
+@media (max-width: 700px) { .editor-layout { grid-template-columns: 1fr; } }
+.file-tree { background: #1a1d27; border: 1px solid #2d3748; border-radius: 8px; padding: 16px; }
+.file-tree ul { list-style: none; margin-bottom: 12px; }
+.file-tree li { padding: 4px 0; }
+.file-link { color: #a0aec0; font-size: 0.85rem; }
+.file-link:hover { color: #e2e8f0; }
+.new-file-form { display: flex; gap: 6px; margin-top: 8px; }
+.new-file-form input { flex: 1; padding: 4px 8px; background: #0f1117; border: 1px solid #2d3748; border-radius: 4px; color: #e2e8f0; font-size: 0.82rem; }
+.editor-panel { background: #1a1d27; border: 1px solid #2d3748; border-radius: 8px; padding: 16px; }
+#editor-header { margin-bottom: 8px; }
+#editor { width: 100%; background: #0f1117; border: 1px solid #2d3748; border-radius: 6px; color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; padding: 10px; resize: vertical; }
+.terminal { background: #0a0c14; border: 1px solid #2d3748; border-radius: 6px; padding: 12px; font-family: 'Courier New', monospace; font-size: 0.85rem; color: #68d391; white-space: pre-wrap; margin-top: 10px; }
+
+/* Profile */
+.info-table { width: 100%; border-collapse: collapse; }
+.info-table th, .info-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #2d3748; }
+.info-table th { color: #718096; font-weight: 500; width: 160px; }
+
+footer { padding: 16px 24px; text-align: center; color: #4a5568; font-size: 0.8rem; border-top: 1px solid #1a1d27; }

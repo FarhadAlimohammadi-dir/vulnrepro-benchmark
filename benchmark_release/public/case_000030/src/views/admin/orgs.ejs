@@ -1,0 +1,28 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>Organizations</h1>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Slug</th><th>Plan</th><th>Owner</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      <% orgs.forEach(o => { %>
+      <tr>
+        <td><strong><%= o.name %></strong></td>
+        <td><code><%= o.slug %></code></td>
+        <td><span class="badge"><%= o.plan %></span></td>
+        <td><%= o.owner_id %></td>
+        <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProjectHub - Manage Your Projects</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f5f6fa; color: #333; }
+    .navbar { background: #2c3e50; color: white; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+    .navbar a { color: #ecf0f1; text-decoration: none; font-size: 14px; }
+    .navbar .brand { font-size: 18px; font-weight: bold; }
+    .hero { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 60px 24px; text-align: center; }
+    .hero h1 { font-size: 36px; margin: 0 0 12px; }
+    .hero p { font-size: 18px; opacity: 0.9; margin: 0 0 24px; }
+    .hero a { background: white; color: #2c3e50; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; }
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 20px; }
+    .card h3 { margin: 0 0 8px; color: #2c3e50; }
+    .card p { margin: 0 0 12px; color: #666; font-size: 14px; }
+    .badge { font-size: 11px; background: #eaf4fb; color: #2980b9; padding: 2px 8px; border-radius: 12px; }
+    .section-title { font-size: 22px; margin: 0 0 20px; color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand"><a href="/" style="color:white;">ProjectHub</a></span>
+    <a href="/projects">Projects</a>
+    <a href="/search">Search</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">Dashboard</a>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+      <a href="/auth/register">Register</a>
+    <% } %>
+  </nav>
+  <div class="hero">
+    <h1>ProjectHub</h1>
+    <p>Manage your team's projects, track progress, and collect feedback.</p>
+    <a href="/projects">Browse Projects</a>
+  </div>
+  <div class="container">
+    <h2 class="section-title">Recent Projects</h2>
+    <div class="grid">
+      <% projects.forEach(p => { %>
+        <div class="card">
+          <h3><a href="/projects/<%= p.id %>" style="text-decoration:none;color:#2c3e50;"><%= p.name %></a></h3>
+          <p><%= p.description %></p>
+          <span class="badge"><%= p.status %></span>
+          <span style="font-size:12px;color:#aaa;margin-left:8px;">by <%= p.owner_name %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

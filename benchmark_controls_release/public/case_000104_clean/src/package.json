@@ -1,0 +1,22 @@
+{
+  "name": "dataviz-studio",
+  "version": "1.0.0",
+  "description": "DataViz Studio - Collaborative charting and dashboard platform",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "9.4.3",
+    "bcryptjs": "2.4.3",
+    "express": "4.18.3",
+    "express-session": "1.18.0",
+    "ejs": "3.1.9",
+    "morgan": "1.10.0",
+    "uuid": "9.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

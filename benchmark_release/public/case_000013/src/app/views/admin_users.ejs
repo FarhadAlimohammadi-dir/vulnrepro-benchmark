@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevForge – Users</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <a href="/admin">Admin</a>
+      <a href="/profile">👤 <%= currentUser ? currentUser.username : '' %></a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>User Management</h1>
+      <a href="/admin" class="btn">← Back</a>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+      <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><strong><%= u.username %></strong></td>
+          <td class="muted"><%= u.email || '—' %></td>
+          <td><span class="badge"><%= u.role %></span></td>
+          <td><span class="badge badge-<%= u.active ? 'ok' : 'error' %>"><%= u.active ? 'active' : 'disabled' %></span></td>
+          <td class="muted"><%= new Date(u.created_at).toLocaleDateString() %></td>
+          <td>
+            <form method="POST" action="/admin/users/<%= u.id %>/toggle" style="display:inline">
+              <button class="btn btn-sm"><%= u.active ? 'Disable' : 'Enable' %></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+</body>
+</html>

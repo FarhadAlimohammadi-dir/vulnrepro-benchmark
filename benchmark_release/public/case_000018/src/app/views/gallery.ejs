@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — VisionBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/"><span class="brand-icon">◈</span> VisionBoard</a>
+  <div class="navbar-links">
+    <a href="/gallery" class="active">Gallery</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">My Images</a>
+      <a href="/settings">Settings</a>
+      <% if (isAdmin) { %><a href="/admin">Admin</a><% } %>
+      <span class="nav-user">@<%= currentUser.username %></span>
+      <form method="POST" action="/logout" style="display:inline">
+        <button class="btn btn-ghost btn-sm">Sign out</button>
+      </form>
+    <% } else { %>
+      <a href="/login">Sign in</a>
+      <a href="/register" class="btn btn-primary btn-sm">Get started</a>
+    <% } %>
+  </div>
+</nav>
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h2>Public Gallery</h2>
+      <p class="text-muted"><%= total %> public image<%= total !== 1 ? 's' : '' %></p>
+    </div>
+  </div>
+
+  <form method="GET" action="/gallery" class="search-bar">
+    <input name="q" type="search" placeholder="Search public images…" value="<%= search %>">
+    <button class="btn btn-secondary" type="submit">Search</button>
+    <% if (search) { %><a href="/gallery" class="btn btn-ghost">Clear</a><% } %>
+  </form>
+
+  <% if (images.length === 0) { %>
+    <div class="empty-state"><p>No public images yet<%= search ? ' matching your search' : '' %>.</p></div>
+  <% } else { %>
+  <div class="image-grid">
+    <% images.forEach(img => { %>
+    <div class="image-card">
+      <div class="image-thumb"><span class="mime-icon"><%= img.content_type.split('/')[1].toUpperCase() %></span></div>
+      <div class="image-meta">
+        <p class="image-filename"><%= img.filename %></p>
+        <p class="image-desc"><%= (img.ai_description || '').substring(0, 100) %></p>
+        <div class="image-tags">
+          <% (img.tags||'').split(',').filter(Boolean).forEach(t => { %>
+            <span class="tag"><%= t.trim() %></span>
+          <% }) %>
+        </div>
+        <p class="text-muted" style="font-size:.8em">by <a href="/profile/<%= img.owner_name %>">@<%= img.owner_name %></a></p>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+
+  <% if (pages > 1) { %>
+  <div class="pagination">
+    <% for (let p = 1; p <= pages; p++) { %>
+      <a href="/gallery?page=<%= p %><%= search ? '&q='+encodeURIComponent(search) : '' %>"
+         class="<%= p === page ? 'active' : '' %>"><%= p %></a>
+    <% } %>
+  </div>
+  <% } %>
+</main>
+<footer class="site-footer"><p>© 2024 VisionBoard</p></footer>
+</body>
+</html>

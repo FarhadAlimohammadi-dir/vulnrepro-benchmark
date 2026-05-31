@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing - Accounts Center</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">Accounts Center</div>
+      <ul class="nav-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/account/overview">Account</a></li>
+        <li><a href="/billing_interfaces" class="active">Billing</a></li>
+        <li><a href="/audit/logs">Activity</a></li>
+        <li class="user-menu">
+          <span><%= user.first_name || user.username %></span>
+          <a href="/auth/logout" class="btn-logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Billing & Payments</h1>
+    
+    <div class="billing-grid">
+      <section class="card">
+        <h2>Payment Methods</h2>
+        <a href="/billing_interfaces/payment-methods" class="btn btn-secondary">Manage Payment Methods</a>
+      </section>
+      
+      <section class="card">
+        <h2>Billing History</h2>
+        <% if (history && history.length > 0) { %>
+          <table class="billing-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% history.forEach(item => { %>
+                <tr>
+                  <td><%= new Date(item.created_at).toLocaleDateString() %></td>
+                  <td><%= item.description %></td>
+                  <td><%= item.currency %> <%= item.amount %></td>
+                  <td><span class="status <%= item.status %>"><%= item.status %></span></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          
+          <% if (totalPages > 1) { %>
+            <div class="pagination">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <% if (i === page) { %>
+                  <span class="current"><%= i %></span>
+                <% } else { %>
+                  <a href="/billing_interfaces?page=<%= i %>"><%= i %></a>
+                <% } %>
+              <% } %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <p>No billing history</p>
+        <% } %>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

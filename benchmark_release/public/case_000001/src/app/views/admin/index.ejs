@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows">Workflows</a>
+      <a href="/admin" class="active">Admin</a>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header"><h1>Admin Panel</h1></div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value"><%= users.length %></div><div class="stat-label">Users</div></div>
+      <div class="stat-card"><div class="stat-value"><%= wfCount %></div><div class="stat-label">Workflows</div></div>
+      <div class="stat-card"><div class="stat-value"><%= runCount %></div><div class="stat-label">Total Runs</div></div>
+      <div class="stat-card"><div class="stat-value"><%= execCount %></div><div class="stat-label">Exec Calls</div></div>
+    </div>
+
+    <div class="two-col">
+      <section>
+        <h2>Users</h2>
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Last Login</th><th></th></tr></thead>
+          <tbody>
+            <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><strong><%= u.username %></strong></td>
+              <td class="muted small"><%= u.email || '—' %></td>
+              <td><span class="badge"><%= u.role %></span></td>
+              <td class="muted small"><%= u.last_login || 'Never' %></td>
+              <td>
+                <form method="POST" action="/admin/users/<%= u.id %>/role" style="display:inline">
+                  <select name="role" onchange="this.form.submit()">
+                    <% ['user','operator','admin'].forEach(r => { %>
+                    <option value="<%= r %>" <%= u.role === r ? 'selected' : '' %>><%= r %></option>
+                    <% }) %>
+                  </select>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Agent State</h2>
+        <div class="info-block">
+          <div class="info-row"><span>Gateway URL</span><code class="small"><%= agentState.gatewayUrl %></code></div>
+          <div class="info-row"><span>Status</span><%= agentState.connectionStatus %></div>
+          <div class="info-row"><span>Exec Approvals</span><%= agentState.execApprovalsEnabled ? 'Required' : 'Disabled' %></div>
+          <div class="info-row"><span>Sandbox Mode</span><%= agentState.sandboxMode ? 'On' : 'Off' %></div>
+        </div>
+
+        <div class="mt16">
+          <a href="/admin/audit" class="btn btn-ghost">View Audit Log</a>
+          <a href="/admin/exec-log" class="btn btn-ghost">View Exec Log</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

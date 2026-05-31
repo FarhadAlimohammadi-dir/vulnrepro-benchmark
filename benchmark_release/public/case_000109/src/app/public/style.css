@@ -1,0 +1,207 @@
+/* Base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #202124;
+  font-size: 14px;
+}
+
+a { color: #1a73e8; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Login page */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  width: 360px;
+}
+
+.login-container h1 {
+  font-size: 18px;
+  color: #1a73e8;
+  margin-bottom: 16px;
+}
+
+.login-form label {
+  display: block;
+  margin: 12px 0 4px;
+  font-weight: 600;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.login-form button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.login-form button:hover { background: #1558b0; }
+.error-msg { color: #d93025; margin: 8px 0; }
+.hint { color: #5f6368; margin-top: 12px; }
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a73e8;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.topbar-title { font-weight: 700; font-size: 16px; flex: 1; }
+.topbar-user { font-size: 13px; }
+
+.btn-link {
+  background: none;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-link:hover { background: rgba(255,255,255,.15); }
+
+/* Dashboard */
+.dashboard {
+  max-width: 960px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 16px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+.card h2 {
+  font-size: 16px;
+  color: #202124;
+  margin-bottom: 12px;
+}
+
+.card label {
+  display: block;
+  margin: 10px 0 4px;
+  font-weight: 600;
+}
+
+.card input[type="text"],
+.card input[type="file"] {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.card button[type="submit"] {
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card button[type="submit"]:hover { background: #1558b0; }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+th, td {
+  border: 1px solid #e0e0e0;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 13px;
+}
+
+th { background: #f8f9fa; font-weight: 600; }
+tr:hover td { background: #f1f3f4; }
+
+.muted { color: #5f6368; font-size: 13px; }
+
+/* Badges */
+.badge {
+  display: inline-block;
+  background: #1a73e8;
+  color: #fff;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.legacy-badge {
+  display: inline-block;
+  background: #e8710a;
+  color: #fff;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Markdown viewer */
+.markdown-body {
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 0 16px;
+  line-height: 1.6;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3 { margin: 20px 0 8px; }
+.markdown-body p { margin: 8px 0; }
+.markdown-body pre {
+  background: #f6f8fa;
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.markdown-body code { font-family: monospace; font-size: 13px; }
+
+nav { padding: 10px 20px; background: #fff; border-bottom: 1px solid #e0e0e0; }
+
+/* Search form */
+.search-form { display: flex; gap: 8px; }
+.search-form input { flex: 1; padding: 7px 10px; border: 1px solid #dadce0; border-radius: 4px; }
+.search-form button { padding: 7px 16px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; cursor: pointer; }

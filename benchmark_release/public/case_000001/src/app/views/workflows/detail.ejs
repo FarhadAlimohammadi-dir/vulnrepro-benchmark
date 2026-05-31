@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= workflow.name %> — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows" class="active">Workflows</a>
+      <a href="/workspace/load">Workspace</a>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <div>
+        <a href="/workflows" class="breadcrumb">← Workflows</a>
+        <h1><%= workflow.name %></h1>
+      </div>
+      <div>
+        <a href="/workflows/<%= workflow.id %>/edit" class="btn btn-ghost">Edit</a>
+        <button onclick="triggerRun(<%= workflow.id %>)" class="btn btn-primary">Run Now</button>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <section>
+        <div class="info-block">
+          <div class="info-row"><span>Description</span><%= workflow.description || '—' %></div>
+          <div class="info-row"><span>Trigger</span><span class="badge"><%= workflow.trigger_type %></span></div>
+          <% if (workflow.schedule) { %>
+          <div class="info-row"><span>Schedule</span><code><%= workflow.schedule %></code></div>
+          <% } %>
+          <div class="info-row"><span>Status</span><%= workflow.status %></div>
+          <div class="info-row"><span>Total Runs</span><%= workflow.run_count %></div>
+          <div class="info-row"><span>Last Run</span><%= workflow.last_run || 'Never' %></div>
+          <div class="info-row"><span>Created</span><%= workflow.created_at %></div>
+        </div>
+
+        <form method="POST" action="/workflows/<%= workflow.id %>/delete" class="mt16"
+              onsubmit="return confirm('Delete this workflow?')">
+          <button type="submit" class="btn btn-danger">Delete Workflow</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Run History</h2>
+        <% if (runs.length === 0) { %>
+          <p class="muted">No runs recorded.</p>
+        <% } else { %>
+        <table class="data-table">
+          <thead><tr><th>Status</th><th>Actor</th><th>Output</th><th>Ran At</th></tr></thead>
+          <tbody>
+            <% runs.forEach(r => { %>
+            <tr>
+              <td><span class="badge <%= r.status === 'ok' ? 'badge-green' : 'badge-red' %>"><%= r.status %></span></td>
+              <td><%= r.actor %></td>
+              <td class="muted small"><%= (r.output || '').slice(0, 60) %></td>
+              <td class="muted small"><%= r.ran_at %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+
+  <script>
+    function triggerRun(id) {
+      fetch('/workflows/' + id + '/run', { method: 'POST' })
+        .then(r => r.json())
+        .then(() => location.reload());
+    }
+  </script>
+</body>
+</html>

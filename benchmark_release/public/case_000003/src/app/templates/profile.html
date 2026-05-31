@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block title %}Profile &mdash; CodeNest{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ user.username }}</h1>
+  <a href="/profile/edit" class="btn btn-secondary">Edit profile</a>
+</div>
+
+<div class="profile-card">
+  {% if user.avatar_url %}
+  <img src="{{ user.avatar_url }}" alt="avatar" class="avatar">
+  {% else %}
+  <div class="avatar-placeholder">{{ user.username[0]|upper }}</div>
+  {% endif %}
+  <div class="profile-info">
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+    <p><strong>Member since:</strong> {{ user.created_at }}</p>
+    <p><strong>Last login:</strong> {{ user.last_login or 'Never' }}</p>
+    {% if user.bio %}<p>{{ user.bio }}</p>{% endif %}
+  </div>
+</div>
+
+{% if notifications %}
+<section class="section">
+  <h2>Notifications</h2>
+  <ul class="notification-list">
+    {% for n in notifications %}
+    <li class="notification {% if not n.read %}unread{% endif %}">
+      <strong>{{ n.title }}</strong>
+      {% if n.body %}<span> &mdash; {{ n.body }}</span>{% endif %}
+      <span class="mono small">{{ n.created_at }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  <button onclick="fetch('/profile/notifications/read',{method:'POST'}).then(()=>location.reload())"
+          class="btn btn-secondary">Mark all read</button>
+</section>
+{% endif %}
+
+<section class="section">
+  <h2>Recent Activity</h2>
+  <table class="table">
+    <thead>
+      <tr><th>Time</th><th>Action</th><th>Resource</th></tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td class="mono small">{{ e.created_at }}</td>
+        <td>{{ e.action }}</td>
+        <td>{{ e.resource_type or '' }} {% if e.resource_id %}#{{ e.resource_id }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+      {% if not events %}
+      <tr><td colspan="3" class="empty-state">No activity.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

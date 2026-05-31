@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  nexuschat:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - SECRET_KEY=nexuschat-prod-secret-2024
+      - DB_PATH=/app/data/nexus.db
+      - PORT=9000
+    volumes:
+      - nexus_data:/app/data
+volumes:
+  nexus_data:

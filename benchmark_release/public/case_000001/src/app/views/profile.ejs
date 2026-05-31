@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows">Workflows</a>
+      <a href="/workspace/load">Workspace</a>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile" class="active"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header"><h1>Your Profile</h1></div>
+
+    <div class="two-col">
+      <section>
+        <div class="avatar-circle"><%= user.avatar_initials || user.username.slice(0,2).toUpperCase() %></div>
+        <form method="POST" action="/profile" class="mt16">
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" name="display_name" value="<%= user.display_name || '' %>" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="<%= user.email || '' %>" />
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<%= user.username %>" disabled />
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <input type="text" value="<%= user.role %>" disabled />
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Notifications</h2>
+        <% if (notifs.length === 0) { %>
+          <p class="muted">No notifications.</p>
+        <% } else { %>
+          <ul class="plain-list">
+            <% notifs.forEach(n => { %>
+            <li class="<%= n.read ? 'muted' : '' %>">
+              <% if (!n.read) { %><span class="dot-unread"></span><% } %>
+              <%= n.message %>
+              <div class="small muted"><%= n.created_at %></div>
+            </li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <h2 class="mt24">Account Info</h2>
+        <div class="info-block">
+          <div class="info-row"><span>Member since</span><%= user.created_at %></div>
+          <div class="info-row"><span>Last login</span><%= user.last_login || 'Never' %></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

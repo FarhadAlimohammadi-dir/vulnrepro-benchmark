@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Documents &mdash; Admin &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>All Documents</h2>
+    <a class="btn btn-sm btn-outline" href="/admin/">Back to Dashboard</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Title</th><th>Owner</th><th>Tags</th><th>Version</th><th>Updated</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for doc in docs %}
+      <tr>
+        <td>{{ doc.id }}</td>
+        <td><a href="/documents/{{ doc.id }}">{{ doc.title }}</a></td>
+        <td>{{ doc.owner_name or '—' }}</td>
+        <td><span class="tag-badge">{{ doc.tags or '—' }}</span></td>
+        <td>v{{ doc.version }}</td>
+        <td class="text-muted">{{ doc.updated_at[:10] if doc.updated_at else '—' }}</td>
+        <td>
+          <form method="post" action="/admin/documents/{{ doc.id }}/delete"
+                onsubmit="return confirm('Delete this document?')">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for p in range(1, pages+1) %}
+    <a class="page-btn {% if p == page %}active{% endif %}" href="/admin/documents?page={{ p }}">{{ p }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

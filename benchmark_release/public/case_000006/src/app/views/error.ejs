@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Error <%= code %> — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+  </nav>
+  <main>
+    <div class="container" style="text-align:center;padding-top:80px;">
+      <h1 style="font-size:4rem;color:#4a5568;"><%= code %></h1>
+      <p style="color:#718096;margin-bottom:24px;"><%= message %></p>
+      <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %></span>
+  </footer>
+</body>
+</html>

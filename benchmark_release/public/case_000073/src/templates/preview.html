@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDN Dashboard - Property Preview</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 2rem; }
+    .card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.1); max-width: 600px; margin: auto; }
+    h1 { color: #2d3748; margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid #e2e8f0; }
+    th { background: #edf2f7; color: #4a5568; font-size: 0.85rem; text-transform: uppercase; }
+    .badge-active { color: #276749; background: #c6f6d5; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+    .badge-suspended { color: #742a2a; background: #fed7d7; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Property Preview</h1>
+    <table>
+      <tr><th>Name</th><td>{{ name }}</td></tr>
+      <tr><th>Domain</th><td>{{ domain }}</td></tr>
+      <tr><th>Status</th><td><span class="badge-{{ status }}">{{ status }}</span></td></tr>
+      <tr><th>CDN Origin</th><td>{{ cdn_origin }}</td></tr>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/admin" class="active">Admin</a>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header"><h1>Admin Dashboard</h1></div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value"><%= stats.userCount %></div>
+      <div class="stat-label">Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= stats.docCount %></div>
+      <div class="stat-label">Documents</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= stats.shareCount %></div>
+      <div class="stat-label">Share Links</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= stats.auditCount %></div>
+      <div class="stat-label">Audit Events</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Quick Links</h3>
+    <a href="/admin/users" class="btn btn-secondary">Manage Users</a>
+    <a href="/admin/docs" class="btn btn-secondary">All Documents</a>
+    <a href="/admin/audit" class="btn btn-secondary">Audit Log</a>
+  </div>
+
+  <div class="card">
+    <h3>Recent Activity</h3>
+    <table class="table">
+      <thead><tr><th>User</th><th>Action</th><th>Target</th><th>IP</th><th>Time</th></tr></thead>
+      <tbody>
+      <% recentAudit.forEach(e => { %>
+      <tr>
+        <td><%= e.username %></td>
+        <td><span class="badge"><%= e.action %></span></td>
+        <td class="mono small"><%= e.target ? e.target.slice(0,20) : '—' %></td>
+        <td><%= e.ip || '—' %></td>
+        <td><%= new Date(e.ts * 1000).toLocaleString() %></td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= snippet.title %> — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+  <% } %>
+</nav>
+<div class="container page">
+  <p class="text-muted mb-1"><a href="/snippets">← All Snippets</a></p>
+  <h1 class="mb-1"><%= snippet.title %></h1>
+  <div class="flex mb-2">
+    <span class="badge badge-blue"><%= snippet.language %></span>
+    <span class="text-muted">by <a href="/profile/<%= snippet.username %>"><%= snippet.username %></a></span>
+    <span class="text-muted"><%= snippet.view_count %> views</span>
+    <span class="text-muted"><%= new Date(snippet.created_at).toLocaleDateString() %></span>
+    <% if (snippet.public) { %><span class="badge badge-green">public</span><% } else { %><span class="badge">private</span><% } %>
+  </div>
+
+  <% if (snippet.description) { %>
+    <p class="mb-2 text-muted"><%= snippet.description %></p>
+  <% } %>
+
+  <pre><%= snippet.body %></pre>
+
+  <div class="flex mt-2">
+    <button id="star-btn" class="btn btn-secondary btn-sm" onclick="toggleStar()">
+      ⭐ <span id="star-count"><%= starCount %></span>
+    </button>
+    <% if (locals.currentUser && locals.currentUser.id === snippet.owner_id) { %>
+      <a href="/snippets/<%= snippet.id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+      <form method="POST" action="/snippets/<%= snippet.id %>/delete"
+            onsubmit="return confirm('Delete this snippet?')">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    <% } %>
+  </div>
+
+  <% if (locals.currentUser) { %>
+    <script>
+    async function toggleStar() {
+      const r = await fetch('/snippets/<%= snippet.id %>/star', {method:'POST'});
+      const d = await r.json();
+      document.getElementById('star-count').textContent = d.count;
+    }
+    </script>
+  <% } %>
+
+  <div class="mt-3">
+    <h3 class="mb-2">Comments (<%= comments.length %>)</h3>
+    <% comments.forEach(c => { %>
+      <div class="card mb-1">
+        <div class="flex mb-1">
+          <strong><a href="/profile/<%= c.username %>"><%= c.username %></a></strong>
+          <span class="text-muted" style="font-size:.8rem"><%= new Date(c.created_at).toLocaleString() %></span>
+        </div>
+        <p><%= c.body %></p>
+      </div>
+    <% }) %>
+    <% if (locals.currentUser) { %>
+      <form method="POST" action="/snippets/<%= snippet.id %>/comment" class="mt-2">
+        <div class="form-group">
+          <label>Leave a comment</label>
+          <textarea name="body" rows="3" placeholder="Your comment…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Post Comment</button>
+      </form>
+    <% } else { %>
+      <p class="text-muted mt-1"><a href="/login">Login</a> to leave a comment.</p>
+    <% } %>
+  </div>
+</div>
+</body>
+</html>

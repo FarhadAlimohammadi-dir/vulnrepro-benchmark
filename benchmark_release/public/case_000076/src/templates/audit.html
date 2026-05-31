@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Audit Log — OldBlog{% endblock %}
+{% block content %}
+<h1>Audit Log</h1>
+<!-- TODO: add date-range filter and CSV export -->
+<table>
+  <thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead>
+  <tbody>
+  {% for ev in events %}
+  <tr>
+    <td>{{ ev.id }}</td>
+    <td>{{ ev.ts }}</td>
+    <td>{{ ev.actor | e }}</td>
+    <td>{{ ev.action | e }}</td>
+    <td>{{ ev.detail | e }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

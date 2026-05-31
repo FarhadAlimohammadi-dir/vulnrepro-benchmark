@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Workflows — NexusRelay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand"><a href="/dashboard" class="brand-link">&#9650; NexusRelay</a></div>
+    <div class="topnav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/workflows" class="active">Workflows</a>
+      <a href="/workspace/load">Workspace</a>
+      <a href="/workspace/settings">Settings</a>
+      <% if (currentRole === 'admin') { %><a href="/admin">Admin</a><% } %>
+    </div>
+    <div class="topnav-user">
+      <a href="/profile"><%= currentUser %></a> &nbsp;·&nbsp; <a href="/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Workflows</h1>
+      <a href="/workflows/new" class="btn btn-primary">+ New Workflow</a>
+    </div>
+
+    <form method="GET" action="/workflows" class="search-bar">
+      <input type="text" name="search" value="<%= search %>" placeholder="Search workflows…" />
+      <button type="submit" class="btn">Search</button>
+      <% if (search) { %><a href="/workflows" class="btn btn-ghost">Clear</a><% } %>
+    </form>
+
+    <% if (rows.length === 0) { %>
+      <p class="muted">No workflows found.</p>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr><th>Name</th><th>Description</th><th>Trigger</th><th>Runs</th><th>Status</th><th>Created</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% rows.forEach(w => { %>
+        <tr>
+          <td><a href="/workflows/<%= w.id %>"><%= w.name %></a></td>
+          <td class="muted"><%= w.description %></td>
+          <td><span class="badge"><%= w.trigger_type %></span></td>
+          <td><%= w.run_count %></td>
+          <td><span class="status-dot <%= w.status === 'active' ? 'green' : 'grey' %>"></span> <%= w.status %></td>
+          <td class="muted small"><%= w.created_at.split('T')[0] || w.created_at %></td>
+          <td>
+            <a href="/workflows/<%= w.id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/workflows?page=<%= page-1 %>&search=<%= search %>" class="btn btn-ghost">← Prev</a><% } %>
+      <span class="muted">Page <%= page %> of <%= pages %> (<%= total %> total)</span>
+      <% if (page < pages) { %><a href="/workflows?page=<%= page+1 %>&search=<%= search %>" class="btn btn-ghost">Next →</a><% } %>
+    </div>
+    <% } %>
+  </main>
+
+  <footer class="page-footer"><span>NexusRelay v<%= agentVersion %></span></footer>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartLock — Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand-sm">🔒 SmartLock</span>
+    <nav>
+      <span class="nav-user">Signed in as <strong>{{ username }}</strong></span>
+      <button id="logoutBtn" class="btn-sm">Sign Out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Device Overview</h2>
+    <div id="deviceGrid" class="device-grid">
+      <p class="loading">Loading devices…</p>
+    </div>
+
+    <section class="audit-section">
+      <h3>Recent Activity</h3>
+      <!-- TODO: add live-reload via SSE once telemetry pipeline is complete -->
+      <table id="auditTable" class="data-table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr>
+        </thead>
+        <tbody id="auditBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // TODO: i18n — format timestamps per user locale
+    function fmtTime(ts) {
+      return new Date(ts * 1000).toLocaleString();
+    }
+
+    function appendCell(row, text, className) {
+      const td = document.createElement('td');
+      if (className) td.className = className;
+      td.textContent = text == null ? '' : String(text);
+      row.appendChild(td);
+    }
+
+    async function loadDevices() {
+      const resp = await fetch('/api/devices');
+      if (!resp.ok) return;
+      const { devices } = await resp.json();
+      const grid = document.getElementById('deviceGrid');
+      grid.textContent = '';
+      const allowedStatus = new Set(['online', 'offline', 'unknown']);
+      devices.forEach(d => {
+        const card = document.createElement('div');
+        const status = allowedStatus.has(d.status) ? d.status : 'unknown';
+        card.className = 'device-card status-' + status;
+        const name = document.createElement('div');
+        name.className = 'device-name';
+        name.textContent = d.name;
+        const loc = document.createElement('div');
+        loc.className = 'device-location';
+        loc.textContent = d.location;
+        const st = document.createElement('div');
+        st.className = 'device-status';
+        st.textContent = d.status;
+        const fw = document.createElement('div');
+        fw.className = 'device-fw';
+        fw.textContent = d.firmware_version;
+        card.appendChild(name);
+        card.appendChild(loc);
+        card.appendChild(st);
+        card.appendChild(fw);
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadAudit() {
+      const resp = await fetch('/api/audit?limit=20');
+      if (!resp.ok) return;
+      const { events } = await resp.json();
+      const tbody = document.getElementById('auditBody');
+      tbody.textContent = '';
+      if (!events || events.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.textContent = 'No events yet';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+      events.forEach(e => {
+        const tr = document.createElement('tr');
+        appendCell(tr, fmtTime(e.ts));
+        appendCell(tr, e.user_id == null ? '—' : e.user_id);
+        appendCell(tr, e.action);
+        appendCell(tr, e.detail);
+        appendCell(tr, e.ip_addr);
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login_page';
+    });
+
+    loadDevices();
+    loadAudit();
+  </script>
+</body>
+</html>

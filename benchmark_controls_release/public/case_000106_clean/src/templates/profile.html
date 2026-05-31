@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile_user.username }} - TeamHub Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #f9f9f9; }
+        .profile-header { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .profile-name { font-size: 28px; font-weight: bold; color: #222; }
+        .profile-username { color: #666; font-size: 16px; margin-top: 4px; }
+        .profile-bio { margin-top: 16px; color: #444; line-height: 1.6; }
+        .profile-meta { margin-top: 12px; color: #888; font-size: 14px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; background: #0066cc; color: white; }
+        .badge-admin { background: #cc0000; }
+        .projects-section { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .project-item { border-bottom: 1px solid #eee; padding: 12px 0; }
+        .project-item:last-child { border-bottom: none; }
+        .nav { background: #0066cc; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; }
+        .nav a { color: white; text-decoration: none; margin-right: 20px; }
+        .share-section { margin-top: 20px; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .share-btn { padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .edit-btn { padding: 8px 16px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/projects/">Projects</a>
+        <a href="/messages/">Messages</a>
+        <a href="/team/directory">Directory</a>
+        {% if current_user.is_authenticated %}
+        <a href="/auth/logout" style="float:right">Logout</a>
+        <a href="/profile/{{ current_user.username }}" style="float:right; margin-right:16px">My Profile</a>
+        {% endif %}
+    </div>
+
+    <div class="profile-header">
+        <div>
+            {% if current_user.is_authenticated and current_user.username == profile_user.username %}
+            <a href="/profile/edit" class="edit-btn">Edit Profile</a>
+            {% endif %}
+        </div>
+        <!-- Display name rendered for rich team directory listings -->
+        <!-- perf: avoid extra round-trip when cache is warm -->
+        <div class="profile-name">{{ profile_user.display_name }}</div>
+        <div class="profile-username">@{{ profile_user.username }}
+            <span class="badge {% if profile_user.role == 'admin' %}badge-admin{% endif %}">
+                {{ profile_user.role }}
+            </span>
+        </div>
+        <div class="profile-bio">{{ profile_user.bio }}</div>
+        <div class="profile-meta">
+            Member since {{ profile_user.created_at[:10] if profile_user.created_at else 'unknown' }}
+        </div>
+    </div>
+
+    <div class="projects-section">
+        <h3>Projects</h3>
+        {% for project in projects %}
+        <div class="project-item">
+            <strong>{{ project.name }}</strong>
+            <span style="float:right; color:#666">{{ project.status }}</span>
+            <p style="color:#666; margin:4px 0">{{ project.description }}</p>
+        </div>
+        {% else %}
+        <p style="color:#999">No projects yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="share-section">
+        <h4>Share this profile</h4>
+        <p>Invite a colleague to view this profile:</p>
+        <input type="text" id="shareUrl" value="{{ request.url }}" style="width:60%; padding:6px;" readonly>
+        <button class="share-btn" onclick="navigator.clipboard.writeText(document.getElementById('shareUrl').value)">
+            Copy Link
+        </button>
+    </div>
+</body>
+</html>

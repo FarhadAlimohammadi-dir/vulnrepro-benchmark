@@ -1,0 +1,79 @@
+<%- include('layout', { title: workflow.name, body: `
+  <div class="breadcrumb">
+    <a href="/dashboard">Dashboard</a> / <a href="/workflows">Workflows</a> / <%= workflow.name %>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h2><%= workflow.name %></h2>
+    <div class="workflow-actions">
+      <a href="/workflows/<%= workflow.id %>/edit" class="btn btn-secondary">Edit</a>
+      <form action="/workflows/<%= workflow.id %>/delete" method="post" style="display: inline;" onsubmit="return confirm('Delete workflow?');">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="content" style="margin-top: 20px;">
+    <h3>Configuration</h3>
+    <table>
+      <tr>
+        <td><strong>Name</strong></td>
+        <td><%= workflow.name %></td>
+      </tr>
+      <tr>
+        <td><strong>Webhook URL</strong></td>
+        <td><code><%= workflow.webhook_url %></code></td>
+      </tr>
+      <tr>
+        <td><strong>HTTP Method</strong></td>
+        <td><%= workflow.method %></td>
+      </tr>
+      <tr>
+        <td><strong>Execution Count</strong></td>
+        <td><%= workflow.execution_count %></td>
+      </tr>
+      <tr>
+        <td><strong>Created</strong></td>
+        <td><%= new Date(workflow.created_at).toLocaleString() %></td>
+      </tr>
+    </table>
+
+    <h3>Headers</h3>
+    <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto;"><%= headersDisplay %></pre>
+
+    <form action="/api/workflows/execute" method="post" style="margin-top: 30px;">
+      <input type="hidden" name="workflow_id" value="<%= workflow.id %>">
+      <button type="submit" class="btn">Execute Now</button>
+    </form>
+  </div>
+
+  <div class="content" style="margin-top: 20px;">
+    <h3>Execution History</h3>
+    <% if (executions.length === 0) { %>
+      <p>No executions yet.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Executed</th>
+            <th>Response Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% executions.forEach(exec => { %>
+            <tr>
+              <td>
+                <span style="<%= exec.status_code >= 200 && exec.status_code < 300 ? 'color: green;' : 'color: red;' %>">
+                  <%= exec.status_code %>
+                </span>
+              </td>
+              <td><%= new Date(exec.executed_at).toLocaleString() %></td>
+              <td><code style="font-size: 11px;"><%= exec.response_body.substring(0, 100) %>...</code></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+` }) %>

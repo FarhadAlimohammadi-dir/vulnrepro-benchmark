@@ -1,0 +1,11 @@
+<%
+  title = 'Error'
+  body = `
+<div style="text-align:center;padding:4rem 0">
+  <h1>Oops</h1>
+  <p class="muted">${message || 'Something went wrong.'}</p>
+  <a href="/" class="btn">Go home</a>
+</div>
+`
+%>
+<%- include('layout', { title, body, user: typeof user !== 'undefined' ? user : null, flash: typeof flash !== 'undefined' ? flash : null }) %>

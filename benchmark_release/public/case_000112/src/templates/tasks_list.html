@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks - TaskFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; }
+        .navbar { background: #1a73e8; color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
+        .card { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; padding: 10px; border-bottom: 2px solid #eee; font-weight: 600; color: #555; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; }
+        a { color: #1a73e8; text-decoration: none; }
+        h1 { font-size: 22px; margin-bottom: 20px; }
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-open { background: #fef3c7; color: #b45309; }
+        .badge-closed { background: #d1fae5; color: #065f46; }
+        .badge-in_progress { background: #dbeafe; color: #1d4ed8; }
+        .badge-high { background: #fee2e2; color: #b91c1c; }
+        .badge-medium { background: #fef3c7; color: #b45309; }
+        .badge-low { background: #f0fdf4; color: #15803d; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight:600;font-size:18px;">TaskFlow</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/projects">Projects</a>
+            <a href="/search">Search</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>My Tasks</h1>
+        <div class="card">
+            {% if tasks %}
+            <table>
+                <thead>
+                    <tr><th>Title</th><th>Project</th><th>Assignee</th><th>Status</th><th>Priority</th></tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td><a href="/tasks/{{ task.id }}">{{ task.title }}</a></td>
+                        <td>{{ task.project_name }}</td>
+                        <td>{{ task.assignee_name or '—' }}</td>
+                        <td><span class="badge badge-{{ task.status }}">{{ task.status }}</span></td>
+                        <td><span class="badge badge-{{ task.priority }}">{{ task.priority }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color:#888;">No tasks found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

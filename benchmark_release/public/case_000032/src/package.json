@@ -1,0 +1,18 @@
+{
+  "name": "metapixel-analytics-platform",
+  "version": "2.1.0",
+  "description": "Analytics and OAuth management platform for Meta Pixel integrations",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js",
+    "seed": "node app/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.0"
+  }
+}

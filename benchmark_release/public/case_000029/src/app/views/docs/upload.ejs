@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Document – DocVault</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/docs">📄 DocVault</a>
+  <div class="navbar-links">
+    <a href="/docs">My Docs</a>
+    <a href="/docs/upload">Upload</a>
+    <a href="/docs/settings/profile">Profile</a>
+    <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+    <a href="/logout">Logout</a>
+    <span class="navbar-user">👤 <%= user.display_name || user.username %></span>
+  </div>
+</nav>
+<div class="container">
+  <div class="page-header">
+    <h1>Upload Document</h1>
+    <a href="/docs" class="btn btn-secondary">← Back</a>
+  </div>
+
+  <% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="card">
+    <form method="POST" action="/docs/upload" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="file">Select file</label>
+        <input id="file" type="file" name="file" accept=".txt,.pdf,.png,.jpg,.jpeg" required>
+        <p class="form-hint">Supported formats: TXT, PDF, PNG, JPEG. Max size: 4 MB.</p>
+      </div>
+      <div class="form-group">
+        <label for="tags">Tags (optional)</label>
+        <input id="tags" type="text" name="tags" placeholder="e.g. finance,report,2024">
+        <p class="form-hint">Comma-separated tags to help organise your documents.</p>
+      </div>
+      <button type="submit" class="btn btn-primary">Upload Document</button>
+    </form>
+  </div>
+</div>
+<footer class="footer"><span>© 2024 DocVault</span></footer>
+</body>
+</html>

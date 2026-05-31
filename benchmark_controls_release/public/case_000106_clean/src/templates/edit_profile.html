@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - TeamHub</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .nav { background: #0066cc; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; }
+        .nav a { color: white; text-decoration: none; margin-right: 20px; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        label { font-weight: bold; color: #333; }
+        button { padding: 10px 20px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .note { color: #888; font-size: 13px; margin-top: 4px; }
+        .flash { color: red; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/profile/{{ user.username }}">My Profile</a>
+        <a href="/auth/logout" style="float:right">Logout</a>
+    </div>
+
+    <div class="card">
+        <h2>Edit Profile</h2>
+        {% for msg in get_flashed_messages() %}<p class="flash">{{ msg }}</p>{% endfor %}
+        <form method="POST" action="/profile/edit">
+            <label>Display Name</label>
+            <input type="text" name="display_name" value="{{ user.display_name }}" required>
+            <p class="note">Supports rich text formatting for team directory listings.</p>
+
+            <label>Email</label>
+            <input type="email" name="email" value="{{ user.email }}" required>
+
+            <label>Bio</label>
+            <textarea name="bio" rows="4" placeholder="Tell your team about yourself...">{{ user.bio }}</textarea>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

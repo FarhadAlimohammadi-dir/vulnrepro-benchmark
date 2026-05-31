@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Profile – NoteFlow{% endblock %}
+{% block content %}
+<h2>My Profile</h2>
+<form method="POST" action="/profile">
+  <label>Username
+    <input type="text" value="{{ user.username | e }}" disabled>
+  </label>
+  <label>Email
+    <input type="email" name="email" value="{{ user.email | e }}" placeholder="you@example.com">
+  </label>
+  <label>Bio <span class="hint">(max 500 characters)</span>
+    <textarea name="bio" rows="4" maxlength="500">{{ user.bio | e }}</textarea>
+  </label>
+  <label>Role
+    <input type="text" value="{{ user.role | e }}" disabled>
+  </label>
+  <div class="form-actions">
+    <button type="submit" class="btn-primary">Save Profile</button>
+    <a href="/" class="btn-link">Cancel</a>
+  </div>
+</form>
+{% endblock %}

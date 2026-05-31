@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  docuvault:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=dv-prod-secret-7f3a9b2e1c4d8f6a
+      - DATABASE_PATH=/app/data/docuvault.db
+      - UPLOAD_FOLDER=/app/uploads
+    volumes:
+      - docuvault_data:/app/data
+      - docuvault_uploads:/app/uploads
+    restart: unless-stopped
+
+volumes:
+  docuvault_data:
+  docuvault_uploads:

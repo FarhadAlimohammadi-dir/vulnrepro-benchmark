@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block title %}Activity &mdash; CodeNest{% endblock %}
+{% block content %}
+<h1>Your Activity</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Action</th>
+      <th>Resource</th>
+      <th>Detail</th>
+      <th>IP</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in events %}
+    <tr>
+      <td class="mono">{{ e.created_at }}</td>
+      <td>{{ e.action }}</td>
+      <td>{{ e.resource_type or '' }} {% if e.resource_id %}#{{ e.resource_id }}{% endif %}</td>
+      <td class="mono small">{{ e.detail or '' }}</td>
+      <td class="mono small">{{ e.ip_address or '' }}</td>
+    </tr>
+    {% endfor %}
+    {% if not events %}
+    <tr><td colspan="5" class="empty-state">No activity yet.</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects - ProjectHub</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f6fa; margin: 0; }
+    .navbar { background: #2c3e50; color: white; padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+    .navbar a { color: #ecf0f1; text-decoration: none; font-size: 14px; }
+    .brand { font-size: 18px; font-weight: bold; }
+    .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    th, td { padding: 12px 16px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+    th { background: #f8f9fa; color: #888; font-weight: 600; }
+    .badge { font-size: 11px; background: #eaf4fb; color: #2980b9; padding: 2px 8px; border-radius: 12px; }
+    .filters { margin-bottom: 20px; display: flex; gap: 8px; }
+    .filters a { padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 13px; background: white; border: 1px solid #ddd; color: #555; }
+    .filters a.active { background: #3498db; color: white; border-color: #3498db; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand"><a href="/" style="color:white;">ProjectHub</a></span>
+    <a href="/projects">Projects</a>
+    <a href="/search">Search</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">Dashboard</a>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+    <% } %>
+  </nav>
+  <div class="container">
+    <h1>Projects</h1>
+    <div class="filters">
+      <a href="/projects?status=all" class="<%= filter === 'all' ? 'active' : '' %>">All</a>
+      <a href="/projects?status=active" class="<%= filter === 'active' ? 'active' : '' %>">Active</a>
+      <a href="/projects?status=archived" class="<%= filter === 'archived' ? 'active' : '' %>">Archived</a>
+    </div>
+    <table>
+      <tr><th>Name</th><th>Description</th><th>Status</th><th>Owner</th></tr>
+      <% projects.forEach(p => { %>
+        <tr>
+          <td><a href="/projects/<%= p.id %>"><%= p.name %></a></td>
+          <td><%= p.description %></td>
+          <td><span class="badge"><%= p.status %></span></td>
+          <td><%= p.owner_name %></td>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"html": "<img src=x onerror=\"document.body.innerHTML='PWNED: <script>fetch(\\'/api/v2/categories/users\\')</script>'\">"}

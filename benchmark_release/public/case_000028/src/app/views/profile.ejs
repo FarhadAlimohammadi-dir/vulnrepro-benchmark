@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralOps — Profile</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav', { user: user.username, role: user.role }) %>
+  <main class="page-content">
+    <div class="page-header">
+      <h1>My Profile</h1>
+    </div>
+
+    <% if (saved) { %>
+      <div class="flash-msg flash-success">Profile updated successfully.</div>
+    <% } %>
+    <% if (error) { %>
+      <div class="flash-msg flash-error"><%= error %></div>
+    <% } %>
+
+    <div class="form-card">
+      <h2>Account Details</h2>
+      <table class="kv-table" style="margin-bottom:1.5rem">
+        <tr><th>Username</th><td><code><%= user.username %></code></td></tr>
+        <tr><th>Role</th><td><span class="badge badge-role"><%= user.role %></span></td></tr>
+        <tr><th>API Token</th><td><code class="token-field"><%= user.api_token %></code></td></tr>
+        <tr><th>Member Since</th><td class="ts"><%= user.created_at %></td></tr>
+        <tr><th>Last Login</th><td class="ts"><%= user.last_login || 'Never' %></td></tr>
+      </table>
+
+      <h3>Edit Profile</h3>
+      <form method="POST" action="/profile">
+        <label>Display Name
+          <input type="text" name="display_name" value="<%= user.display_name || '' %>" maxlength="64" placeholder="Your full name">
+        </label>
+        <label>Email
+          <input type="email" name="email" value="<%= user.email || '' %>" maxlength="128" placeholder="you@example.com">
+        </label>
+        <label>Bio
+          <textarea name="bio" rows="3" maxlength="300"><%= user.bio || '' %></textarea>
+        </label>
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </form>
+    </div>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

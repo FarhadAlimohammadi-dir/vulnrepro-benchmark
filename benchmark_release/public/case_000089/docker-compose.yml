@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  streamdash:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=streamdash-prod-key-2024
+      - DATABASE_PATH=/app/data/streamdash.db
+    volumes:
+      - streamdash_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  streamdash_data:

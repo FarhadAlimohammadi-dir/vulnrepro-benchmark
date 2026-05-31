@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloud Shell File Manager</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+<div class="login-container">
+  <h1>Cloud Shell File Manager</h1>
+  <% if (message) { %>
+    <p class="error-msg"><%= message %></p>
+  <% } %>
+  <form method="POST" action="/login" class="login-form">
+    <h2>Sign In</h2>
+    <label>Username
+      <input type="text" name="username" placeholder="username" required autocomplete="username">
+    </label>
+    <label>Password
+      <input type="password" name="password" placeholder="password" required autocomplete="current-password">
+    </label>
+    <button type="submit">Login</button>
+    <p class="hint"><small>Demo accounts: alice/pass123 &bull; bob/pass456 &bull; charlie/pass789</small></p>
+  </form>
+</div>
+</body>
+</html>

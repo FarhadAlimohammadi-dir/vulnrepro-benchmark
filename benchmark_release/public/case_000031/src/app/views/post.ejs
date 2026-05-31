@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= post.title %> — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/search">Search</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<% if (flashMessage) { %><div class="flash-message"><%= flashMessage %></div><% } %>
+<main class="main-content">
+<div class="container">
+  <article class="post-detail">
+    <header class="post-detail-header">
+      <h1><%= post.title %></h1>
+      <p class="post-meta">
+        By <strong><%= post.username %></strong> &middot;
+        <%= new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+        <span class="post-status status-<%= post.status %>"><%= post.status %></span>
+      </p>
+      <% if (currentUser && (currentUser.id === post.user_id || currentUser.role === 'admin')) { %>
+      <div class="post-actions">
+        <a href="/posts/<%= post.id %>/edit" class="btn btn-sm">Edit</a>
+        <form method="POST" action="/posts/<%= post.id %>/delete" style="display:inline">
+          <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this post?')">Delete</button>
+        </form>
+      </div>
+      <% } %>
+    </header>
+    <div class="post-body"><%= post.body %></div>
+  </article>
+
+  <section class="comments-section">
+    <h3>Comments (<%= comments.length %>)</h3>
+    <% if (comments.length === 0) { %>
+      <p class="empty-state">No comments yet. Be the first!</p>
+    <% } %>
+    <ul class="comment-list">
+      <% comments.forEach(c => { %>
+      <li class="comment-item">
+        <strong><%= c.username %></strong>
+        <span class="comment-date"><%= new Date(c.created_at).toLocaleDateString() %></span>
+        <p><%= c.body %></p>
+      </li>
+      <% }) %>
+    </ul>
+    <form method="POST" action="/posts/<%= post.id %>/comments" class="comment-form">
+      <div class="form-group">
+        <label for="body">Add a comment</label>
+        <textarea id="body" name="body" rows="3" placeholder="Write your comment…" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Post Comment</button>
+    </form>
+  </section>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error <%= code %> — VisionBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/"><span class="brand-icon">◈</span> VisionBoard</a>
+  <div class="navbar-links">
+    <a href="/gallery">Gallery</a>
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <a href="/dashboard">My Images</a>
+    <% } else { %>
+      <a href="/login">Sign in</a>
+    <% } %>
+  </div>
+</nav>
+<main class="container" style="text-align:center;padding-top:4rem">
+  <h1 style="font-size:5rem;color:#e0e0e0;margin:0"><%= code %></h1>
+  <p style="font-size:1.25rem;color:#555"><%= message %></p>
+  <a href="/" class="btn btn-primary" style="margin-top:1.5rem">Go home</a>
+</main>
+<footer class="site-footer"><p>© 2024 VisionBoard</p></footer>
+</body>
+</html>

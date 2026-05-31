@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DocCollab - <%= doc.title %></title>
+  <style>
+    body { font-family: Inter, sans-serif; margin: 0; background: #f5f5f5; }
+    nav { background: #0066CC; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; }
+    nav a { color: white; text-decoration: none; margin-left: 1rem; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .doc-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    h1 { color: #333; margin-top: 0; }
+    .meta { color: #888; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .preview-box { border: 1px solid #eee; border-radius: 4px; padding: 1rem; background: #fafafa; min-height: 80px; }
+    .raw-box { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; overflow-x: auto; margin-top: 1rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .tab { padding: 0.4rem 1rem; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: white; }
+    .tab.active { background: #0066CC; color: white; border-color: #0066CC; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span><strong>DocCollab</strong></span>
+    <div><a href="/documents">&larr; Back to Dashboard</a></div>
+  </nav>
+  <div class="container">
+    <div class="doc-card">
+      <h1><%= doc.title %></h1>
+      <div class="meta">
+        Owner: <%= doc.owner_name %> &bull;
+        Type: <%= doc.media_type %> &bull;
+        Updated: <%= doc.updated_at %>
+        <% if (doc.is_public) { %>&bull; <span style="color:#0066CC">Public</span><% } %>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('preview')">Preview (Sanitized)</button>
+        <button class="tab" onclick="showTab('raw')">Raw Content</button>
+        <button class="tab" onclick="showTab('source')">Sanitized Source</button>
+      </div>
+
+      <div id="preview" class="preview-box">
+        <%- doc.sanitized_content %>
+      </div>
+      <div id="raw" class="raw-box" style="display:none"><%= doc.content %></div>
+      <div id="source" class="raw-box" style="display:none"><%= doc.sanitized_content %></div>
+    </div>
+  </div>
+  <script>
+    function showTab(name) {
+      ['preview','raw','source'].forEach(t => {
+        document.getElementById(t).style.display = t === name ? 'block' : 'none';
+      });
+      document.querySelectorAll('.tab').forEach((b,i) => {
+        b.classList.toggle('active', ['preview','raw','source'][i] === name);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ note['title'] | e }} - Shared Note</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               max-width: 760px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #1a1a2e; }
+        .meta { color: #888; font-size: 13px; margin-bottom: 28px; }
+        .content { line-height: 1.7; }
+    </style>
+</head>
+<body>
+    <h1>{{ note['title'] | e }}</h1>
+    <div class="meta">Shared note &bull; {{ note['created_at'][:10] }}</div>
+    <div class="content">{{ content | safe }}</div>
+</body>
+</html>

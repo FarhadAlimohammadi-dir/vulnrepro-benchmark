@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; }
+        .navbar {
+            background: white;
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        }
+        .navbar-brand { font-size: 1.3rem; font-weight: 700; color: #2563eb; }
+        .navbar-user { font-size: 0.875rem; color: #6b7280; }
+        .navbar-user a { color: #2563eb; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        }
+        .stat-card h3 { font-size: 2rem; font-weight: 700; color: #111827; }
+        .stat-card p { color: #6b7280; font-size: 0.875rem; margin-top: 0.3rem; }
+        .section-title { font-size: 1.1rem; font-weight: 600; color: #111827; margin-bottom: 1rem; }
+        .card { background: white; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
+        .card-body { padding: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #f3f4f6; }
+        td { padding: 0.75rem 1rem; font-size: 0.875rem; color: #374151; border-bottom: 1px solid #f9fafb; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .badge-todo { background: #f3f4f6; color: #6b7280; }
+        .badge-in_progress { background: #dbeafe; color: #1d4ed8; }
+        .badge-done { background: #d1fae5; color: #065f46; }
+        .badge-high { background: #fee2e2; color: #b91c1c; }
+        .badge-medium { background: #fef9c3; color: #92400e; }
+        .badge-low { background: #f3f4f6; color: #6b7280; }
+        .search-bar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .search-bar input { flex: 1; padding: 0.6rem 1rem; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; }
+        .search-bar button { padding: 0.6rem 1.25rem; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="navbar-brand">TaskFlow</span>
+        <div class="navbar-user">
+            {% if user is defined %}Welcome, {{ user.username }}{% endif %}
+            <a href="/profile">Profile</a>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if stats is defined %}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>{{ stats.total_projects }}</h3>
+                <p>Total Projects</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ stats.open_tasks }}</h3>
+                <p>Open Tasks</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ stats.completed_tasks }}</h3>
+                <p>Completed Tasks</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search tasks..." value="{{ search_query | default('') | e }}">
+            <button onclick="location.href='/search?q='+document.getElementById('searchInput').value">Search</button>
+        </div>
+
+        {% if search_results is defined %}
+        <div class="card">
+            <div class="card-body">
+                <p class="section-title">Search Results for "{{ search_query | e }}"</p>
+                {% if search_results %}
+                <table>
+                    <thead><tr><th>Title</th><th>Project</th><th>Status</th><th>Priority</th></tr></thead>
+                    <tbody>
+                    {% for r in search_results %}
+                    <tr>
+                        <td>{{ r.title | e }}</td>
+                        <td>{{ r.project_name | e }}</td>
+                        <td><span class="badge badge-{{ r.status }}">{{ r.status }}</span></td>
+                        <td><span class="badge badge-{{ r.priority }}">{{ r.priority }}</span></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color:#6b7280; text-align:center; padding:2rem">No results found.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tasks is defined %}
+        <div class="card">
+            <div class="card-body">
+                <p class="section-title">My Tasks</p>
+                <table>
+                    <thead><tr><th>Title</th><th>Project</th><th>Status</th><th>Priority</th><th>Due</th></tr></thead>
+                    <tbody>
+                    {% for t in tasks %}
+                    <tr>
+                        <td>{{ t.title | e }}</td>
+                        <td>{{ t.project_name | e }}</td>
+                        <td><span class="badge badge-{{ t.status }}">{{ t.status }}</span></td>
+                        <td><span class="badge badge-{{ t.priority }}">{{ t.priority }}</span></td>
+                        <td>{{ t.due_date or '—' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if projects is defined %}
+        <div class="card">
+            <div class="card-body">
+                <p class="section-title">My Projects</p>
+                <table>
+                    <thead><tr><th>Name</th><th>Status</th><th>Priority</th><th>Updated</th></tr></thead>
+                    <tbody>
+                    {% for p in projects %}
+                    <tr>
+                        <td>{{ p.name | e }}</td>
+                        <td>{{ p.status }}</td>
+                        <td><span class="badge badge-{{ p.priority }}">{{ p.priority }}</span></td>
+                        <td>{{ p.updated_at }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NoteFlow{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="brand" href="/">🗒 NoteFlow</a>
+  {% if session.get('user_id') %}
+  <div class="nav-links">
+    <a href="/">My Notes</a>
+    <a href="/public">Explore</a>
+    <a href="/search">Search</a>
+    {% if session.get('role') == 'admin' %}
+    <a href="/admin/">Admin</a>
+    {% endif %}
+    <a href="/profile">{{ session.get('username') }}</a>
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+  {% else %}
+  <div class="nav-links">
+    <a href="/login" class="btn-login">Login</a>
+  </div>
+  {% endif %}
+</nav>
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in messages %}
+      <div class="alert alert-{{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+  <small>NoteFlow v2.1 &nbsp;·&nbsp; <a href="/public">Public Notes</a> &nbsp;·&nbsp; <a href="/api/tags">API</a></small>
+</footer>
+</body>
+</html>

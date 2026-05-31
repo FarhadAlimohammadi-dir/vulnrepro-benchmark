@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReportForge - Sign In</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+               background: #f0f2f5; display: flex; align-items: center;
+               justify-content: center; min-height: 100vh; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+                padding: 40px; width: 380px; }
+        .logo { text-align: center; margin-bottom: 28px; }
+        .logo h1 { color: #2563eb; font-size: 26px; font-weight: 700; }
+        .logo p { color: #6b7280; font-size: 13px; margin-top: 4px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 500;
+                color: #374151; margin-bottom: 6px; }
+        input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db;
+                border-radius: 6px; font-size: 14px; transition: border-color 0.15s; }
+        input:focus { outline: none; border-color: #2563eb;
+                      box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        button { width: 100%; padding: 11px; background: #2563eb; color: white;
+                 border: none; border-radius: 6px; font-size: 15px; font-weight: 500;
+                 cursor: pointer; transition: background 0.15s; }
+        button:hover { background: #1d4ed8; }
+        .error { color: #dc2626; font-size: 13px; margin-top: 10px;
+                 padding: 8px 12px; background: #fef2f2; border-radius: 4px;
+                 display: none; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <h1>ReportForge</h1>
+            <p>Business Intelligence Platform</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username"
+                       placeholder="Enter your username" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Enter your password" autocomplete="current-password">
+            </div>
+            <button type="submit">Sign In</button>
+            <div class="error" id="errorMsg"></div>
+        </form>
+        <div class="footer">
+            ReportForge v2.4.1 &copy; 2024 · Enterprise Edition
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.style.display = 'none';
+
+            const resp = await fetch('/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            });
+
+            const data = await resp.json();
+
+            if (resp.ok) {
+                window.location.href = '/profile';
+            } else {
+                errorDiv.textContent = data.error || 'Login failed';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

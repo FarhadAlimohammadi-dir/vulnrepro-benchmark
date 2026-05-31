@@ -1,0 +1,1 @@
+/* i18n helpers */ window.i18n = { locale: "en-US", t: function(k) { return k; } };

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffiliTrack - Profile</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+               background: #f0f2f5; }
+        .nav { background: white; padding: 0 2rem; height: 56px; display: flex; align-items: center;
+               justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .nav h1 { color: #2563eb; font-size: 1.25rem; font-weight: 700; }
+        .main { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 2rem; }
+        .card h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem; }
+        input[type=text], input[type=email] { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid #d1d5db;
+                                               border-radius: 6px; font-size: 0.875rem; }
+        .btn { padding: 0.625rem 1.5rem; background: #2563eb; color: white; border: none;
+               border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
+        .alert { padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.875rem; }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-error { background: #fef2f2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <h1>AffiliTrack</h1>
+        <a href="/dashboard/" style="color:#6b7280;text-decoration:none;font-size:0.875rem;">← Dashboard</a>
+    </nav>
+    <div class="main">
+        <div class="card">
+            <h2>Edit Profile</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endwith %}
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" value="{{ current_user.username }}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ current_user.email }}">
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" value="{{ current_user.company or '' }}">
+                </div>
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

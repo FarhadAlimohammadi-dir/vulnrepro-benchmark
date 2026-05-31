@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Log - ProjectFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, sans-serif; background: #f8fafc; }
+        nav { background: #4f46e5; color: white; padding: 14px 32px; display: flex; justify-content: space-between; }
+        nav .brand { font-weight: 700; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+        .container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { font-size: 1.3rem; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { text-align: left; padding: 10px 12px; background: #f1f5f9; color: #64748b; font-weight: 600; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; color: #475569; }
+        tr:last-child td { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="brand">ProjectFlow</span>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/audit-log">Activity</a>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Account Activity Log</h2>
+            {% if logs %}
+            <table>
+                <thead>
+                    <tr><th>#</th><th>Action</th><th>Detail</th><th>IP Address</th><th>Timestamp</th></tr>
+                </thead>
+                <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log['id'] }}</td>
+                    <td>{{ log['action'] }}</td>
+                    <td>{{ log['detail'] }}</td>
+                    <td>{{ log['ip_address'] }}</td>
+                    <td>{{ log['created_at'] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color:#94a3b8;">No activity recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Profile — PromptForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Profile</h2>
+  <a href="/profile/edit" class="btn-secondary">Edit Profile</a>
+</div>
+<div class="detail-card">
+  <dl class="detail-list">
+    <dt>Username</dt><dd>{{ user.username }}</dd>
+    <dt>Full Name</dt><dd>{{ user.full_name or '—' }}</dd>
+    <dt>Email</dt><dd>{{ user.email or '—' }}</dd>
+    <dt>Role</dt><dd><span class="badge">{{ user.role }}</span></dd>
+    <dt>Bio</dt><dd>{{ user.bio or '—' }}</dd>
+    <dt>Member Since</dt><dd>{{ user.created_at[:10] }}</dd>
+    <dt>Last Login</dt><dd>{{ user.last_login or 'Never' }}</dd>
+  </dl>
+</div>
+{% endblock %}

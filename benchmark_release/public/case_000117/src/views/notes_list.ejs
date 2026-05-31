@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteFlow — My Notes</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; margin: 0; }
+    header { background: #1a1a2e; color: #fff; padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.25rem; }
+    nav a { color: #a5b4fc; text-decoration: none; margin-left: 1rem; }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .search { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+    .search input { flex: 1; padding: .5rem .75rem; border: 1px solid #d0d5dd; border-radius: 4px; }
+    .search button { padding: .5rem 1rem; background: #4f46e5; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    .note-card { background: #fff; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 1rem 1.25rem; margin-bottom: .75rem; display: flex; justify-content: space-between; align-items: center; }
+    .note-card h3 { margin: 0; font-size: 1rem; }
+    .note-card .meta { font-size: .75rem; color: #888; margin-top: .2rem; }
+    .note-card a { color: #4f46e5; text-decoration: none; }
+    .badge { background: #e0e7ff; color: #3730a3; border-radius: 999px; padding: .15rem .5rem; font-size: .7rem; }
+    h2 { color: #1a1a2e; }
+    .new-btn { display: inline-block; padding: .5rem 1.25rem; background: #4f46e5; color: #fff; border-radius: 4px; text-decoration: none; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✏️ NoteFlow</h1>
+    <nav>
+      <a href="/notes">My Notes</a>
+      <% if (user && user.role === 'admin') { %>
+        <a href="/admin">Admin</a>
+      <% } %>
+      <form method="POST" action="/auth/logout" style="display:inline">
+        <button style="background:none;border:none;color:#a5b4fc;cursor:pointer;font-size:1rem">Logout</button>
+      </form>
+    </nav>
+  </header>
+  <main>
+    <form class="search" action="/notes/search" method="GET">
+      <input name="q" placeholder="Search by title or tag…" value="<%= query %>">
+      <button type="submit">Search</button>
+    </form>
+
+    <a class="new-btn" href="/notes/new">+ New Note</a>
+
+    <h2>My Notes</h2>
+    <% if (myNotes.length === 0) { %>
+      <p>No notes yet.</p>
+    <% } else { %>
+      <% myNotes.forEach(n => { %>
+        <div class="note-card">
+          <div>
+            <h3><a href="/notes/<%= n.id %>"><%= n.title %></a></h3>
+            <div class="meta">
+              <span class="badge"><%= n.visibility %></span>
+              <%= n.tags ? n.tags.split(',').map(t => t.trim()).filter(Boolean).join(' · ') : '' %>
+              &nbsp;·&nbsp; <%= n.updated_at %>
+            </div>
+          </div>
+          <div>
+            <a href="/notes/<%= n.id %>/edit">Edit</a>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+
+    <% if (publicNotes.length > 0 && !query) { %>
+      <h2>Community Notes</h2>
+      <% publicNotes.forEach(n => { %>
+        <div class="note-card">
+          <div>
+            <h3><a href="/notes/<%= n.id %>"><%= n.title %></a></h3>
+            <div class="meta">by <%= n.username %> · <%= n.updated_at %></div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </main>
+</body>
+</html>

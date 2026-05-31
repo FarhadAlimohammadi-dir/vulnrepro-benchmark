@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Authors — OldBlog{% endblock %}
+{% block content %}
+<h1>Authors</h1>
+<ul class="user-list">
+{% for u in users %}
+  <li><a href="/users/{{ u.username | e }}">{{ u.display_name | e }}</a> <span class="role">{{ u.role | e }}</span></li>
+{% endfor %}
+</ul>
+{% endblock %}

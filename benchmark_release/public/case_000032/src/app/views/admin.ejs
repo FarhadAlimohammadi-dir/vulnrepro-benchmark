@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — PixelFlow</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin" class="nav-admin active">Admin</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/audit">Audit Log</a>
+      <a href="/admin/tokens">Tokens</a>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Admin Dashboard</h2>
+      <p class="muted">Platform overview and system health</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.userCount %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.appCount %></div>
+        <div class="stat-label">Applications</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.tokenCount %></div>
+        <div class="stat-label">Active Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.eventCount %></div>
+        <div class="stat-label">Pixel Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.requestCount %></div>
+        <div class="stat-label">Graph Requests</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Recent Audit Entries</h3>
+        <a href="/admin/audit" class="btn btn-sm">View All</a>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th>Action</th><th>Actor</th><th>Resource</th><th>Details</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <% recentAudit.forEach(function(entry) { %>
+          <tr>
+            <td><span class="badge badge-action"><%= entry.action %></span></td>
+            <td><code class="small"><%= entry.actor_id %></code></td>
+            <td class="small muted"><%= entry.resource_type || '—' %></td>
+            <td class="small"><%= entry.details || '—' %></td>
+            <td class="small muted"><%= new Date(entry.timestamp).toLocaleString() %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics.</p>
+  </footer>
+</body>
+</html>

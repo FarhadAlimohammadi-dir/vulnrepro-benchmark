@@ -1,0 +1,5 @@
+Flask==3.0.3
+requests==2.32.3
+bcrypt==4.2.0
+Flask-Login==0.6.3
+Werkzeug==3.0.3

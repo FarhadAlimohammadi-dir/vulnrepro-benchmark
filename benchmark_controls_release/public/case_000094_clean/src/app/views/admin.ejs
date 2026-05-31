@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroSSR - Admin Panel</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">AstroSSR</div>
+    <nav class="nav">
+      <a href="/">Home</a>
+      <a href="/api/users">Users</a>
+      <a href="/api/audit-log">Audit Log</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Admin Panel</h1>
+    <div class="panel">
+      <p class="message"><%= message %></p>
+      <p class="secret">SENSITIVE DATA: admin_credentials_exposed</p>
+      <h3>Request Metadata</h3>
+      <pre class="code-block"><%= JSON.stringify(requests, null, 2) %></pre>
+    </div>
+
+    <section class="admin-actions">
+      <h2>Quick Actions</h2>
+      <ul>
+        <li><a href="/api/users">View All Users</a></li>
+        <li><a href="/api/audit-log">View Audit Log</a></li>
+        <li><a href="/status">System Status</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 AstroSSR Platform.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Meridian HR – Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; }
+        .nav { background: #1a3a5c; color: #fff; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .nav h2 { font-size: 18px; }
+        .nav a { color: #aec6e8; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .container { max-width: 960px; margin: 30px auto; padding: 0 20px; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 8px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 24px; }
+        h3 { color: #1a3a5c; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f4f6fa; padding: 10px 12px; text-align: left; color: #344055; }
+        td { padding: 10px 12px; border-bottom: 1px solid #eef0f4; }
+        .badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-approved { background: #d4edda; color: #155724; }
+        .badge-cancelled { background: #e2e3e5; color: #383d41; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <h2>&#127970; Meridian HR Portal</h2>
+    <div>
+        <a href="/employees">Directory</a>
+        <a href="/leave/request">Leave Request</a>
+        <a href="/announcements">Announcements</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Sign Out</a>
+    </div>
+</div>
+<div class="container">
+    <div class="card">
+        <h3>Welcome back, {{ user.username }}!</h3>
+        <p style="color:#6b7a8d;font-size:14px;">Role: {{ user.role }} | Department: {{ user.department }}</p>
+    </div>
+    <div class="card">
+        <h3>My Leave Requests</h3>
+        {% if leave_requests %}
+        <table>
+            <tr><th>Type</th><th>Start</th><th>End</th><th>Status</th><th>Reason</th></tr>
+            {% for req in leave_requests %}
+            <tr>
+                <td>{{ req.leave_type }}</td>
+                <td>{{ req.start_date }}</td>
+                <td>{{ req.end_date }}</td>
+                <td><span class="badge badge-{{ req.status }}">{{ req.status }}</span></td>
+                <td>{{ req.reason or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:#8a97a8;font-size:14px;">No leave requests on record.</p>
+        {% endif %}
+    </div>
+    {% if current_user.role == 'admin' and recent_logs %}
+    <div class="card">
+        <h3>Recent Audit Activity</h3>
+        <table>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr>
+            {% for log in recent_logs %}
+            <tr>
+                <td>{{ log.created_at }}</td>
+                <td>{{ log.username or 'system' }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.detail }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

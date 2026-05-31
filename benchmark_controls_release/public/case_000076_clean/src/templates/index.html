@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}OldBlog — Home{% endblock %}
+{% block content %}
+<h1>Latest Posts</h1>
+{% for post in posts[:5] %}
+<article class="post-card">
+  <h2><a href="/posts/{{ post.id }}">{{ post.title | e }}</a></h2>
+  <p class="meta">By {{ post.author | e }} &middot; {{ post.created_at }}</p>
+  <p>{{ post.body[:140] | e }}…</p>
+</article>
+{% else %}
+<p>No posts yet.</p>
+{% endfor %}
+<p><a href="/posts">View all posts &rarr;</a></p>
+{% endblock %}

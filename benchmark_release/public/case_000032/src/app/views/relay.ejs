@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel Relay</title>
+</head>
+<body>
+  <script>
+    // Pixel relay bootstrap — forwards initialization message to opener window
+    // SRE-2031: batches up to 50 items per token window
+    (function() {
+      var payload = {
+        msg_type: '<%= msg_type || "FACEBOOK_IWL_BOOTSTRAP" %>',
+        graphToken: '<%= token %>',
+        pixelID: '<%= pixel_id %>'
+      };
+
+      // postMessage to opener for cross-window pixel measurement bootstrap
+      if (window.opener) {
+        window.opener.postMessage(payload, '*');
+      }
+
+      // Also broadcast to parent frame if embedded
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+    })();
+  </script>
+  <p style="font-family:sans-serif;color:#888;font-size:12px">Pixel relay initialized.</p>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MarketHub — Marketplace</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">MarketHub</a>
+    <div class="nav-links">
+      <a href="/api/search?q=">Browse</a>
+      <% if (userId) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Sign out (<%= username %>)</a>
+      <% } else { %>
+        <a href="/login">Sign in</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+      <% categories.forEach(cat => { %>
+        <a class="category-card" href="/categories/<%= cat.id %>">
+          <span class="cat-name"><%= cat.name %></span>
+        </a>
+      <% }); %>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 MarketHub Inc. All rights reserved.</p>
+  </footer>
+</body>
+</html>

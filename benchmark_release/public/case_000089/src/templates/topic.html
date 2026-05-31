@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ topic.name }} - StreamDash</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; }
+        .navbar { background: #1a1d27; border-bottom: 1px solid #2d3148; padding: 1rem 2rem; }
+        .navbar a { color: #7c83fd; text-decoration: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .filter-bar { background: #1a1d27; border: 1px solid #2d3148; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; }
+        .filter-bar input, .filter-bar select { background: #0f1117; border: 1px solid #2d3148; color: #e2e8f0; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; }
+        .filter-bar input { flex: 1; }
+        .filter-bar button { background: #7c83fd; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; background: #1a1d27; border-radius: 8px; overflow: hidden; }
+        th { background: #2d3148; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; font-size: 0.85rem; font-family: monospace; }
+        a { color: #7c83fd; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar"><a href="/">StreamDash</a> / <a href="/clusters/{{ cluster.id }}">{{ cluster.name }}</a> / {{ topic.name }}</div>
+    <div class="container">
+        <div class="filter-bar">
+            <input type="text" id="filterQuery" placeholder="Filter expression..." />
+            <select id="filterType">
+                <option value="STRING_CONTAINS">String Contains</option>
+                <option value="REGEX">Regex</option>
+                <option value="KEY_EQUALS">Key Equals</option>
+                <option value="PYTHON_EXPR">Expression</option>
+            </select>
+            <button onclick="applyFilter()">Apply Filter</button>
+        </div>
+        <table id="msgTable">
+            <thead><tr><th>Offset</th><th>Partition</th><th>Key</th><th>Value</th><th>Timestamp</th></tr></thead>
+            <tbody>
+            {% for msg in messages %}
+            <tr>
+                <td>{{ msg.offset_val }}</td>
+                <td>{{ msg.partition }}</td>
+                <td>{{ msg.msg_key or '' }}</td>
+                <td>{{ msg.msg_value or '' }}</td>
+                <td>{{ msg.timestamp }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+    function applyFilter() {
+        const q = document.getElementById('filterQuery').value;
+        const ft = document.getElementById('filterType').value;
+        const clusterId = {{ cluster.id }};
+        const topicName = '{{ topic.name }}';
+        fetch(`/api/clusters/${clusterId}/topics/${topicName}/messages?q=${encodeURIComponent(q)}&filterType=${ft}`)
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.querySelector('#msgTable tbody');
+                tbody.innerHTML = '';
+                (data.messages || []).forEach(msg => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${msg.offset_val}</td><td>${msg.partition}</td><td>${msg.msg_key||''}</td><td>${msg.msg_value||''}</td><td>${msg.timestamp}</td>`;
+                    tbody.appendChild(tr);
+                });
+            });
+    }
+    </script>
+</body>
+</html>

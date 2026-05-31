@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralOps — Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav', { user, role }) %>
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Administration</h1>
+    </div>
+
+    <h2>User Management</h2>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Last Login</th><th>Action</th></tr></thead>
+      <tbody>
+        <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><code><%= u.username %></code></td>
+          <td><%= u.email || '—' %></td>
+          <td><span class="badge badge-role"><%= u.role %></span></td>
+          <td class="ts"><%= u.last_login || 'Never' %></td>
+          <td>
+            <form method="POST" action="/admin/users/<%= u.id %>/role" style="display:inline-flex;gap:4px">
+              <select name="role" style="font-size:0.8rem;padding:2px">
+                <% ['viewer','operator','admin'].forEach(r => { %>
+                  <option value="<%= r %>" <%= u.role === r ? 'selected' : '' %>><%= r %></option>
+                <% }) %>
+              </select>
+              <button type="submit" class="btn-sm">Set</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h2>Model Registry</h2>
+    <div class="form-card" style="margin-bottom:1.5rem">
+      <h3>Promote New Model</h3>
+      <form method="POST" action="/admin/models/promote" class="inline-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <label>Model Name <input type="text" name="model_name" required placeholder="my-model"></label>
+          <label>Version <input type="text" name="version" required placeholder="1.0.0"></label>
+          <label>Artifact Path <input type="text" name="artifact_path" placeholder="s3://..."></label>
+          <label>Tags <input type="text" name="tags" placeholder="cv,production"></label>
+        </div>
+        <label>Description <input type="text" name="description" maxlength="512"></label>
+        <button type="submit" class="btn-primary" style="margin-top:0.5rem">Promote</button>
+      </form>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Model</th><th>Version</th><th>Tags</th><th>Artifact</th><th>Created</th></tr></thead>
+      <tbody>
+        <% modelRegistry.forEach(m => { %>
+        <tr>
+          <td><code><%= m.model_name %></code></td>
+          <td><%= m.version %></td>
+          <td><% (m.tags||'').split(',').forEach(t => { %><span class="tag"><%= t.trim() %></span><% }) %></td>
+          <td><code style="font-size:0.75rem"><%= m.artifact_path || '—' %></code></td>
+          <td class="ts"><%= m.created_at %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h2>Audit Log <span style="font-size:0.85rem;color:#888">(last 50 entries)</span></h2>
+    <table class="data-table">
+      <thead><tr><th>Actor</th><th>Action</th><th>Resource</th><th>Detail</th><th>IP</th><th>Time</th></tr></thead>
+      <tbody>
+        <% auditEntries.forEach(e => { %>
+        <tr>
+          <td><code><%= e.actor_name %></code></td>
+          <td><span class="badge badge-action"><%= e.action %></span></td>
+          <td><code style="font-size:0.75rem"><%= e.resource %></code></td>
+          <td><%= e.detail %></td>
+          <td><%= e.ip_addr %></td>
+          <td class="ts"><%= e.recorded_at %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

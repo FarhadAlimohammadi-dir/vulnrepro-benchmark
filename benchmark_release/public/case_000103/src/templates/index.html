@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}ContentHub — Latest Posts{% endblock %}
+{% block content %}
+<h1>Latest Posts</h1>
+{% for post in posts %}
+<div class="card">
+    <h2><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h2>
+    <p class="meta">
+        By <a href="/profile/{{ post.author }}">{{ post.author }}</a>
+        &middot; <span class="tag">{{ post.category }}</span>
+        &middot; {{ post.created_at[:10] }}
+        &middot; {{ post.views }} views
+    </p>
+</div>
+{% else %}
+<p>No posts yet. <a href="/posts/new">Be the first to write one!</a></p>
+{% endfor %}
+{% endblock %}

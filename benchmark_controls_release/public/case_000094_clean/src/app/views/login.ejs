@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroSSR - Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">AstroSSR</div>
+    <nav class="nav"><a href="/">Home</a></nav>
+  </header>
+
+  <main class="container narrow">
+    <h1>Sign In</h1>
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/login" class="form-card">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="username">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="current-password">
+
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <p class="hint">Demo accounts: admin/admin123 &bull; user/user123 &bull; guest/guest123</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 AstroSSR Platform.</p>
+  </footer>
+</body>
+</html>

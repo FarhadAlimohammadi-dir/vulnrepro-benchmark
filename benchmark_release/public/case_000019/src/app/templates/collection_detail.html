@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}{{ collection.name }} — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ collection.name }}</h1>
+  <p class="subtitle">{{ collection.description or '' }}</p>
+</div>
+
+<div class="collection-detail-container">
+  {% if items %}
+  <table class="data-table">
+    <thead>
+      <tr><th>Title</th><th>URL</th><th>Snippet</th><th>Saved</th></tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.title }}</td>
+        <td>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">
+            {{ item.url[:50] }}</a>{% endif %}</td>
+        <td>{{ item.snippet or '' }}</td>
+        <td>{{ item.saved_at[:10] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">This collection is empty.</p>
+  {% endif %}
+
+  <a href="/collections" class="btn btn-sm">&larr; Back to collections</a>
+</div>
+{% endblock %}

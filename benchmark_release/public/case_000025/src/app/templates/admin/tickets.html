@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}All Tickets{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>All Tickets</h2>
+  <a href="/admin/" class="btn btn-secondary">← Admin</a>
+</div>
+
+<div class="filter-bar">
+  <form method="get">
+    <input type="text" name="q" placeholder="Search…" value="{{ search_query }}">
+    <select name="status">
+      <option value="">All Statuses</option>
+      <option value="open" {% if status_filter=='open' %}selected{% endif %}>Open</option>
+      <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
+      <option value="closed" {% if status_filter=='closed' %}selected{% endif %}>Closed</option>
+    </select>
+    <select name="priority">
+      <option value="">All Priorities</option>
+      <option value="critical" {% if priority_filter=='critical' %}selected{% endif %}>Critical</option>
+      <option value="high" {% if priority_filter=='high' %}selected{% endif %}>High</option>
+      <option value="normal" {% if priority_filter=='normal' %}selected{% endif %}>Normal</option>
+      <option value="low" {% if priority_filter=='low' %}selected{% endif %}>Low</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+  </form>
+</div>
+
+<p class="result-count">{{ total }} tickets found (page {{ page }} of {{ pages }})</p>
+
+<table class="data-table">
+  <thead>
+    <tr><th>#</th><th>Owner</th><th>Subject</th><th>Status</th><th>Priority</th><th>Assigned To</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+  {% for t in tickets %}
+  <tr>
+    <td>#{{ t.id }}</td>
+    <td>{{ t.owner }}</td>
+    <td>{{ t.subject }}</td>
+    <td><span class="badge badge-{{ t.status }}">{{ t.status }}</span></td>
+    <td><span class="badge badge-{{ t.priority }}">{{ t.priority }}</span></td>
+    <td>{{ t.assigned_to or '—' }}</td>
+    <td>{{ t.created_at[:16] if t.created_at else '—' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, pages + 1) %}
+  <a href="?page={{ p }}&status={{ status_filter }}&priority={{ priority_filter }}&q={{ search_query }}"
+     class="{% if p == page %}active{% endif %}">{{ p }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

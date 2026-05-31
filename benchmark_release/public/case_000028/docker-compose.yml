@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  neuralops:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - SESSION_SECRET=neuralops-docker-secret-2024
+      - DB_PATH=/data/neuralops.db
+      - LOG_LEVEL=info
+    volumes:
+      - neuralops_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  neuralops_data:

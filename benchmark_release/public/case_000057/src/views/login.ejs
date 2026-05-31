@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Portal Login</title>
+  <style>
+    body { font-family: Arial; margin: 50px; }
+    form { max-width: 300px; }
+    input { display: block; margin: 10px 0; padding: 8px; width: 100%; }
+    button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Financial Data Portal</h1>
+  <form method="POST" action="/login">
+    <input type="text" name="username" placeholder="Username" value="alice" required>
+    <input type="password" name="password" placeholder="Password" value="pass123" required>
+    <button type="submit">Login</button>
+  </form>
+  <p>Demo: alice/pass123, bob/pass456, charlie/pass789</p>
+</body>
+</html>

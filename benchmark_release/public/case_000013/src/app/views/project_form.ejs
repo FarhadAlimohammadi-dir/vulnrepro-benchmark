@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevForge – <%= project ? 'Edit' : 'New' %> Project</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <a href="/profile">👤 <%= currentUser ? currentUser.username : '' %></a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container" style="max-width:600px">
+    <h1><%= project ? 'Edit Project' : 'New Project' %></h1>
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <form method="POST" action="<%= project ? '/projects/' + project.id + '/edit' : '/projects' %>">
+      <div class="form-group">
+        <label>Project Name</label>
+        <input name="name" type="text" value="<%= project ? project.name : '' %>" required maxlength="80">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3"><%= project ? project.description : '' %></textarea>
+      </div>
+      <% if (!project) { %>
+      <div class="form-group">
+        <label>Language</label>
+        <select name="lang">
+          <% langs.forEach(l => { %><option value="<%= l %>"><%= l %></option><% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Visibility</label>
+        <select name="visibility">
+          <option value="private">Private</option>
+          <option value="public">Public</option>
+        </select>
+      </div>
+      <% } %>
+      <div style="display:flex;gap:.8rem">
+        <button type="submit" class="btn btn-primary"><%= project ? 'Save Changes' : 'Create Project' %></button>
+        <a href="<%= project ? '/projects/' + project.id : '/projects' %>" class="btn">Cancel</a>
+      </div>
+    </form>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+</body>
+</html>

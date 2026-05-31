@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile — ContentHub{% endblock %}
+{% block content %}
+<div class="card" style="max-width:600px;margin:0 auto;">
+    <h1>Edit Profile</h1>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="bio">Bio</label>
+        <textarea name="bio" id="bio" rows="4">{{ user.bio | e }}</textarea>
+        <label for="avatar_url">Avatar URL</label>
+        <input type="url" name="avatar_url" id="avatar_url" value="{{ user.avatar_url | e }}">
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Save</button>
+        <a href="/profile/{{ session['username'] }}" class="btn btn-secondary" style="margin-top:1rem;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

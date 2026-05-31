@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Not Found — PipelineForge{% endblock %}
+{% block content %}
+<div class="error-page">
+  <h1>404</h1>
+  <p>{{ message or "The page you requested could not be found." }}</p>
+  <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+</div>
+{% endblock %}

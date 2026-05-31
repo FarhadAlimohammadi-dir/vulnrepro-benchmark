@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContentSync CMS</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 1rem 2rem; }
+        .container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin: 0; font-size: 1.5rem; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-published { background: #d4edda; color: #155724; }
+        .badge-draft { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ContentSync CMS</h1>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>Welcome to ContentSync</h2>
+            <p>A modern content management platform for your team. Use the API to manage your posts, import content in bulk, and integrate with your existing workflows.</p>
+            <h3>Quick Start</h3>
+            <ul>
+                <li><code>POST /api/auth/login</code> — Authenticate</li>
+                <li><code>GET /api/posts</code> — List posts</li>
+                <li><code>POST /api/import/xml</code> — Bulk import via XML</li>
+                <li><code>GET /api/search?q=keyword</code> — Search content</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, page: 'calendar' }) %>
+<main class="content">
+<div class="page-header">
+  <h1>Calendar</h1>
+</div>
+
+<% if (error) { %>
+<div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="dash-grid" style="grid-template-columns:1fr 1fr">
+  <div class="dash-card">
+    <h2 class="card-title">Add Event</h2>
+    <form method="POST" action="/calendar">
+      <label class="field-label">Title <span class="required">*</span></label>
+      <input class="field-input" name="title" required maxlength="120" placeholder="Meeting title">
+
+      <label class="field-label">Date <span class="required">*</span></label>
+      <input class="field-input" name="event_date" type="date" required>
+
+      <label class="field-label">Description</label>
+      <textarea class="field-input" name="description" rows="2" maxlength="500"></textarea>
+
+      <button class="btn btn-primary" style="margin-top:.75rem" type="submit">Add Event</button>
+    </form>
+  </div>
+
+  <div class="dash-card">
+    <h2 class="card-title">Scheduled Events</h2>
+    <ul class="event-list-full">
+      <% events.forEach(e => { %>
+      <li class="event-item-full">
+        <div class="event-date-badge"><%= e.event_date %></div>
+        <div>
+          <strong><%= e.title %></strong>
+          <% if (e.description) { %><p class="muted"><%= e.description %></p><% } %>
+        </div>
+        <form method="POST" action="/calendar/<%= e.id %>/delete" style="margin-left:auto">
+          <button class="btn btn-ghost btn-sm" onclick="return confirm('Delete event?')">✕</button>
+        </form>
+      </li>
+      <% }) %>
+      <% if (!events.length) { %><li class="muted">No events yet.</li><% } %>
+    </ul>
+  </div>
+</div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

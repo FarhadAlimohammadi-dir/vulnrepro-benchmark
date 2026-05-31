@@ -1,0 +1,71 @@
+*, *::before, *::after { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f0f2f5; color: #333; }
+
+/* Navbar */
+.navbar { background: #1a237e; color: #fff; display: flex; align-items: center; padding: 0 24px; height: 56px; }
+.brand { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; flex: 0 0 auto; }
+.nav-links { display: flex; gap: 18px; margin-left: 32px; flex: 1; }
+.nav-links a { color: #c5cae9; text-decoration: none; font-size: 0.95rem; }
+.nav-links a:hover { color: #fff; }
+.nav-user { font-size: 0.9rem; color: #c5cae9; }
+
+/* Container */
+.container { max-width: 1200px; margin: 32px auto; padding: 0 20px; }
+
+/* Stats row */
+.stats-row { display: flex; gap: 16px; margin-bottom: 24px; }
+.stat-card { background: #fff; border-radius: 8px; padding: 16px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; min-width: 120px; }
+.stat-label { font-size: 0.8rem; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+.stat-value { font-size: 1.8rem; font-weight: 700; }
+.stat-value.active { color: #2e7d32; }
+.stat-value.inactive { color: #c62828; }
+.stat-value.standby { color: #f57c00; }
+.stat-value.maintenance { color: #1565c0; }
+
+/* Search box */
+.search-box { background: #fff; padding: 16px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; gap: 8px; }
+.search-box input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; width: 320px; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #ececec; font-size: 0.9rem; }
+th { background: #f5f5f5; font-weight: 600; color: #555; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafafa; }
+
+/* Status badge */
+.status { padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; display: inline-block; text-transform: capitalize; }
+.status.active { background: #e8f5e9; color: #2e7d32; }
+.status.inactive { background: #ffebee; color: #c62828; }
+.status.standby { background: #fff3e0; color: #e65100; }
+.status.maintenance { background: #e3f2fd; color: #1565c0; }
+.status.decommissioned { background: #eeeeee; color: #616161; }
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; color: #444; }
+.form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+
+/* Buttons */
+.btn { display: inline-block; padding: 9px 18px; border: none; border-radius: 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+.btn-primary { background: #1a237e; color: #fff; }
+.btn-primary:hover { background: #283593; }
+.btn-secondary { background: #e0e0e0; color: #333; }
+.btn-secondary:hover { background: #bdbdbd; }
+.btn-block { display: block; width: 100%; text-align: center; }
+
+/* Login page */
+.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.login-box { background: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 40px 36px; width: 380px; }
+.login-logo { font-size: 1.8rem; font-weight: 800; color: #1a237e; text-align: center; margin-bottom: 4px; }
+.login-subtitle { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 24px; }
+.login-hint { margin-top: 16px; text-align: center; font-size: 0.78rem; color: #aaa; }
+
+/* Alerts */
+.alert { padding: 10px 14px; border-radius: 4px; margin-bottom: 16px; font-size: 0.9rem; }
+.alert-error { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+.alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+
+/* Detail card */
+.detail-card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px; }
+.detail-table th { width: 160px; color: #555; background: none; }

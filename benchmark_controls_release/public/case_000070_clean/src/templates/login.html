@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In — DocFlow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgba(0,0,0,.08); padding: 2.5rem; width: 100%; max-width: 380px; }
+        h2 { margin: 0 0 1.5rem; color: #1a1f36; }
+        label { display: block; font-size: .85rem; color: #555; margin-bottom: .3rem; }
+        input { width: 100%; box-sizing: border-box; padding: .65rem .85rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; margin-bottom: 1rem; }
+        button { width: 100%; padding: .75rem; background: #635bff; color: #fff; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .error { color: #c0392b; font-size: .85rem; margin-bottom: .75rem; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Sign in to DocFlow</h2>
+        <div class="error" id="err"></div>
+        <label for="username">Username</label>
+        <input id="username" type="text" autocomplete="username" placeholder="your username">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+        <button onclick="doLogin()">Sign In</button>
+    </div>
+    <script>
+        async function doLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = data.redirect || '/dashboard';
+            } else {
+                const el = document.getElementById('err');
+                el.textContent = data.error || 'Login failed';
+                el.style.display = 'block';
+            }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    </script>
+</body>
+</html>

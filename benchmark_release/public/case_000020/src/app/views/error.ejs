@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – <%= typeof code !== 'undefined' ? code : 'Error' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">ToolBridge</a></div>
+  </nav>
+  <main class="main-content">
+    <div class="error-page">
+      <h1><%= typeof code !== 'undefined' ? code : 'Error' %></h1>
+      <p><%= message %></p>
+      <a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+  </main>
+</body>
+</html>

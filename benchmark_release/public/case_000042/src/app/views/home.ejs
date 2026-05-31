@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    a { color: #007bff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to NextAuth Guard</h1>
+    <p>A minimal authentication system demonstration.</p>
+    <% if (user) { %>
+      <p>Welcome back, <%= user.name %>!</p>
+      <ul>
+        <li><a href="/dashboard">Go to Dashboard</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    <% } else { %>
+      <p><a href="/login-page">Sign In</a></p>
+    <% } %>
+  </div>
+</body>
+</html>

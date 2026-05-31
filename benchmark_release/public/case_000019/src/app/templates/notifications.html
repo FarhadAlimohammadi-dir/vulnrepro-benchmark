@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Notifications — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>&#128276; Notifications</h1>
+</div>
+<div class="notifications-container">
+  {% if notifications %}
+  <ul class="notif-full-list">
+    {% for n in notifications %}
+    <li class="notif-item {% if not n.read %}notif-unread{% endif %}">
+      <span class="notif-msg">{{ n.message }}</span>
+      <span class="notif-time">{{ n.created_at[:16] }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty-state">No notifications.</p>
+  {% endif %}
+</div>
+{% endblock %}

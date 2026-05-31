@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}{% if note %}Edit Note{% else %}New Note{% endif %} – NoteFlow{% endblock %}
+{% block content %}
+<h2>{% if note %}Edit Note{% else %}New Note{% endif %}</h2>
+<form method="POST">
+  <label>Title
+    <input type="text" name="title" required
+           value="{{ note.title | e if note else '' }}"
+           placeholder="A short descriptive title">
+  </label>
+
+  <label>Tags <span class="hint">(comma-separated)</span>
+    <input type="text" name="tags"
+           value="{{ note.tags | e if note else '' }}"
+           placeholder="e.g. work,ideas,reference">
+  </label>
+
+  <label>Body <span class="hint">Markdown supported. Bare URLs are auto-linked.</span>
+    <textarea name="body" rows="18" placeholder="Write your note here…">{{ note.body | e if note else '' }}</textarea>
+  </label>
+
+  <label class="checkbox-label">
+    <input type="checkbox" name="public" {% if note and note.public %}checked{% endif %}>
+    Make this note publicly visible
+  </label>
+
+  <div class="form-actions">
+    <button type="submit" class="btn-primary">{% if note %}Save Changes{% else %}Create Note{% endif %}</button>
+    <a href="{% if note %}/notes/{{ note.id }}{% else %}/{% endif %}" class="btn-link">Cancel</a>
+  </div>
+</form>
+{% endblock %}

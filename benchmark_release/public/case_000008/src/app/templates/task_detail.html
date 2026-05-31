@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Task #{{ task.id }} — PipelineForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Task #{{ task.id }}: {{ task.title }}</h1>
+  <div class="task-meta">
+    <span class="badge status-{{ task.status }}">{{ task.status }}</span>
+    <span class="badge priority-{{ task.priority }}">{{ task.priority }}</span>
+    {% if task.label %}<span class="badge">{{ task.label }}</span>{% endif %}
+    <span class="meta-text">by {{ task.author_name }} &mdash; {{ task.created_at[:10] }}</span>
+  </div>
+</div>
+
+{% if task.approved %}
+<div class="info-banner">
+  ✓ Approved by <strong>{{ task.approver_name or 'manager' }}</strong>
+  {% if task.approved_at %}on {{ task.approved_at[:10] }}{% endif %}
+</div>
+{% endif %}
+
+<div class="task-body">
+  <h3>Description</h3>
+  <pre>{{ task.body }}</pre>
+</div>
+
+{% if workflows %}
+<div class="section">
+  <h3>Generated Workflows</h3>
+  {% for wf in workflows %}
+  <div class="workflow-card">
+    <div class="workflow-header">
+      <span>Workflow #{{ wf.id }}</span>
+      <span class="meta-text">{{ wf.created_at[:19] }}</span>
+      <a href="/api/workflows/{{ wf.id }}/download" class="btn btn-sm">Download YAML</a>
+    </div>
+    <pre class="yaml-preview">{{ wf.yaml_content }}</pre>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="section">
+  <h3>Comments ({{ comments|length }})</h3>
+  {% for c in comments %}
+  <div class="comment">
+    <div class="comment-meta">
+      <strong>{{ c.author_name }}</strong>
+      <small>{{ c.created_at[:19] }}</small>
+    </div>
+    <p>{{ c.body }}</p>
+  </div>
+  {% else %}
+  <p class="empty">No comments yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

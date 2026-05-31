@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackFlow - Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f5f7fa; }
+        .navbar { background: #2c3e50; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { margin: 0; font-size: 1.4rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; color: #666; font-size: 0.85rem; text-transform: uppercase; }
+        .badge { padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-active { background: #d4edda; color: #155724; }
+        .badge-paused { background: #fff3cd; color: #856404; }
+        .btn { padding: 0.5rem 1rem; border-radius: 4px; border: none; cursor: pointer; font-size: 0.9rem; }
+        .btn-danger { background: #e74c3c; color: white; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>⚡ TrackFlow</h1>
+        <span>Welcome, {{ username }} | <a href="/api/auth/logout" style="color:#aaa">Logout</a></span>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Your Campaigns</h2>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Status</th><th>Budget</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for c in campaigns %}
+                    <tr>
+                        <td>{{ c.name }}</td>
+                        <td><span class="badge badge-{{ c.status }}">{{ c.status }}</span></td>
+                        <td>${{ "%.2f"|format(c.budget) }}</td>
+                        <td><button class="btn btn-danger" onclick="deleteCampaign({{ c.id }})">Delete</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        async function deleteCampaign(id) {
+            if (!confirm('Delete this campaign?')) return;
+            const r = await fetch(`/api/campaigns/${id}`, {method: 'DELETE'});
+            if (r.ok) location.reload();
+        }
+    </script>
+</body>
+</html>

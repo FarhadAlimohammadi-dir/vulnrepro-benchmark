@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-key-change-in-deployment-xyz987
+      - DATABASE_PATH=/app/data/collab.db
+      - OAUTH_MOCK_BASE=http://localhost:9000
+    volumes:
+      - collab_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  collab_data:

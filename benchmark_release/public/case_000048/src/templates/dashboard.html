@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowCI - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+        .header { background: #1a1a2e; color: white; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .header h1 { font-size: 1.5rem; font-weight: 600; }
+        .header .version { font-size: 0.75rem; color: #aaa; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 0.875rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card .value { font-size: 2.5rem; font-weight: 700; color: #1a1a2e; margin-top: 0.5rem; }
+        .builds-table { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .builds-table h2 { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; font-size: 1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem 1.5rem; text-align: left; font-size: 0.875rem; }
+        th { background: #f9f9f9; font-weight: 600; color: #666; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+        tr:not(:last-child) td { border-bottom: 1px solid #eee; }
+        .status { display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .status.success { background: #d1fae5; color: #065f46; }
+        .status.failed { background: #fee2e2; color: #991b1b; }
+        .status.running { background: #dbeafe; color: #1e40af; }
+        .status.queued { background: #f3f4f6; color: #374151; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: #aaa; text-decoration: none; font-size: 0.875rem; }
+        .nav-links a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>🔄 FlowCI</h1>
+            <span class="version">Build Automation Platform</span>
+        </div>
+        <nav class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/app/rest/projects">Projects API</a>
+            <a href="/app/rest/server">Server Info</a>
+            <a href="/status">Status</a>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Projects</h3>
+                <div class="value">{{ projects }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Builds</h3>
+                <div class="value">{{ builds }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Users</h3>
+                <div class="value">{{ users }}</div>
+            </div>
+        </div>
+        <div class="builds-table">
+            <h2>Recent Builds</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Project</th>
+                        <th>Branch</th>
+                        <th>Triggered By</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for build in recent_builds %}
+                    <tr>
+                        <td>#{{ build.id }}</td>
+                        <td>{{ build.project_name }}</td>
+                        <td><code>{{ build.branch }}</code></td>
+                        <td>{{ build.username }}</td>
+                        <td><span class="status {{ build.status }}">{{ build.status }}</span></td>
+                        <td>{{ build.started_at or '—' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

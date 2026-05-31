@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DocStore</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; }
+        .header { background: #1a73e8; color: white; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+        .header h1 { font-size: 22px; font-weight: 600; }
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; }
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .badge-published { background: #e6f4ea; color: #1e7e34; }
+        .badge-draft { background: #fff3cd; color: #856404; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 14px; }
+        button.sm { padding: 4px 12px; font-size: 12px; background: #6c757d; border: none; color: white; border-radius: 3px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DocStore Dashboard</h1>
+        <div class="nav-links">
+            <a href="/" id="user-display">Loading...</a>
+            <a href="#" onclick="doLogout()">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h3 style="margin-bottom:16px">My Documents</h3>
+            <table>
+                <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead>
+                <tbody id="doc-table"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        async function loadUser() {
+            const r = await fetch('/api/auth/me');
+            if (!r.ok) { window.location.href = '/login'; return; }
+            const u = await r.json();
+            document.getElementById('user-display').textContent = u.username;
+        }
+        function makeCell(text) {
+            const td = document.createElement('td');
+            td.textContent = text == null ? '' : String(text);
+            return td;
+        }
+        async function loadDocs() {
+            const r = await fetch('/api/documents');
+            const data = await r.json();
+            const tbody = document.getElementById('doc-table');
+            tbody.innerHTML = '';
+            for (const doc of (data.documents || [])) {
+                const tr = document.createElement('tr');
+                tr.appendChild(makeCell(doc.title));
+                tr.appendChild(makeCell(doc.category));
+
+                const statusTd = document.createElement('td');
+                const badge = document.createElement('span');
+                const safeStatus = String(doc.status || '').replace(/[^a-z0-9_-]/gi, '');
+                badge.className = 'badge badge-' + safeStatus;
+                badge.textContent = doc.status == null ? '' : String(doc.status);
+                statusTd.appendChild(badge);
+                tr.appendChild(statusTd);
+
+                tr.appendChild(makeCell(doc.updated_at));
+
+                const actionTd = document.createElement('td');
+                const btn = document.createElement('button');
+                btn.className = 'sm';
+                btn.textContent = 'View';
+                const docId = Number(doc.id);
+                if (Number.isFinite(docId)) {
+                    btn.addEventListener('click', () => viewDoc(docId));
+                }
+                actionTd.appendChild(btn);
+                tr.appendChild(actionTd);
+
+                tbody.appendChild(tr);
+            }
+        }
+        async function viewDoc(id) {
+            const r = await fetch('/api/documents/' + id);
+            const doc = await r.json();
+            alert(JSON.stringify(doc, null, 2));
+        }
+        async function doLogout() {
+            await fetch('/api/auth/logout', {method:'POST'});
+            window.location.href = '/';
+        }
+        loadUser();
+        loadDocs();
+    </script>
+</body>
+</html>

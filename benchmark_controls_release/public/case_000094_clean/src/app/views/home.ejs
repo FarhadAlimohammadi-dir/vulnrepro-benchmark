@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroSSR - Home</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">AstroSSR</div>
+    <nav class="nav">
+      <% if (user) { %>
+        <span class="nav-user">Welcome, <strong><%= user.username %></strong></span>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Welcome to AstroSSR</h1>
+    <p class="lead">A Node.js server-side rendering platform with robust request processing.</p>
+
+    <section class="featured">
+      <h2>Featured Content</h2>
+      <ul class="item-list">
+        <% if (featured && featured.length) { %>
+          <% featured.forEach(function(item) { %>
+            <li class="item-card">
+              <span class="item-title"><%= item.title %></span>
+              <span class="item-category badge"><%= item.category %></span>
+              <span class="item-views"><%= item.views %> views</span>
+            </li>
+          <% }); %>
+        <% } else { %>
+          <li>No featured content available.</li>
+        <% } %>
+      </ul>
+    </section>
+
+    <section class="links">
+      <h2>Quick Links</h2>
+      <ul>
+        <li><a href="/status">System Status</a></li>
+        <li><a href="/health">Health Check</a></li>
+        <li><a href="/fetch-content">Request Inspector</a></li>
+        <% if (user && user.role === 'admin') { %>
+          <li><a href="/admin">Admin Panel</a></li>
+          <li><a href="/api/users">User Management</a></li>
+          <li><a href="/api/audit-log">Audit Log</a></li>
+        <% } %>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 AstroSSR Platform. All rights reserved.</p>
+  </footer>
+</body>
+</html>

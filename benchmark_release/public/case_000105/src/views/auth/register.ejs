@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - ProjectHub</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f6fa; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .box { background: white; padding: 36px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); width: 320px; }
+    h2 { margin: 0 0 20px; color: #2c3e50; }
+    input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+    .error { color: #e74c3c; font-size: 13px; margin-bottom: 12px; }
+    a { color: #3498db; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Create Account</h2>
+    <% if (error) { %><div class="error"><%= error %></div><% } %>
+    <form method="POST" action="/auth/register">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password (min 8 chars)" required>
+      <button type="submit">Register</button>
+    </form>
+    <p style="margin-top:16px;text-align:center;"><a href="/auth/login">Already have an account?</a></p>
+  </div>
+</body>
+</html>

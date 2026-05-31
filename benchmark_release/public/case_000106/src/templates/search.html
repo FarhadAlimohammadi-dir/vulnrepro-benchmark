@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search - TeamHub</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .nav { background: #0066cc; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; }
+        .nav a { color: white; text-decoration: none; margin-right: 20px; }
+        input[type=text] { width: 70%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 8px 16px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .result { padding: 10px; border-bottom: 1px solid #eee; }
+        h3 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/projects/">Projects</a>
+        <a href="/team/directory">Directory</a>
+        <a href="/auth/logout" style="float:right">Logout</a>
+    </div>
+
+    <h2>Search</h2>
+    <form method="GET">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search users and projects...">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if results.users %}
+    <h3>Users</h3>
+    {% for u in results.users %}
+    <div class="result">
+        <a href="/profile/{{ u.username }}">{{ u.display_name }}</a>
+        <span style="color:#888">@{{ u.username }}</span>
+        <span style="float:right; color:#666">{{ u.role }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if results.projects %}
+    <h3>Projects</h3>
+    {% for p in results.projects %}
+    <div class="result">
+        <strong>{{ p.name }}</strong>
+        <span style="float:right; color:#{{ 'green' if p.status == 'active' else '888' }}">{{ p.status }}</span>
+        <p style="color:#666; margin:4px 0">{{ p.description }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if query and not results.users and not results.projects %}
+    <p style="color:#999">No results for "{{ query }}"</p>
+    {% endif %}
+</body>
+</html>

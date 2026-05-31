@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Prompt Library — PromptForge{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Prompt Library</h2>
+</div>
+
+<form class="search-bar" method="get" action="/prompts">
+  <input name="q" type="search" placeholder="Search prompts…" value="{{ search }}">
+  <button type="submit" class="btn-primary">Search</button>
+  {% if search %}<a href="/prompts" class="btn-secondary">Clear</a>{% endif %}
+</form>
+
+<p class="result-count">{{ total }} prompt{% if total != 1 %}s{% endif %} found</p>
+
+{% if prompts %}
+<div class="prompt-grid">
+  {% for p in prompts %}
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <h4><a href="/prompts/{{ p.id }}">{{ p.name }}</a></h4>
+      <span class="badge">{{ p.prompt_type }}</span>
+    </div>
+    <p class="prompt-model"><code>{{ p.model }}</code></p>
+    <p class="prompt-date muted">{{ p.created_at[:10] }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="?page={{ page - 1 }}&q={{ search }}" class="btn-secondary">← Prev</a>
+  {% endif %}
+  <span>Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}
+    <a href="?page={{ page + 1 }}&q={{ search }}" class="btn-secondary">Next →</a>
+  {% endif %}
+</div>
+{% endif %}
+{% else %}
+<p class="empty-state">No prompts found{% if search %} for "{{ search }}"{% endif %}.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — VisionBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/"><span class="brand-icon">◈</span> VisionBoard</a>
+  <div class="navbar-links">
+    <a href="/gallery">Gallery</a>
+    <a href="/dashboard">My Images</a>
+    <a href="/admin" class="active">Admin</a>
+    <span class="nav-user">@<%= currentUser.username %></span>
+    <form method="POST" action="/logout" style="display:inline">
+      <button class="btn btn-ghost btn-sm">Sign out</button>
+    </form>
+  </div>
+</nav>
+<main class="container">
+  <h2>Admin Panel</h2>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num"><%= userCount %></div><div class="stat-label">Users</div></div>
+    <div class="stat-card"><div class="stat-num"><%= imgCount %></div><div class="stat-label">Images</div></div>
+    <div class="stat-card"><div class="stat-num"><%= shareCount %></div><div class="stat-label">Shares</div></div>
+  </div>
+
+  <h3>Users</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Username</th><th>Plan</th><th>Admin</th><th>Since</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><a href="/profile/<%= u.username %>">@<%= u.username %></a></td>
+        <td><span class="plan-badge plan-<%= u.plan %>"><%= u.plan %></span></td>
+        <td><%= u.is_admin ? '✓' : '' %></td>
+        <td><%= u.created_at.split(' ')[0] %></td>
+        <td>
+          <form method="POST" action="/admin/users/<%= u.id %>/toggle-admin" style="display:inline">
+            <button class="btn btn-ghost btn-sm"><%= u.is_admin ? 'Remove admin' : 'Make admin' %></button>
+          </form>
+          <form method="POST" action="/admin/users/<%= u.id %>/plan" style="display:inline">
+            <select name="plan">
+              <option value="free" <%= u.plan==='free' ? 'selected' : '' %>>free</option>
+              <option value="pro" <%= u.plan==='pro' ? 'selected' : '' %>>pro</option>
+              <option value="enterprise" <%= u.plan==='enterprise' ? 'selected' : '' %>>enterprise</option>
+            </select>
+            <button class="btn btn-ghost btn-sm">Set</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:2rem">Recent Activity</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>When</th><th>User</th><th>Action</th><th>Entity</th><th>Detail</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      <% logs.forEach(l => { %>
+      <tr>
+        <td style="white-space:nowrap"><%= l.created_at %></td>
+        <td><%= l.username || '—' %></td>
+        <td><code><%= l.action %></code></td>
+        <td><%= l.entity || '' %> <%= l.entity_id ? '#'+l.entity_id : '' %></td>
+        <td><%= l.detail || '' %></td>
+        <td><%= l.ip || '' %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</main>
+<footer class="site-footer"><p>© 2024 VisionBoard</p></footer>
+</body>
+</html>

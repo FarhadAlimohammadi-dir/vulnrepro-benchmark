@@ -1,0 +1,105 @@
+/* OldBlog base stylesheet — TODO: migrate to CSS custom properties for theming */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #fafafa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+.site-header {
+  background: #1a1a2e;
+  color: #eee;
+  padding: 0.75rem 0;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.site-header .logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #e0c97f;
+  text-decoration: none;
+}
+
+.site-header nav a {
+  color: #ccc;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+.site-header nav a:hover { color: #fff; }
+
+/* Main content */
+main.container { padding-top: 2rem; padding-bottom: 3rem; }
+
+h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+h2 { font-size: 1.3rem; margin-bottom: 0.4rem; }
+
+/* Post cards */
+.post-card {
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+}
+
+.post-card h2 a { color: #1a1a2e; text-decoration: none; }
+.post-card h2 a:hover { text-decoration: underline; }
+
+.meta { font-size: 0.85rem; color: #666; margin: 0 0 0.5rem; font-family: sans-serif; }
+
+/* Tags */
+.tag {
+  display: inline-block;
+  background: #e0e0e0;
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 0.78rem;
+  font-family: sans-serif;
+  margin-right: 3px;
+}
+
+/* User list */
+.user-list { list-style: none; padding: 0; }
+.user-list li { padding: 0.4rem 0; border-bottom: 1px solid #eee; }
+.role { font-size: 0.8rem; color: #888; font-family: sans-serif; }
+
+/* Pager */
+.pager { margin-top: 1.5rem; }
+.pager a { margin-right: 1rem; font-family: sans-serif; }
+
+/* Search form */
+form input[type=text] { padding: 0.4rem 0.6rem; font-size: 1rem; width: 60%; border: 1px solid #ccc; }
+form button { padding: 0.4rem 0.8rem; font-size: 1rem; }
+
+/* Table */
+table { border-collapse: collapse; width: 100%; font-family: sans-serif; font-size: 0.88rem; }
+th, td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; text-align: left; }
+th { background: #f0f0f0; }
+
+/* Footer */
+.site-footer {
+  background: #f0f0f0;
+  border-top: 1px solid #ddd;
+  padding: 0.75rem 0;
+  font-family: sans-serif;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+dl dt { font-weight: bold; font-family: sans-serif; }
+dl dd { margin: 0 0 0.5rem 1rem; }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AssetFlow - Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">AssetFlow</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <a href="/audit">Audit Log</a>
+      <a href="/settings">Settings</a>
+      <a href="/logout">Logout</a>
+    </div>
+    <div class="nav-user">Welcome, <strong><%= username %></strong></div>
+  </nav>
+
+  <div class="container">
+    <h2>Asset Inventory</h2>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Active</span>
+        <span class="stat-value active"><%= stats.active %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Inactive</span>
+        <span class="stat-value inactive"><%= stats.inactive %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Standby</span>
+        <span class="stat-value standby"><%= stats.standby %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Maintenance</span>
+        <span class="stat-value maintenance"><%= stats.maintenance %></span>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search assets by name...">
+      <button onclick="searchAssets()">Search</button>
+      <button onclick="clearSearch()">Clear</button>
+    </div>
+
+    <!-- TODO: add column sort and pagination controls (UI-3301) -->
+    <table id="assetsTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Type</th><th>Owner</th><th>Location</th><th>Status</th><th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% assets.forEach(a => { %>
+          <tr>
+            <td><a href="/assets/<%= a.id %>"><%= a.id %></a></td>
+            <td><%= a.name %></td>
+            <td><%= a.type %></td>
+            <td><%= a.owner || '-' %></td>
+            <td><%= a.location || '-' %></td>
+            <td><span class="status <%= a.status %>"><%= a.status %></span></td>
+            <td><%= new Date(a.created_at).toLocaleDateString() %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function searchAssets() {
+      const q = document.getElementById('searchInput').value;
+      if (!q) return;
+      fetch('/api/search/simple?q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(d => {
+          const tbody = document.querySelector('#assetsTable tbody');
+          tbody.innerHTML = '';
+          d.data.forEach(a => {
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+              '<td>' + a.id + '</td>' +
+              '<td>' + a.name.replace(/</g,'&lt;') + '</td>' +
+              '<td>' + a.type + '</td>' +
+              '<td colspan="4"></td>';
+            tbody.appendChild(tr);
+          });
+        });
+    }
+    function clearSearch() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>

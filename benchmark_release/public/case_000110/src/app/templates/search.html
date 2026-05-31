@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Search — TaskFlow{% endblock %}
+{% block content %}
+<h1 style="font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;">Search Tasks</h1>
+<div class="card">
+    <form method="GET" action="/search" style="display:flex;gap:.75rem;">
+        <input type="text" name="q" value="{{ query | e }}" placeholder="Search tasks..." style="flex:1;padding:.5rem .75rem;border:1px solid #cbd5e0;border-radius:4px;">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+{% if query %}
+<div class="card">
+    <h2 style="font-size:1rem;font-weight:600;margin-bottom:1rem;">
+        Results for "{{ query | e }}" — {{ results | length }} found
+    </h2>
+    {% if results %}
+    <table>
+        <thead><tr><th>Title</th><th>Project</th><th>Priority</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for r in results %}
+        <tr>
+            <td>{{ r.title }}</td>
+            <td>{{ r.project_name }}</td>
+            <td><span class="badge badge-{{ r.priority }}">{{ r.priority }}</span></td>
+            <td>{{ r.status }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#718096;font-style:italic;">No tasks match your query.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

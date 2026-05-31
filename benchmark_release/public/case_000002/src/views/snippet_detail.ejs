@@ -1,0 +1,16 @@
+<%
+  title = snippet.title
+  body = `
+<h1>${snippet.title}</h1>
+<p class="muted">by ${snippet.owner_name} · <span class="pill">${snippet.language || '—'}</span> · <span class="pill">${snippet.visibility}</span></p>
+<pre>${snippet.body || ''}</pre>
+<div style="margin-top:1rem">
+  <a href="/snippets/${snippet.id}/edit" class="btn">Edit</a>
+  <form action="/snippets/${snippet.id}/delete" method="post" style="display:inline;margin-left:0.5rem">
+    <button class="danger">Delete</button>
+  </form>
+  <a href="/snippets" style="margin-left:1rem">← Back</a>
+</div>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

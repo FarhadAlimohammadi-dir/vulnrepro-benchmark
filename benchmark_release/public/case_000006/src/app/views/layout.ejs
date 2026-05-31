@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <% if (typeof user !== 'undefined' && user) { %>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (user.role === 'admin') { %>
+      <a href="/admin">Admin</a>
+      <% } %>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+    <% } %>
+  </nav>
+  <main>
+    <%- body %>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

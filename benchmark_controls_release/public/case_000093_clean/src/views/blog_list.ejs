@@ -1,0 +1,20 @@
+<section class="blog-list">
+  <h1>Blog</h1>
+  <% if (tag) { %>
+    <p class="tag-filter">Filtered by tag: <strong><%= tag %></strong> &mdash; <a href="/blog">clear</a></p>
+  <% } %>
+  <ul class="post-list">
+    <% posts.forEach(function(post) { %>
+      <li class="post-item">
+        <a href="/blog/<%= post.slug %>"><%= post.title %></a>
+        <span class="post-meta"><%= post.date %> &middot; <%= post.author %></span>
+        <p class="post-summary"><%= post.summary %></p>
+      </li>
+    <% }); %>
+  </ul>
+  <div class="pagination">
+    <% if (page > 1) { %><a href="/blog?page=<%= page - 1 %>">Prev</a><% } %>
+    <span>Page <%= page %> of <%= pages %></span>
+    <% if (page < pages) { %><a href="/blog?page=<%= page + 1 %>">Next</a><% } %>
+  </div>
+</section>

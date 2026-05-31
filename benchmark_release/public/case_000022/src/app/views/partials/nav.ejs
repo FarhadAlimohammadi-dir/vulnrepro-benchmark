@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <a class="brand" href="/dashboard">&#9654; CodePilot</a>
+  <div class="nav-links">
+    <% if (user) { %>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/issues">Issues</a>
+      <% if (role === 'admin') { %>
+        <a href="/admin">Admin</a>
+        <a href="/settings">Settings</a>
+      <% } %>
+      <a href="/profile">&#128100; <%= user %></a>
+      <a href="/logout" class="btn-sm">Sign out</a>
+    <% } else { %>
+      <a href="/login" class="btn-sm">Sign in</a>
+    <% } %>
+  </div>
+</nav>

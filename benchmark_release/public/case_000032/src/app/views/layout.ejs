@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — PixelFlow Analytics</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/apps">My Apps</a>
+        <a href="/profile">Profile</a>
+        <% if (user.role === 'admin') { %>
+          <a href="/admin" class="nav-admin">Admin</a>
+        <% } %>
+        <form action="/logout" method="POST" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Sign In</a>
+      <% } %>
+    </div>
+  </nav>
+  <div class="container">
+    <%- body %>
+  </div>
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics. All rights reserved.</p>
+  </footer>
+</body>
+</html>

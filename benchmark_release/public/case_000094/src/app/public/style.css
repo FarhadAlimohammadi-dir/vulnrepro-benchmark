@@ -1,0 +1,309 @@
+/* AstroSSR Platform Stylesheet */
+/* TODO: migrate to CSS variables for theming support */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* Header */
+.site-header {
+  background: #1a202c;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #63b3ed;
+}
+
+.nav a {
+  color: #e2e8f0;
+  text-decoration: none;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.nav a:hover {
+  color: #63b3ed;
+}
+
+.nav-user {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+/* Container */
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.container.narrow {
+  max-width: 480px;
+}
+
+.container.center {
+  text-align: center;
+}
+
+/* Typography */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 0.75rem;
+  color: #2d3748;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+  color: #4a5568;
+}
+
+.lead {
+  font-size: 1.1rem;
+  color: #718096;
+  margin-bottom: 1.5rem;
+}
+
+p {
+  margin-bottom: 0.75rem;
+}
+
+/* Panel */
+.panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Alerts */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+}
+
+/* Forms */
+.form-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.form-card label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.form-card input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  background: #f7fafc;
+}
+
+.form-card input:focus {
+  outline: none;
+  border-color: #63b3ed;
+  background: #fff;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  background: #3182ce;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #2b6cb0;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e0;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #bee3f8;
+  color: #2b6cb0;
+}
+
+/* Tables */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.info-table th {
+  width: 35%;
+  color: #718096;
+  font-weight: 600;
+}
+
+/* Lists */
+.item-list {
+  list-style: none;
+}
+
+.item-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.item-title {
+  flex: 1;
+  font-weight: 500;
+}
+
+.item-views {
+  font-size: 0.8rem;
+  color: #a0aec0;
+}
+
+/* Code */
+.code-block {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}
+
+/* Secret / sensitive data display */
+.secret {
+  color: #c53030;
+  font-weight: 700;
+  background: #fff5f5;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border-left: 4px solid #fc8181;
+  margin-bottom: 1rem;
+}
+
+/* Hint text */
+.hint {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  color: #a0aec0;
+  text-align: center;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 3rem;
+  background: #1a202c;
+  color: #718096;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Admin actions */
+.admin-actions ul {
+  list-style: none;
+}
+
+.admin-actions li {
+  margin-bottom: 0.5rem;
+}
+
+.admin-actions a {
+  color: #3182ce;
+  text-decoration: none;
+}
+
+.admin-actions a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}

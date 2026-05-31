@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVault — Dashboard</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/dashboard" class="logo">☁ CloudVault</a>
+      <nav class="main-nav">
+        <a href="/dashboard" class="active">Dashboard</a>
+        <a href="/buckets">Buckets</a>
+        <a href="/search">Search</a>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="/admin">Admin</a>
+        <% } %>
+        <a href="/profile">Profile</a>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Welcome back, <strong><%= currentUser.username %></strong></p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.bucketCount %></div>
+        <div class="stat-label">Buckets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.objectCount %></div>
+        <div class="stat-label">Objects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= (stats.totalSize / 1024).toFixed(1) %> KB</div>
+        <div class="stat-label">Total Storage</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Your Buckets</h2>
+          <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/buckets" class="btn btn-small">Manage →</a>
+          <% } %>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Region</th><th>Created</th></tr>
+          </thead>
+          <tbody>
+            <% buckets.slice(0, 5).forEach(b => { %>
+              <tr>
+                <td><a href="/buckets/<%= b.id %>"><%= b.name %></a></td>
+                <td><span class="badge"><%= b.region %></span></td>
+                <td><%= new Date(b.createdAt).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+            <% if (buckets.length === 0) { %>
+              <tr><td colspan="3" class="empty">No buckets found.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Recent Activity</h2>
+          <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/admin" class="btn btn-small">View all →</a>
+          <% } %>
+        </div>
+        <div class="activity-list">
+          <% recentActivity.forEach(entry => { %>
+            <div class="activity-item">
+              <span class="activity-action"><%= entry.action %></span>
+              <span class="activity-resource"><%= entry.resource %></span>
+              <span class="activity-time"><%= new Date(entry.timestamp).toLocaleString() %></span>
+            </div>
+          <% }) %>
+          <% if (recentActivity.length === 0) { %>
+            <p class="empty">No recent activity.</p>
+          <% } %>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <span>CloudVault Storage Manager v2.1.0</span>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteFlow — <%= mode === 'login' ? 'Sign In' : 'Register' %></title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.1); padding: 2rem; width: 360px; }
+    h1 { margin-top: 0; color: #1a1a2e; }
+    label { display: block; margin-top: 1rem; font-size: .875rem; color: #555; }
+    input { width: 100%; box-sizing: border-box; padding: .5rem .75rem; margin-top: .25rem; border: 1px solid #d0d5dd; border-radius: 4px; font-size: 1rem; }
+    button { width: 100%; margin-top: 1.5rem; padding: .65rem; background: #4f46e5; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    .error { background: #fee2e2; color: #b91c1c; padding: .5rem .75rem; border-radius: 4px; margin-top: 1rem; font-size: .875rem; }
+    a { color: #4f46e5; }
+    .alt { margin-top: 1rem; text-align: center; font-size: .875rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>NoteFlow</h1>
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/auth/<%= mode %>">
+      <% if (mode === 'register') { %>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+      <% } %>
+      <label>Username
+        <input type="text" name="username" required autocomplete="username">
+      </label>
+      <label>Password
+        <input type="password" name="password" required autocomplete="<%= mode === 'login' ? 'current-password' : 'new-password' %>">
+      </label>
+      <button type="submit"><%= mode === 'login' ? 'Sign In' : 'Create Account' %></button>
+    </form>
+    <div class="alt">
+      <% if (mode === 'login') { %>
+        No account? <a href="/auth/register">Register</a>
+      <% } else { %>
+        Have an account? <a href="/auth/login">Sign in</a>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>

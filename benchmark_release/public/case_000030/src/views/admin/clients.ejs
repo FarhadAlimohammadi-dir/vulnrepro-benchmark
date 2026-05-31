@@ -1,0 +1,28 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>OAuth Clients</h1>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Client ID</th><th>Name</th><th>Redirect URIs</th><th>Scopes</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <% clients.forEach(c => { %>
+      <tr>
+        <td><code><%= c.id %></code></td>
+        <td><%= c.name %></td>
+        <td><small><%= c.redirect_uris %></small></td>
+        <td><small class="muted"><%= c.scopes %></small></td>
+        <td><span class="badge <%= c.is_active ? 'badge-active' : 'badge-inactive' %>"><%= c.is_active ? 'Active' : 'Inactive' %></span></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

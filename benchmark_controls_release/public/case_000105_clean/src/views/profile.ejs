@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %> - ProjectHub</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f5f6fa; }
+    .navbar { background: #2c3e50; color: white; padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+    .navbar a { color: #ecf0f1; text-decoration: none; font-size: 14px; }
+    .brand { font-size: 18px; font-weight: bold; }
+    .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 20px; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #3498db; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; }
+    .bio { color: #555; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand"><a href="/" style="color:white;">ProjectHub</a></span>
+    <a href="/projects">Projects</a>
+    <a href="/search">Search</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">Dashboard</a>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+    <% } %>
+  </nav>
+  <div class="container">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="avatar"><%= profileUser.username[0].toUpperCase() %></div>
+        <div>
+          <h2 style="margin:0;"><%= profileUser.username %></h2>
+          <span style="color:#aaa;font-size:13px;"><%= profileUser.role %></span>
+        </div>
+      </div>
+      <p class="bio"><%= profileUser.bio || 'No bio set.' %></p>
+    </div>
+    <div class="card">
+      <h3>Projects</h3>
+      <% projects.forEach(p => { %>
+        <div style="padding:8px 0;border-bottom:1px solid #eee;">
+          <a href="/projects/<%= p.id %>"><%= p.name %></a>
+          <span style="color:#aaa;font-size:12px;margin-left:8px;"><%= p.status %></span>
+        </div>
+      <% }) %>
+      <% if (!projects.length) { %><p style="color:#aaa;">No active projects.</p><% } %>
+    </div>
+  </div>
+</body>
+</html>

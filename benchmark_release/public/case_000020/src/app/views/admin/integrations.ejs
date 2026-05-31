@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToolBridge – All Integrations</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">ToolBridge</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/integrations" class="active">Integrations</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>All Integrations</h1>
+      <span class="muted"><%= total %> total</span>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Owner</th><th>Name</th><th>Type</th><th>Status</th><th>Created</th></tr></thead>
+      <tbody>
+        <% rows.forEach(function(r) { %>
+        <tr>
+          <td><%= r.id %></td>
+          <td><%= r.username %></td>
+          <td><%= r.name %></td>
+          <td><span class="badge"><%= r.provider_type %></span></td>
+          <td><span class="badge badge-status-<%= r.status %>"><%= r.status %></span></td>
+          <td><%= new Date(r.created_at).toLocaleDateString() %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/admin/integrations?page=<%= page - 1 %>" class="btn btn-sm btn-ghost">&larr; Prev</a><% } %>
+      <span class="page-info">Page <%= page %> of <%= totalPages %></span>
+      <% if (page < totalPages) { %><a href="/admin/integrations?page=<%= page + 1 %>" class="btn btn-sm btn-ghost">Next &rarr;</a><% } %>
+    </div>
+  </main>
+  <footer class="site-footer"><p>&copy; 2024 ToolBridge, Inc.</p></footer>
+</body>
+</html>

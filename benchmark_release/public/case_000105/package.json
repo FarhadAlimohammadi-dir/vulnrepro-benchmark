@@ -1,0 +1,22 @@
+{
+  "name": "project-hub",
+  "version": "1.0.0",
+  "description": "Project management and feedback platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node db/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "9.4.3",
+    "bcryptjs": "2.4.3",
+    "connect-sqlite3": "0.9.13",
+    "ejs": "3.1.9",
+    "express": "4.18.2",
+    "express-session": "1.17.3",
+    "morgan": "1.10.0",
+    "qs": "6.11.2",
+    "react": "0.13.3",
+    "react-tools": "0.13.3"
+  }
+}

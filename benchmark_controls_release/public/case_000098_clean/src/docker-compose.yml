@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - DATABASE_PATH=/app/data/relay.db
+    volumes:
+      - relay_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  relay_data:

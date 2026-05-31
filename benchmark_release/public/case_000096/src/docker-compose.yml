@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  pulsecheck:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-key-xk29d7fh2
+      - DATABASE_PATH=/app/data/pulsecheck.db
+    volumes:
+      - pulsecheck_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pulsecheck_data:

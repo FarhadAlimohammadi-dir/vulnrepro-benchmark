@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %}{{ snippet.title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>{{ snippet.title }}</h2>
+    <span class="badge badge-lang">{{ snippet.language }}</span>
+    {% if snippet.tags %}
+      {% for tag in snippet.tags.split(',') %}
+      <span class="tag">{{ tag.strip() }}</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="header-actions">
+    <span class="text-muted">&#128065; {{ snippet.view_count }} views</span>
+  </div>
+</div>
+
+{% if snippet.description %}
+<p class="snippet-desc">{{ snippet.description }}</p>
+{% endif %}
+
+<div class="card">
+  <pre class="code-block">{{ snippet.code }}</pre>
+</div>
+
+<div class="card mt-4">
+  <div class="card-header"><h3>Comments ({{ comments|length }})</h3></div>
+  {% if comments %}
+  <ul class="comment-list">
+    {% for c in comments %}
+    <li class="comment-item">
+      <div class="comment-header">
+        <strong>{{ c.author_name }}</strong>
+        {% if c.line_number %}<span class="text-muted">line {{ c.line_number }}</span>{% endif %}
+        <span class="item-meta">{{ c.created_at[:16] }}</span>
+      </div>
+      <div class="comment-body">{{ c.body }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty-state">No comments yet. Be the first!</p>
+  {% endif %}
+
+  <div class="comment-form mt-4">
+    <h4>Add a Comment</h4>
+    <div class="form-group">
+      <textarea id="comment-body" rows="3" placeholder="Your thoughts…" style="width:100%"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="postComment({{ snippet.id }})">Post Comment</button>
+    <div id="comment-error" class="form-error"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function postComment(sid) {
+    const body = document.getElementById('comment-body').value.trim();
+    const err  = document.getElementById('comment-error');
+    err.textContent = '';
+    if (!body) { err.textContent = 'Comment cannot be empty.'; return; }
+    const r = await fetch(`/api/snippets/${sid}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body })
+    });
+    const d = await r.json();
+    if (r.ok) { window.location.reload(); }
+    else { err.textContent = d.error || 'Failed to post comment.'; }
+  }
+</script>
+{% endblock %}

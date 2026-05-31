@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - SECRET_KEY=nf-secret-2025-xkq
+      - DB_PATH=/tmp/noteflow.db

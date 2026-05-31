@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocFlow — Document Library</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               background: #f5f7fa; color: #1a1a2e; }
+        header { background: #fff; border-bottom: 1px solid #e0e0e0;
+                 padding: 16px 32px; display: flex; align-items: center; gap: 16px; }
+        header h1 { font-size: 1.4rem; color: #1a73e8; }
+        nav a { color: #444; text-decoration: none; font-size: .9rem; margin-left: 20px; }
+        nav a:hover { color: #1a73e8; }
+        .main { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
+        .filters input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+                         font-size: .9rem; width: 280px; }
+        .filters select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+                          font-size: .9rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: #fff; border-radius: 8px; border: 1px solid #e8e8e8;
+                padding: 20px; transition: box-shadow .15s; }
+        .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+        .card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .card .meta { font-size: .8rem; color: #888; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px;
+                 font-size: .75rem; font-weight: 500; background: #e8f0fe; color: #1a73e8;
+                 margin-bottom: 8px; }
+        .empty { text-align: center; color: #888; padding: 60px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DocFlow</h1>
+        <nav>
+            <a href="/">Library</a>
+            <a href="/auth/login">Sign In</a>
+        </nav>
+    </header>
+    <div class="main">
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Search documents…">
+            <select id="categoryFilter">
+                <option value="">All categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.name }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="grid" id="docGrid">
+            {% for doc in documents %}
+            <div class="card">
+                <span class="badge">{{ doc.category or 'Uncategorized' }}</span>
+                <h3>{{ doc.title }}</h3>
+                <p class="meta">By {{ doc.owner }} &bull; {{ doc.created_at[:10] }}</p>
+            </div>
+            {% else %}
+            <div class="empty">No public documents available.</div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const categoryFilter = document.getElementById("categoryFilter");
+
+        async function loadDocs() {
+            const q = searchInput.value.trim();
+            const cat = categoryFilter.value;
+            let url = q ? `/api/documents/search?q=${encodeURIComponent(q)}` : `/documents`;
+            if (!q && cat) url += `?category=${encodeURIComponent(cat)}`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            const docs = data.results || data.documents || [];
+            const grid = document.getElementById("docGrid");
+            if (!docs.length) {
+                grid.innerHTML = '<div class="empty">No documents found.</div>';
+                return;
+            }
+            grid.innerHTML = docs.map(d => `
+                <div class="card">
+                    <span class="badge">${d.category || 'Uncategorized'}</span>
+                    <h3>${d.title}</h3>
+                    <p class="meta">By ${d.owner} &bull; ${(d.created_at || '').slice(0,10)}</p>
+                </div>
+            `).join("");
+        }
+
+        let debounce;
+        searchInput.addEventListener("input", () => {
+            clearTimeout(debounce);
+            debounce = setTimeout(loadDocs, 300);
+        });
+        categoryFilter.addEventListener("change", loadDocs);
+    </script>
+</body>
+</html>

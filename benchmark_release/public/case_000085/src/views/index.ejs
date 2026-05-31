@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sitecore Bundle System — Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <span class="navbar-brand">Sitecore CMS</span>
+    <div class="navbar-links">
+      <a href="/">Dashboard</a>
+      <a href="/api/bundles">Bundles</a>
+      <% if (user.role === 'administrator') { %>
+        <a href="/api/audit">Audit Log</a>
+        <a href="/api/settings">Settings</a>
+      <% } %>
+      <a href="/logout">Logout</a>
+    </div>
+    <span class="navbar-user">Logged in as <strong><%= user.username %></strong> (<%= user.role %>)</span>
+  </nav>
+
+  <div class="container">
+    <h1>Bundle Serving Dashboard</h1>
+
+    <div class="card-row">
+      <div class="card">
+        <h3>Total Bundles</h3>
+        <p class="stat"><%= stats.totalBundles %></p>
+      </div>
+      <div class="card">
+        <h3>Total Scripts</h3>
+        <p class="stat"><%= stats.totalScripts %></p>
+      </div>
+      <div class="card">
+        <h3>Last Build</h3>
+        <p class="stat-sm"><%= stats.lastBuildTs %></p>
+      </div>
+      <div class="card">
+        <h3>CDN Sync</h3>
+        <p class="stat"><%= stats.cdnSync %></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Bundle Endpoint</h2>
+      <p>JavaScript bundles are served via the path below. Use the <code>f</code> query parameter to specify a bundle relative to the web root.</p>
+      <pre><code>GET /-/speak/v1/bundles/bundle.js?f=/bundles/app.js</code></pre>
+    </div>
+
+    <div class="section">
+      <h2>Available Bundles</h2>
+      <table class="table">
+        <thead>
+          <tr><th>File</th><th>Folder</th><th>Request URL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>app.js</td><td>bundles</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/bundles/app.js</code></td>
+          </tr>
+          <tr>
+            <td>vendor.js</td><td>bundles</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/bundles/vendor.js</code></td>
+          </tr>
+          <tr>
+            <td>polyfills.js</td><td>bundles</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/bundles/polyfills.js</code></td>
+          </tr>
+          <tr>
+            <td>main.js</td><td>scripts</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/scripts/main.js</code></td>
+          </tr>
+          <tr>
+            <td>analytics.js</td><td>scripts</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/scripts/analytics.js</code></td>
+          </tr>
+          <tr>
+            <td>i18n.js</td><td>scripts</td>
+            <td><code>/-/speak/v1/bundles/bundle.js?f=/scripts/i18n.js</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>API Reference</h2>
+      <ul>
+        <li><code>GET /api/bundles?q=</code> — Search bundle manifest</li>
+        <li><code>GET /api/script-info?name=</code> — Script metadata</li>
+        <li><code>GET /assets/static?path=</code> — Static asset delivery</li>
+        <li><code>POST /api/bundle-cache</code> — Cache management (admin)</li>
+        <li><code>GET /api/audit</code> — Audit log (admin)</li>
+        <li><code>GET /healthz</code> — Service healthcheck</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Sitecore Bundle System &mdash; internal use only &mdash; &copy; 2024</p>
+  </footer>
+</body>
+</html>

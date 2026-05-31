@@ -1,0 +1,26 @@
+<%
+  title = 'Welcome'
+  body = `
+<div class="hero">
+  <h1>Claspace</h1>
+  <p class="muted">The workspace manager for AI coding assistants.<br>
+     Keep your projects, snippets, automations, and team configs in sync.</p>
+  <a class="btn" href="/auth/register">Get started</a>
+  &nbsp;
+  <a href="/auth/login">Sign in →</a>
+</div>
+
+<section style="margin-top:2rem">
+  <h2>Features</h2>
+  <ul>
+    <li>Organise projects into workspaces — private, team, or public</li>
+    <li>Declare <code>onOpen</code> / <code>onSync</code> automation hooks in <code>.claspace/settings.json</code></li>
+    <li>Share code snippets with teammates</li>
+    <li>Browse project templates and start fast</li>
+    <li>Fine-grained API keys for CI and IDE plugins</li>
+    <li>Activity feed for audit and compliance</li>
+  </ul>
+</section>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

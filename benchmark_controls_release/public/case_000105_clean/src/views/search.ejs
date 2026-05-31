@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - ProjectHub</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f5f6fa; color: #333; }
+    .navbar { background: #2c3e50; color: white; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+    .navbar a { color: #ecf0f1; text-decoration: none; font-size: 14px; }
+    .navbar .brand { font-size: 18px; font-weight: bold; }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    .search-box { display: flex; gap: 8px; margin-bottom: 32px; }
+    .search-box input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; }
+    .search-box button { padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; }
+    .results-container { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 24px; }
+    .result-item { border-bottom: 1px solid #eee; padding: 16px 0; }
+    .result-item:last-child { border-bottom: none; }
+    .result-title { margin: 0 0 6px; font-size: 18px; color: #2c3e50; }
+    .result-desc { margin: 0 0 6px; color: #666; font-size: 14px; }
+    .result-status { font-size: 12px; background: #eaf4fb; color: #2980b9; padding: 2px 8px; border-radius: 12px; }
+    .search-query-label { font-size: 14px; color: #888; margin-bottom: 16px; }
+    .no-results { color: #999; font-style: italic; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand"><a href="/" style="color:white;">ProjectHub</a></span>
+    <a href="/projects">Projects</a>
+    <a href="/search">Search</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile/<%= currentUser.username %>">Profile</a>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+    <% } %>
+  </nav>
+  <div class="container">
+    <h1>Search Projects</h1>
+    <form class="search-box" method="GET" action="/search">
+      <input type="text" name="q" placeholder="Search projects by name or description..." value="<%= queryStr %>">
+      <button type="submit">Search</button>
+    </form>
+    <div class="results-container">
+      <% if (queryStr) { %>
+        <div class="search-query-label">Results for: <%= queryStr %></div>
+      <% } %>
+      <div class="results-list">
+        <% if (results && results.length > 0) { %>
+          <% results.forEach(function (project) { %>
+            <div class="result-item">
+              <h3 class="result-title"><%= project.name %></h3>
+              <p class="result-desc"><%= project.description %></p>
+              <span class="result-status"><%= project.status %></span>
+            </div>
+          <% }) %>
+        <% } else if (queryStr) { %>
+          <p class="no-results">No projects found.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

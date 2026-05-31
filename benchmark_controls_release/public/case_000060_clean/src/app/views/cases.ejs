@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cases — Community Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/dashboard">Home</a>
+      <a href="/dashboard/cases">Cases</a>
+      <a href="/dashboard/settings">Settings</a>
+      <form class="nav-right" method="POST" action="/logout"><button type="submit">Log Out</button></form>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Support Cases</h1>
+    <!-- TODO: add pagination; currently limited to 50 rows server-side -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Subject</th><th>Status</th><th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cases.forEach(c => { %>
+        <tr>
+          <td><%= c.id %></td>
+          <td><%= c.subject %></td>
+          <td><span class="badge badge-<%= c.status %>"><%= c.status %></span></td>
+          <td><%= c.created_at %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

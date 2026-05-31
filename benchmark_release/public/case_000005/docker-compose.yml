@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  nexusai:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - '9000:9000'
+    environment:
+      PORT: '9000'
+      DB_PATH: '/data/nexus.db'
+    volumes:
+      - nexus_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+volumes:
+  nexus_data:

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Category — MarketHub</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">MarketHub</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a class="back-link" href="/">← Back to categories</a>
+    <h1 id="cat-title">Loading…</h1>
+    <p id="content" class="content-panel"></p>
+    <div id="product-list" class="product-list"></div>
+  </main>
+
+  <script>
+    const catId = '<%= catId %>';
+
+    fetch(`/api/v2/categories/${catId}.json`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.name) {
+          document.getElementById('cat-title').textContent = data.name;
+        }
+        document.getElementById('content').textContent = data.description || '';
+      })
+      .catch(e => {
+        document.getElementById('content').textContent = 'Unable to load category data';
+        console.error('Category fetch error:', e);
+      });
+
+    fetch(`/api/v2/products?category=${encodeURIComponent(catId)}&limit=20`)
+      .then(r => r.json())
+      .then(data => {
+        const list = document.getElementById('product-list');
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            const name = document.createElement('strong');
+            name.textContent = p.name;
+            card.appendChild(name);
+            list.appendChild(card);
+          });
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

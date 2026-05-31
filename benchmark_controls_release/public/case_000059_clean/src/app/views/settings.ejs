@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FileVault — Settings</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">📁 FileVault</div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <a href="/settings" class="active">Settings</a>
+      <a href="/logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header"><h2>Settings</h2></div>
+    <% if (saved) { %><div class="alert alert-success">Preferences saved.</div><% } %>
+    <form method="POST" action="/settings" class="card">
+      <div class="form-group">
+        <label>Theme</label>
+        <select name="theme">
+          <option value="light" <%= prefs.theme === 'light' ? 'selected' : '' %>>Light</option>
+          <option value="dark" <%= prefs.theme === 'dark' ? 'selected' : '' %>>Dark</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Email Notifications</label>
+        <select name="notifications">
+          <option value="on" <%= prefs.notifications === 'on' ? 'selected' : '' %>>On</option>
+          <option value="off" <%= prefs.notifications === 'off' ? 'selected' : '' %>>Off</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Default Sort</label>
+        <select name="defaultSort">
+          <option value="name" <%= prefs.defaultSort === 'name' ? 'selected' : '' %>>Name</option>
+          <option value="date" <%= prefs.defaultSort === 'date' ? 'selected' : '' %>>Date</option>
+          <option value="size" <%= prefs.defaultSort === 'size' ? 'selected' : '' %>>Size</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Preferences</button>
+    </form>
+  </main>
+</body>
+</html>

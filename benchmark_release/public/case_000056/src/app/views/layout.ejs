@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ContentFlow</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a class="nav-brand" href="/">ContentFlow</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/articles">Articles</a></li>
+        <% if (typeof session !== 'undefined' && session && session.userId) { %>
+          <li><a href="/api/users/profile">My Profile</a></li>
+          <% if (session.isAdmin) { %>
+            <li><a href="/api/admin/stats">Admin</a></li>
+          <% } %>
+          <li>
+            <form action="/logout" method="POST" style="display:inline">
+              <button type="submit" class="btn-nav">Logout</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li><a href="/login">Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <%- body %>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2024 ContentFlow Editorial Platform. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="/articles">Articles</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

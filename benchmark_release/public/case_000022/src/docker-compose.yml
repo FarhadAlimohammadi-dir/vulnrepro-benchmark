@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  codepilot:
+    build: .
+    ports:
+      - '9000:9000'
+    environment:
+      PORT: '9000'
+      SESSION_SECRET: 'cp-compose-secret-xyz'
+      PLAN_APPROVAL_MS: '1000'
+      LOG_LEVEL: 'info'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped

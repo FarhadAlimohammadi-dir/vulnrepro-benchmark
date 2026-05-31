@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Meridian HR – Employee Directory</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; }
+        .nav { background: #1a3a5c; color: #fff; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .nav a { color: #aec6e8; text-decoration: none; margin-left: 18px; font-size: 14px; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 8px rgba(0,0,0,0.08); padding: 24px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f4f6fa; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #eef0f4; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <h2>&#127970; Meridian HR</h2>
+    <div><a href="/dashboard">Dashboard</a><a href="/logout">Sign Out</a></div>
+</div>
+<div class="container">
+    <div class="card">
+        <h3 style="color:#1a3a5c;margin-bottom:18px;">Employee Directory</h3>
+        <table>
+            <tr><th>Name</th><th>Position</th><th>Department</th><th>Email</th></tr>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+                <td>{{ emp.position }}</td>
+                <td>{{ emp.dept_name }}</td>
+                <td>{{ emp.email }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>

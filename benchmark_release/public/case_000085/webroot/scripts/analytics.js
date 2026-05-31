@@ -1,0 +1,1 @@
+/* Analytics bootstrap */ window._analytics = { version: "2.4.1", init: function() {} };

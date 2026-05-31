@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}Error {{ code }} – NoteFlow{% endblock %}
+{% block content %}
+<div class="error-box">
+  <h2>{{ code }}</h2>
+  <p>{{ message }}</p>
+  <a href="/" class="btn-primary">Go Home</a>
+</div>
+{% endblock %}

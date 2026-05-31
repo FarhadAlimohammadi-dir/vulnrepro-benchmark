@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FileVault — Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">📁 FileVault</div>
+    <div class="nav-links">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <a href="/settings">Settings</a>
+      <% if (role === 'admin') { %><a href="/admin/users">Admin</a><% } %>
+      <a href="/logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h2>My Files</h2>
+      <span class="badge"><%= username %></span>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search files…" oninput="searchFiles(this.value)">
+      <span id="searchCount"></span>
+    </div>
+    <% if (files && files.length > 0) { %>
+      <table class="file-table" id="fileTable">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Size (bytes)</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% files.forEach(function(f) { %>
+          <tr>
+            <td><a href="/api/file/<%= f.file_id %>"><%= f.filename %></a></td>
+            <td><%= f.size %></td>
+            <td><%= new Date(f.created_at).toLocaleDateString() %></td>
+            <td>
+              <button class="btn btn-sm btn-danger" onclick="deleteFile('<%= f.file_id %>')">Delete</button>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="empty-state">No files yet. Upload your first document below.</p>
+    <% } %>
+    <div class="upload-panel">
+      <h3>Upload File</h3>
+      <form id="uploadForm">
+        <div class="form-row">
+          <input type="text" id="uploadName" placeholder="filename.txt" required>
+          <textarea id="uploadContent" placeholder="File contents…" rows="4"></textarea>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+        <div id="uploadMsg"></div>
+      </form>
+    </div>
+  </main>
+  <script>
+    async function deleteFile(fileId) {
+      if (!confirm('Delete this file?')) return;
+      const r = await fetch('/api/files/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ file_id: fileId })
+      });
+      if (r.ok) location.reload();
+      else alert('Delete failed');
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const fn = document.getElementById('uploadName').value;
+      const ct = document.getElementById('uploadContent').value;
+      const r = await fetch('/api/file/upload', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ filename: fn, content: ct })
+      });
+      const msg = document.getElementById('uploadMsg');
+      if (r.ok) { msg.textContent = 'Uploaded successfully.'; location.reload(); }
+      else { const d = await r.json(); msg.textContent = d.error || 'Upload failed'; }
+    });
+
+    function searchFiles(q) {
+      const rows = document.querySelectorAll('#fileTable tbody tr');
+      let shown = 0;
+      rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        if (name.includes(q.toLowerCase())) { row.style.display = ''; shown++; }
+        else row.style.display = 'none';
+      });
+      document.getElementById('searchCount').textContent = q ? `${shown} result(s)` : '';
+    }
+  </script>
+</body>
+</html>

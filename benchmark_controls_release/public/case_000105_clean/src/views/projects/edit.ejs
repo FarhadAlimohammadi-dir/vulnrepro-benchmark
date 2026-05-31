@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Project - ProjectHub</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f6fa; margin: 0; }
+    .navbar { background: #2c3e50; color: white; padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+    .navbar a { color: #ecf0f1; text-decoration: none; font-size: 14px; }
+    .brand { font-size: 18px; font-weight: bold; }
+    .container { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 28px; }
+    input, textarea, select { width: 100%; padding: 10px; margin-bottom: 14px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    button { padding: 10px 24px; background: #3498db; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+    label { font-size: 13px; color: #555; display: block; margin-bottom: 4px; }
+    .error { color: #e74c3c; font-size: 13px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand"><a href="/" style="color:white;">ProjectHub</a></span>
+    <a href="/projects">Projects</a>
+    <a href="/dashboard">Dashboard</a>
+  </nav>
+  <div class="container">
+    <div class="card">
+      <h2>Edit Project</h2>
+      <% if (error) { %><div class="error"><%= error %></div><% } %>
+      <form method="POST" action="/projects/<%= project.id %>/edit">
+        <label>Name</label>
+        <input type="text" name="name" value="<%= project.name %>" required>
+        <label>Description</label>
+        <textarea name="description" rows="4"><%= project.description %></textarea>
+        <label>Status</label>
+        <select name="status">
+          <option value="active" <%= project.status === 'active' ? 'selected' : '' %>>Active</option>
+          <option value="archived" <%= project.status === 'archived' ? 'selected' : '' %>>Archived</option>
+          <option value="pending" <%= project.status === 'pending' ? 'selected' : '' %>>Pending</option>
+        </select>
+        <label>Tags (comma-separated)</label>
+        <input type="text" name="tags" value="<%= project.tags %>">
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}ToolForge{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand"><a href="/">⚙ ToolForge</a></div>
+  <ul class="nav-links">
+    {% if session.get('user_id') %}
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/tools">Tools</a></li>
+    <li><a href="/profile">Profile</a></li>
+    {% if session.get('role') == 'admin' %}
+    <li><a href="/admin/stats">Admin</a></li>
+    {% endif %}
+    <li>
+      <form action="/logout" method="post" style="display:inline">
+        <button type="submit" class="btn-link">Logout ({{ session.get('username') }})</button>
+      </form>
+    </li>
+    {% else %}
+    <li><a href="/login">Login</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+  <span>ToolForge v2.1.0 &mdash; Automation Platform</span>
+</footer>
+</body>
+</html>

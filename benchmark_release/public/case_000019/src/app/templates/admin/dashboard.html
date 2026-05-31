@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard — NexusAI{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>&#128272; Admin Dashboard</h1>
+</div>
+
+<div class="admin-stats">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_users }}</div>
+    <div class="stat-label">Total Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_logs }}</div>
+    <div class="stat-label">Audit Events</div>
+  </div>
+</div>
+
+<div class="admin-grid">
+  <div class="card">
+    <h2>Recent Users <a href="/admin/users" class="see-all">View all</a></h2>
+    <table class="data-table">
+      <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Created</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+          <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
+          <td>{{ u.created_at[:10] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Recent Audit Events <a href="/admin/audit" class="see-all">View all</a></h2>
+    <table class="data-table">
+      <thead><tr><th>User</th><th>Action</th><th>IP</th><th>Time</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.username or '—' }}</td>
+          <td>{{ log.action }}</td>
+          <td>{{ log.ip or '—' }}</td>
+          <td>{{ log.created_at[11:19] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

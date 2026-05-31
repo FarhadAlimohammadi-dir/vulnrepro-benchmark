@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAuth Clients — CodeFlow Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/logout" class="nav-logout">Logout (<%= user %>)</a>
+    </div>
+  </nav>
+  <main class="container">
+    <a href="/admin" class="back-link">&#8592; Admin Dashboard</a>
+    <h1>&#128196; OAuth Client Management</h1>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr><th>Name</th><th>Client ID</th><th>Owner</th><th>Scopes</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <% for (const c of clients) { %>
+            <tr>
+              <td><strong><%= c.name %></strong><br><small class="muted"><%= c.description || '' %></small></td>
+              <td><code><%= c.id %></code></td>
+              <td><%= c.owner_name || '—' %></td>
+              <td>
+                <% for (const s of (c.scopes || '').split(' ')) { %>
+                  <span class="badge"><%= s %></span>
+                <% } %>
+              </td>
+              <td>
+                <% if (c.is_active) { %>
+                  <span class="badge green">Active</span>
+                <% } else { %>
+                  <span class="badge red">Disabled</span>
+                <% } %>
+              </td>
+              <td><a href="/oauth/clients/<%= c.id %>" class="btn btn-sm">View</a></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

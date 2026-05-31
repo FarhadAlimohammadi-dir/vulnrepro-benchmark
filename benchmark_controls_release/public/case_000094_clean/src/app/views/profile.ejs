@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroSSR - Profile</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">AstroSSR</div>
+    <nav class="nav">
+      <a href="/">Home</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="container narrow">
+    <h1>Your Profile</h1>
+    <div class="panel">
+      <table class="info-table">
+        <tr><th>Username</th><td><%= profile.username %></td></tr>
+        <tr><th>Email</th><td><%= profile.email %></td></tr>
+        <tr><th>Role</th><td><span class="badge"><%= profile.role %></span></td></tr>
+        <tr><th>Member Since</th><td><%= profile.createdAt %></td></tr>
+      </table>
+    </div>
+
+    <section class="settings-form">
+      <h2>Update Settings</h2>
+      <form method="POST" action="/profile/settings" class="form-card">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="<%= profile.email %>" required>
+
+        <label for="displayName">Display Name</label>
+        <input type="text" id="displayName" name="displayName" value="<%= profile.username %>" maxlength="64">
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 AstroSSR Platform.</p>
+  </footer>
+</body>
+</html>

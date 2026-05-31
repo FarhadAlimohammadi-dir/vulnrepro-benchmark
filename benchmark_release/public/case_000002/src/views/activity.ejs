@@ -1,0 +1,24 @@
+<%
+  title = 'Activity'
+  const rows2 = rows.map(r => `
+    <tr>
+      <td class="muted" style="white-space:nowrap">${r.created_at}</td>
+      <td>${r.username || '—'}</td>
+      <td><span class="pill">${r.kind}</span></td>
+      <td class="muted">${r.target_type || ''} ${r.target_id ? '#'+r.target_id : ''}</td>
+      <td class="muted">${r.message || ''}</td>
+    </tr>
+  `).join('')
+  body = `
+<h1>Activity feed</h1>
+<p class="muted">Showing last ${limit} events</p>
+<table class="list">
+  <thead><tr><th>Time</th><th>User</th><th>Kind</th><th>Target</th><th>Message</th></tr></thead>
+  <tbody>${rows2 || '<tr><td colspan="5" class="muted">No activity yet</td></tr>'}</tbody>
+</table>
+<div style="margin-top:1rem">
+  <a href="?limit=100">Show 100</a> · <a href="?limit=200">Show 200</a>
+</div>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

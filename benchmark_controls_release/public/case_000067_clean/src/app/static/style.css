@@ -1,0 +1,78 @@
+/* FruitDB Inventory — base stylesheet */
+/* TODO: migrate to CSS custom properties for theming in next release */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ---- Navbar ---- */
+.navbar {
+    background: #2c3e50;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 54px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.25);
+}
+.nav-brand { font-size: 1.2rem; font-weight: 700; letter-spacing: .5px; }
+.nav-links { list-style: none; display: flex; gap: 18px; }
+.nav-links a { color: #cfd8dc; text-decoration: none; padding: 4px 8px; border-radius: 4px; }
+.nav-links a:hover { background: #3d5166; color: #fff; }
+.btn-logout { background: #e74c3c; color: #fff !important; padding: 4px 12px !important; border-radius: 4px; }
+
+/* ---- Container ---- */
+.container { max-width: 1200px; margin: 32px auto; padding: 0 16px; }
+
+/* ---- Tables ---- */
+.data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.data-table th { background: #34495e; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+.data-table td { padding: 9px 14px; border-bottom: 1px solid #ecf0f1; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #f8f9fa; }
+
+/* ---- Toolbar ---- */
+.toolbar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.search-bar { display: flex; gap: 6px; }
+.search-bar input { padding: 7px 12px; border: 1px solid #ddd; border-radius: 4px; }
+.search-bar button { padding: 7px 16px; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+.search-bar button:hover { background: #2980b9; }
+
+/* ---- Pagination ---- */
+.pagination { display: flex; align-items: center; gap: 12px; margin-top: 16px; justify-content: flex-end; }
+.pagination a { padding: 6px 14px; background: #3498db; color: #fff; text-decoration: none; border-radius: 4px; }
+.pagination a:hover { background: #2980b9; }
+.pagination span { color: #666; }
+
+/* ---- Login page ---- */
+body.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.login-card { background: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.12); padding: 40px 36px; width: 360px; text-align: center; }
+.login-logo { font-size: 3rem; margin-bottom: 8px; }
+.login-card h1 { font-size: 1.5rem; margin-bottom: 4px; }
+.login-subtitle { color: #777; margin-bottom: 24px; }
+.form-group { text-align: left; margin-bottom: 14px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 4px; }
+.form-group input { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 4px; }
+.btn-primary { width: 100%; padding: 10px; background: #27ae60; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+.btn-primary:hover { background: #219a52; }
+.login-hint { margin-top: 16px; color: #999; font-size: 12px; }
+
+/* ---- Alerts ---- */
+.alert { padding: 9px 14px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; }
+.alert-error { background: #fdecea; border: 1px solid #f5c6cb; color: #c0392b; }
+.alert-success { background: #eafaf1; border: 1px solid #a9dfbf; color: #1e8449; }
+
+/* ---- Misc cards ---- */
+.card { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); padding: 24px; margin-bottom: 24px; }
+.card h3 { margin-bottom: 12px; font-size: 1.05rem; color: #2c3e50; }
+.stat-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.stat-box { flex: 1; min-width: 140px; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); padding: 20px; text-align: center; }
+.stat-box .stat-val { font-size: 2rem; font-weight: 700; color: #2980b9; }
+.stat-box .stat-label { color: #888; font-size: 13px; margin-top: 4px; }

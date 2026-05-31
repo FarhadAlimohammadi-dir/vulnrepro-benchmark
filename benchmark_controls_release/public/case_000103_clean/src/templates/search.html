@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Search — ContentHub{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Search</h1>
+    <form method="GET">
+        <div style="display:flex;gap:.5rem;">
+            <input type="text" name="q" value="{{ q | e }}" placeholder="Search posts..." style="flex:1;">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+{% if q %}
+<p>{{ results | length }} result(s) for <strong>{{ q | e }}</strong></p>
+{% for post in results %}
+<div class="card">
+    <h2><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h2>
+    <p class="meta">By {{ post.author }} &middot; {{ post.category }} &middot; {{ post.created_at[:10] }}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

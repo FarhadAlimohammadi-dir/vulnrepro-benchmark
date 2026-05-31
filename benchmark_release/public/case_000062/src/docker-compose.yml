@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=f3a9c2e1d4b7a0e8c5f2d9b6a3e0c7f4
+      - DATABASE_PATH=/app/data/docstore.db
+    volumes:
+      - doc_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  doc_data:

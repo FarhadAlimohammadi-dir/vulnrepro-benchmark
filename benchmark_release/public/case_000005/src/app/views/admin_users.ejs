@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users — NexusAI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav', { user: user, page: 'admin' }) %>
+<main class="content">
+<div class="page-header">
+  <h1>Manage Users</h1>
+  <a href="/admin" class="btn btn-ghost">← Admin</a>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Username</th><th>Display Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+      <tr>
+        <td class="muted"><%= u.id %></td>
+        <td><strong><%= u.username %></strong></td>
+        <td><%= u.display_name || '—' %></td>
+        <td class="muted"><%= u.email || '—' %></td>
+        <td><span class="badge <%= u.role==='admin'?'badge-purple':'badge-blue' %>"><%= u.role %></span></td>
+        <td>
+          <form method="POST" action="/admin/users/<%= u.id %>/role" style="display:inline-flex;gap:.5rem">
+            <select name="role" class="field-select-sm">
+              <option value="user"  <%= u.role==='user' ?'selected':'' %>>user</option>
+              <option value="admin" <%= u.role==='admin'?'selected':'' %>>admin</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" type="submit">Update</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

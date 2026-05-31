@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block title %}Snippets{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>My Snippets</h2>
+  <button class="btn btn-primary" onclick="showNewSnippetForm()">+ New Snippet</button>
+</div>
+
+<!-- Search -->
+<form method="GET" action="/snippets" class="search-form">
+  <input type="text" name="q" value="{{ search }}" placeholder="Search snippets…" class="search-input">
+  <button type="submit" class="btn btn-secondary">Search</button>
+  {% if search %}<a href="/snippets" class="btn btn-sm">Clear</a>{% endif %}
+</form>
+
+<p class="text-muted">{{ total }} snippet{{ 's' if total != 1 else '' }} found.</p>
+
+{% if snippets %}
+<div class="snippet-grid">
+  {% for s in snippets %}
+  <div class="snippet-card">
+    <div class="snippet-card-header">
+      <a href="/snippets/{{ s.id }}" class="snippet-title">{{ s.title }}</a>
+      <span class="badge badge-lang">{{ s.language }}</span>
+    </div>
+    <div class="snippet-card-meta">
+      <span>&#128065; {{ s.view_count }}</span>
+      <span>{{ s.created_at[:10] }}</span>
+    </div>
+    {% if s.tags %}
+    <div class="snippet-tags">
+      {% for tag in s.tags.split(',') %}
+      <span class="tag">{{ tag.strip() }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, pages + 1) %}
+  <a href="/snippets?page={{ p }}{% if search %}&q={{ search }}{% endif %}"
+     class="page-btn {% if p == page %}active{% endif %}">{{ p }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+{% else %}
+<div class="empty-state-box">
+  <p>No snippets found{% if search %} matching "{{ search }}"{% endif %}.</p>
+</div>
+{% endif %}
+
+<!-- New Snippet Modal -->
+<div id="new-snippet-modal" class="modal" style="display:none">
+  <div class="modal-backdrop" onclick="hideNewSnippetForm()"></div>
+  <div class="modal-box">
+    <h3>New Snippet</h3>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="ns-title" placeholder="Snippet title">
+    </div>
+    <div class="form-group">
+      <label>Language</label>
+      <select id="ns-lang">
+        <option>python</option><option>javascript</option><option>typescript</option>
+        <option>go</option><option>rust</option><option>bash</option><option>text</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="ns-tags" placeholder="e.g. flask,auth">
+    </div>
+    <div class="form-group">
+      <label>Code</label>
+      <textarea id="ns-code" class="code-input" style="height:160px" placeholder="Paste your code here…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="createSnippet()">Create</button>
+      <button class="btn btn-secondary" onclick="hideNewSnippetForm()">Cancel</button>
+    </div>
+    <div id="ns-error" class="form-error"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function showNewSnippetForm() { document.getElementById('new-snippet-modal').style.display = 'flex'; }
+  function hideNewSnippetForm() { document.getElementById('new-snippet-modal').style.display = 'none'; }
+
+  async function createSnippet() {
+    const err = document.getElementById('ns-error');
+    err.textContent = '';
+    const payload = {
+      title:    document.getElementById('ns-title').value || 'Untitled',
+      language: document.getElementById('ns-lang').value,
+      tags:     document.getElementById('ns-tags').value,
+      code:     document.getElementById('ns-code').value
+    };
+    if (!payload.code) { err.textContent = 'Code is required.'; return; }
+    const r = await fetch('/api/snippets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (r.ok) { window.location.reload(); }
+    else { err.textContent = d.error || 'Failed to create snippet.'; }
+  }
+</script>
+{% endblock %}

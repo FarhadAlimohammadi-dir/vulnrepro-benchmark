@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectFlow - Team Project Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #2d3748; }
+        header { background: #2b6cb0; color: white; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 24px; font-size: 0.9rem; }
+        nav a:hover { color: white; }
+        .hero { max-width: 900px; margin: 80px auto; text-align: center; padding: 0 24px; }
+        .hero h2 { font-size: 2.5rem; font-weight: 800; color: #1a202c; margin-bottom: 16px; }
+        .hero p { font-size: 1.15rem; color: #4a5568; max-width: 600px; margin: 0 auto 32px; line-height: 1.7; }
+        .btn { display: inline-block; padding: 12px 28px; border-radius: 6px; font-size: 1rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+        .btn-primary { background: #2b6cb0; color: white; margin-right: 12px; }
+        .btn-secondary { background: white; color: #2b6cb0; border: 2px solid #2b6cb0; }
+        .features { max-width: 1100px; margin: 60px auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; padding: 0 24px; }
+        .feature { background: white; border-radius: 10px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+        .feature h3 { font-size: 1.1rem; margin-bottom: 10px; color: #2b6cb0; }
+        .feature p { color: #718096; font-size: 0.93rem; line-height: 1.6; }
+        .api-section { max-width: 900px; margin: 40px auto 80px; background: white; border-radius: 10px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+        .api-section h3 { margin-bottom: 20px; font-size: 1.2rem; }
+        pre { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; font-size: 0.85rem; overflow-x: auto; }
+        footer { text-align: center; padding: 24px; color: #a0aec0; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>ProjectFlow</h1>
+    <nav>
+        <a href="/health">Status</a>
+        <a href="#api">API Docs</a>
+        <a href="#features">Features</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h2>Ship projects faster, together.</h2>
+    <p>ProjectFlow gives your team a single source of truth for tracking tasks, managing deadlines, and shipping on time. Built for engineering teams that move fast.</p>
+    <a href="#api" class="btn btn-primary">Get Started</a>
+    <a href="#features" class="btn btn-secondary">See Features</a>
+</div>
+
+<div class="features" id="features">
+    <div class="feature">
+        <h3>⚡ Real-time Updates</h3>
+        <p>Every change is instantly reflected across your team. No more stale dashboards or missed updates.</p>
+    </div>
+    <div class="feature">
+        <h3>🔒 Role-Based Access</h3>
+        <p>Granular permissions let you control exactly who sees and edits what, down to individual projects.</p>
+    </div>
+    <div class="feature">
+        <h3>📊 Audit Logging</h3>
+        <p>Full audit trails for compliance. Know exactly who changed what and when, with immutable records.</p>
+    </div>
+    <div class="feature">
+        <h3>🔑 API Token Auth</h3>
+        <p>Integrate with your existing CI/CD pipelines using scoped API tokens with rotation support.</p>
+    </div>
+    <div class="feature">
+        <h3>📋 Task Management</h3>
+        <p>Priorities, due dates, assignees, and statuses. Everything you need without the bloat.</p>
+    </div>
+    <div class="feature">
+        <h3>🔍 Smart Search</h3>
+        <p>Find users, projects, and tasks instantly with our optimized full-text search.</p>
+    </div>
+</div>
+
+<div class="api-section" id="api">
+    <h3>Quick Start API</h3>
+    <pre>
+# Login
+POST /api/v1/auth/login
+{"username": "&lt;your-username&gt;", "password": "&lt;your-password&gt;"}
+
+# List your projects
+GET /api/v1/projects
+Authorization: Session cookie
+
+# Create a project
+POST /api/v1/projects
+{"name": "My Project", "description": "Project description"}
+
+# Generate API token
+POST /api/v1/tokens
+{"label": "CI Pipeline"}
+    </pre>
+</div>
+
+<footer>
+    &copy; 2024 ProjectFlow, Inc. &mdash; v2.4.1 &mdash; <a href="/health">System Status</a>
+</footer>
+</body>
+</html>

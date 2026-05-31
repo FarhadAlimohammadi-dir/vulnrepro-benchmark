@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: demo
+    volumes:
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpass"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      - fruitnet
+
+  web:
+    build: .
+    ports:
+      - "9000:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fruitnet
+    environment:
+      - APACHE_LOG_DIR=/var/log/apache2
+
+networks:
+  fruitnet:
+    driver: bridge

@@ -1,0 +1,16 @@
+<%
+  title = 'Templates'
+  const rows = templates.map(t => `
+    <div class="entry">
+      <strong>${t.name}</strong>
+      <span class="pill">${t.language || '—'}</span>
+      <p class="muted">${t.description || ''}</p>
+    </div>
+  `).join('')
+  body = `
+<h1>Project templates</h1>
+<p class="muted">Browse curated boilerplates. Start a new project from any template.</p>
+${rows || '<p class="muted">No templates defined.</p>'}
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

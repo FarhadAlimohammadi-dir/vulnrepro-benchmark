@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVault — Search</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/dashboard" class="logo">☁ CloudVault</a>
+      <nav class="main-nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/buckets">Buckets</a>
+        <a href="/search" class="active">Search</a>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="/admin">Admin</a>
+        <% } %>
+        <a href="/profile">Profile</a>
+        <form method="POST" action="/logout" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="page-header">
+      <h1>Search</h1>
+    </div>
+
+    <form method="GET" action="/search" class="search-form">
+      <div class="search-row">
+        <input type="text" name="q" value="<%= query %>" placeholder="Search buckets, objects, users…" autofocus>
+        <select name="type">
+          <option value="all" <%= type === 'all' ? 'selected' : '' %>>All</option>
+          <option value="buckets" <%= type === 'buckets' ? 'selected' : '' %>>Buckets</option>
+          <option value="objects" <%= type === 'objects' ? 'selected' : '' %>>Objects</option>
+          <option value="users" <%= type === 'users' ? 'selected' : '' %>>Users</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+
+    <% if (results) { %>
+      <% if ((results.buckets || []).length > 0) { %>
+        <section class="panel">
+          <div class="panel-header"><h2>Buckets</h2></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Region</th></tr></thead>
+            <tbody>
+              <% results.buckets.forEach(b => { %>
+                <tr>
+                  <td><a href="/buckets/<%= b.id %>"><%= b.id %></a></td>
+                  <td><%= b.name %></td>
+                  <td><span class="badge"><%= b.region %></span></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+      <% } %>
+
+      <% if ((results.objects || []).length > 0) { %>
+        <section class="panel">
+          <div class="panel-header"><h2>Objects</h2></div>
+          <table class="data-table">
+            <thead><tr><th>Bucket</th><th>Key</th><th>Type</th><th>Size</th></tr></thead>
+            <tbody>
+              <% results.objects.forEach(o => { %>
+                <tr>
+                  <td><a href="/buckets/<%= o.bucketId %>"><%= o.bucketId %></a></td>
+                  <td><code><%= o.key %></code></td>
+                  <td><%= o.contentType %></td>
+                  <td><%= o.size %> B</td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+      <% } %>
+
+      <% if ((results.users || []).length > 0 && currentUser && currentUser.role === 'admin') { %>
+        <section class="panel">
+          <div class="panel-header"><h2>Users</h2></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Username</th><th>Display Name</th><th>Role</th></tr></thead>
+            <tbody>
+              <% results.users.forEach(u => { %>
+                <tr>
+                  <td><%= u.id %></td>
+                  <td><%= u.username %></td>
+                  <td><%= u.displayName || '—' %></td>
+                  <td><span class="badge badge-<%= u.role %>"><%= u.role %></span></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+      <% } %>
+
+      <% const totalResults = (results.buckets||[]).length + (results.objects||[]).length + (results.users||[]).length; %>
+      <% if (totalResults === 0) { %>
+        <p class="empty">No results found for "<%= query %>".</p>
+      <% } %>
+    <% } %>
+  </main>
+  <footer class="site-footer">
+    <div class="container"><span>CloudVault Storage Manager v2.1.0</span></div>
+  </footer>
+</body>
+</html>

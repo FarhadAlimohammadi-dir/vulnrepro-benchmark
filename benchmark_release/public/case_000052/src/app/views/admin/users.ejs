@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management — CodeFlow Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/admin" class="active">Admin</a>
+      <a href="/logout" class="nav-logout">Logout (<%= user %>)</a>
+    </div>
+  </nav>
+  <main class="container">
+    <a href="/admin" class="back-link">&#8592; Admin Dashboard</a>
+    <h1>&#128100; User Management</h1>
+
+    <form method="GET" class="search-form">
+      <input type="text" name="q" value="<%= search %>" placeholder="Search users...">
+      <button type="submit" class="btn">Search</button>
+      <% if (search) { %><a href="/admin/users" class="btn">Clear</a><% } %>
+    </form>
+
+    <p class="muted"><%= total %> user<%= total !== 1 ? 's' : '' %> found</p>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Username</th><th>Full Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const u of users) { %>
+            <tr>
+              <td><a href="/profile/<%= u.id %>"><strong><%= u.username %></strong></a></td>
+              <td><%= u.full_name || '—' %></td>
+              <td><%= u.email %></td>
+              <td><span class="badge"><%= u.role %></span></td>
+              <td>
+                <% if (u.is_active) { %>
+                  <span class="badge green">Active</span>
+                <% } else { %>
+                  <span class="badge red">Inactive</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (u.is_active) { %>
+                  <form method="POST" action="/admin/users/<%= u.id %>/deactivate" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Deactivate this user?')">Deactivate</button>
+                  </form>
+                <% } else { %>
+                  <form method="POST" action="/admin/users/<%= u.id %>/activate" style="display:inline">
+                    <button type="submit" class="btn btn-sm">Activate</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if (pages > 1) { %>
+      <div class="pagination">
+        <% for (let i = 1; i <= pages; i++) { %>
+          <a href="/admin/users?page=<%= i %><%= search ? '&q=' + search : '' %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

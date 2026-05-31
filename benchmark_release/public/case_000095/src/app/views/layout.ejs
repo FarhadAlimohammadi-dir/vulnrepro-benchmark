@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <% if (typeof username !== 'undefined' && username) { %>
+    <header>
+      <div class="container">
+        <nav>
+          <h1>WorkflowHub</h1>
+          <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/workflows">Workflows</a>
+            <a href="/workflows/new">New Workflow</a>
+            <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+              <a href="/admin">Admin</a>
+            <% } %>
+            <a href="/logout">Logout (<%= username %>)</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+  <% } %>
+
+  <div class="container">
+    <%- body %>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 WorkflowHub Enterprise. All rights reserved.</p>
+  </footer>
+</body>
+</html>

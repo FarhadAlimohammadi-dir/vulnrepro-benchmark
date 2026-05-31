@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  workflowhub:
+    build: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped

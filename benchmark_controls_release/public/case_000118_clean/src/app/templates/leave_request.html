@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Meridian HR – Leave Request</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; }
+        .nav { background: #1a3a5c; color: #fff; padding: 14px 32px; display: flex; justify-content: space-between; }
+        .nav a { color: #aec6e8; text-decoration: none; margin-left: 18px; font-size: 14px; }
+        .container { max-width: 540px; margin: 36px auto; padding: 0 20px; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 8px rgba(0,0,0,0.08); padding: 28px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #344055; }
+        select, input, textarea { width: 100%; padding: 9px 11px; border: 1px solid #d0d7e2; border-radius: 5px; font-size: 14px; }
+        .btn { background: #1a3a5c; color: #fff; border: none; padding: 10px 26px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .alert-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 14px; font-size: 14px; }
+        .alert-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 14px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <h2>&#127970; Meridian HR</h2>
+    <div><a href="/dashboard">Dashboard</a><a href="/logout">Sign Out</a></div>
+</div>
+<div class="container">
+    <div class="card">
+        <h3 style="color:#1a3a5c;margin-bottom:20px;">Submit Leave Request</h3>
+        {% if message %}<div class="alert-success">{{ message }}</div>{% endif %}
+        {% if error %}<div class="alert-error">{{ error }}</div>{% endif %}
+        <form method="post">
+            <div class="form-group">
+                <label>Leave Type</label>
+                <select name="leave_type">
+                    <option value="annual">Annual Leave</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="personal">Personal Leave</option>
+                    <option value="maternity">Maternity/Paternity</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label>End Date</label>
+                <input type="date" name="end_date" required>
+            </div>
+            <div class="form-group">
+                <label>Reason (optional)</label>
+                <textarea name="reason" rows="3" placeholder="Brief description..."></textarea>
+            </div>
+            <button type="submit" class="btn">Submit Request</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

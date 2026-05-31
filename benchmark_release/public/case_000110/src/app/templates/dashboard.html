@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — TaskFlow{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+    <div>
+        <h1 style="font-size:1.75rem;font-weight:700;">Welcome, {{ welcome_name }}!</h1>
+        <p style="color:#718096;margin-top:.25rem;">Here's your task overview for today.</p>
+    </div>
+    <div>
+        <a href="/api/tasks" class="btn btn-secondary" style="margin-right:.5rem;">All Tasks</a>
+        <a href="/profile" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;">
+    <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-size:2rem;font-weight:700;color:#2b6cb0;">{{ stats.total or 0 }}</div>
+        <div style="font-size:.85rem;color:#718096;margin-top:.25rem;">Total Tasks</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-size:2rem;font-weight:700;color:#c05621;">{{ stats.open_count or 0 }}</div>
+        <div style="font-size:.85rem;color:#718096;margin-top:.25rem;">Open</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-size:2rem;font-weight:700;color:#2c7a7b;">{{ stats.in_progress_count or 0 }}</div>
+        <div style="font-size:.85rem;color:#718096;margin-top:.25rem;">In Progress</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem;">
+        <div style="font-size:2rem;font-weight:700;color:#276749;">{{ stats.closed_count or 0 }}</div>
+        <div style="font-size:.85rem;color:#718096;margin-top:.25rem;">Closed</div>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+    <div class="card">
+        <h2 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">My Tasks</h2>
+        {% if my_tasks %}
+        <table>
+            <thead>
+                <tr><th>Title</th><th>Project</th><th>Priority</th><th>Status</th><th>Due</th></tr>
+            </thead>
+            <tbody>
+            {% for task in my_tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.project_name }}</td>
+                <td><span class="badge badge-{{ task.priority }}">{{ task.priority }}</span></td>
+                <td>{{ task.status.replace('_', ' ').title() }}</td>
+                <td>{{ task.due_date or '—' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#718096;font-style:italic;">No tasks assigned to you yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Recent Activity</h2>
+        {% if recent_comments %}
+        {% for comment in recent_comments %}
+        <div style="padding:.75rem 0;border-bottom:1px solid #e2e8f0;">
+            <p style="font-size:.85rem;font-weight:600;">{{ comment.author_name }}</p>
+            <p style="font-size:.8rem;color:#718096;margin-top:.15rem;">on <em>{{ comment.task_title }}</em></p>
+            <p style="font-size:.85rem;margin-top:.25rem;">{{ comment.content }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="color:#718096;font-style:italic;">No recent activity.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= client.name %> — CodeFlow OAuth</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/oauth/clients" class="active">Applications</a>
+      <% if (user) { %>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="nav-logout">Logout (<%= user %>)</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <a href="/oauth/clients" class="back-link">&#8592; All Applications</a>
+    <h1>&#128196; <%= client.name %></h1>
+
+    <div class="card-grid">
+      <div class="card">
+        <h2>Client Details</h2>
+        <dl class="detail-list">
+          <dt>Client ID</dt><dd><code><%= client.id %></code></dd>
+          <dt>Description</dt><dd><%= client.description || '—' %></dd>
+          <dt>Owner</dt><dd><%= client.owner_name || '—' %></dd>
+          <dt>Website</dt><dd><% if (client.website) { %><a href="<%= client.website %>" target="_blank"><%= client.website %></a><% } else { %>—<% } %></dd>
+          <dt>Scopes</dt>
+          <dd>
+            <% for (const scope of (client.scopes || '').split(' ')) { %>
+              <span class="badge"><%= scope %></span>
+            <% } %>
+          </dd>
+          <dt>Active Tokens</dt><dd><%= tokenCount %></dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <h2>Redirect URIs</h2>
+        <ul class="uri-list">
+          <% for (const uri of client.redirect_uris) { %>
+            <li><code><%= uri %></code></li>
+          <% } %>
+        </ul>
+
+        <h2 style="margin-top:1.5rem">Start OAuth Flow</h2>
+        <p>
+          <a href="/authorize?client_id=<%= client.id %>&redirect_uri=<%= encodeURIComponent(client.redirect_uris[0]) %>&response_type=code&state=demo-<%= Date.now() %>" class="btn btn-primary">
+            &#9654; Authorize
+          </a>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Recent Authorizations</h2>
+        <% if (recentAuthorizations.length === 0) { %>
+          <p class="muted">No recent activity.</p>
+        <% } else { %>
+          <table class="data-table">
+            <thead><tr><th>User</th><th>Action</th><th>Time</th></tr></thead>
+            <tbody>
+              <% for (const entry of recentAuthorizations) { %>
+                <tr>
+                  <td><%= entry.username || 'unknown' %></td>
+                  <td><code><%= entry.action %></code></td>
+                  <td><%= new Date(entry.created_at * 1000).toLocaleString() %></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform</p>
+  </footer>
+</body>
+</html>

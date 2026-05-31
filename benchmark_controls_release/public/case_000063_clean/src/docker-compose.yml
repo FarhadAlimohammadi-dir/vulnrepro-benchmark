@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      FLASK_ENV: production
+      SECRET_KEY: flask-session-secret-abc123xyz
+      DATABASE_URL: sqlite:///data/projecthub.db
+      STRIPE_SECRET_KEY: sk_live_EXPOSED_SECRET_stripe_key_abc123
+      OPENAI_API_KEY: sk-openai-EXPOSED_prod_key_9876543210abcdef
+      DB_PASSWORD: sup3r$ecretDBpass!
+      INTERNAL_API_TOKEN: internal-svc-token-EXPOSED-aBcDeFgHiJ
+      SMTP_PASSWORD: smtp-mail-pass-EXPOSED-xyz789
+      APP_PORT: "9000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralOps — Run #<%= run.id %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav', { user, role }) %>
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Run #<%= run.id %> — <code><%= run.model_name %></code></h1>
+      <span class="badge badge-<%= run.status %>"><%= run.status %></span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h3>Run Info</h3>
+        <table class="kv-table">
+          <tr><th>Model</th><td><code><%= run.model_name %></code></td></tr>
+          <tr><th>Status</th><td><span class="badge badge-<%= run.status %>"><%= run.status %></span></td></tr>
+          <tr><th>Owner ID</th><td><%= run.owner_id || '—' %></td></tr>
+          <tr><th>Started</th><td class="ts"><%= run.started_at %></td></tr>
+          <tr><th>Finished</th><td class="ts"><%= run.finished_at || 'In progress' %></td></tr>
+        </table>
+      </div>
+
+      <div class="detail-card">
+        <h3>Config</h3>
+        <pre class="config-block"><%= run.config_json %></pre>
+      </div>
+    </div>
+
+    <% if (metrics && metrics.length) { %>
+    <h2>Metrics</h2>
+    <table class="data-table">
+      <thead><tr><th>Metric</th><th>Value</th><th>Recorded</th></tr></thead>
+      <tbody>
+        <% metrics.forEach(m => { %>
+          <tr>
+            <td><%= m.metric_name %></td>
+            <td><strong><%= m.metric_value %></strong></td>
+            <td class="ts"><%= m.recorded_at %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+
+    <h2>Notes</h2>
+    <p class="run-notes"><%= run.notes || 'No notes.' %></p>
+    <form method="POST" action="/runs/<%= run.id %>/notes" class="inline-form">
+      <textarea name="notes" rows="3" maxlength="500"><%= run.notes || '' %></textarea>
+      <button type="submit" class="btn-secondary">Save Notes</button>
+    </form>
+
+    <% if (['operator','admin'].includes(role) && ['pending','running'].includes(run.status)) { %>
+    <hr>
+    <form method="POST" action="/runs/<%= run.id %>/cancel" onsubmit="return confirm('Cancel this run?')">
+      <button type="submit" class="btn-danger">Cancel Run</button>
+    </form>
+    <% } %>
+
+    <p style="margin-top:2rem"><a href="/runs" class="btn-link-blue">← Back to Runs</a></p>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

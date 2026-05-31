@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search - ProjectFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, sans-serif; background: #f8fafc; }
+        nav { background: #4f46e5; color: white; padding: 14px 32px; display: flex; justify-content: space-between; }
+        nav .brand { font-weight: 700; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+        .container { max-width: 860px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { font-size: 1.3rem; margin-bottom: 20px; }
+        .result { padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; }
+        .result-name { font-weight: 600; }
+        .result-meta { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+        input[type=text] { padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; width: 300px; }
+        .btn { padding: 10px 16px; background: #6366f1; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="brand">ProjectFlow</span>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Search Results for "{{ query }}"</h2>
+            <form method="GET" action="/search" style="margin-bottom:24px;display:flex;gap:12px;">
+                <input type="text" name="q" value="{{ query }}">
+                <button type="submit" class="btn">Search</button>
+            </form>
+            {% if results %}
+                {% for r in results %}
+                <div class="result">
+                    <div class="result-name">{{ r['name'] }}</div>
+                    <div class="result-meta">Owner: {{ r['owner'] }} &bull; Status: {{ r['status'] }}</div>
+                    <div style="font-size:0.875rem;color:#475569;margin-top:6px;">{{ r['description'] or '' }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#94a3b8;">No projects found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

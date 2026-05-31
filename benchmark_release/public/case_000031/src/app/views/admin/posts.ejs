@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Posts — Admin — SocialKit</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">SocialKit</a>
+    <nav class="main-nav">
+      <a href="/admin">Admin</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/posts" class="active">Posts</a>
+      <a href="/admin/audit">Audit Log</a>
+      <a href="/logout" class="nav-logout">Sign out</a>
+    </nav>
+  </div>
+</header>
+<main class="main-content">
+<div class="container">
+  <h2>All Posts</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Title</th><th>Author</th><th>Status</th><th>Created</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <% posts.forEach(p => { %>
+      <tr>
+        <td><%= p.id %></td>
+        <td><a href="/posts/<%= p.id %>"><%= p.title %></a></td>
+        <td><%= p.username %></td>
+        <td><span class="status-dot <%= p.status === 'published' ? 'on' : 'off' %>"><%= p.status %></span></td>
+        <td><%= new Date(p.created_at).toLocaleDateString() %></td>
+        <td>
+          <form method="POST" action="/admin/posts/<%= p.id %>/delete">
+            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <div class="pagination">
+    <% if (page > 1) { %><a href="/admin/posts?page=<%= page-1 %>" class="btn btn-sm">&laquo; Prev</a><% } %>
+    <span>Page <%= page %> of <%= totalPages %></span>
+    <% if (page < totalPages) { %><a href="/admin/posts?page=<%= page+1 %>" class="btn btn-sm">Next &raquo;</a><% } %>
+  </div>
+</div>
+</main>
+<footer class="site-footer"><div class="container"><p>&copy; 2024 SocialKit Platform</p></div></footer>
+</body>
+</html>

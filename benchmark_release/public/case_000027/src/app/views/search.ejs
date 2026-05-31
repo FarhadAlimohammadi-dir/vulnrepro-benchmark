@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Search — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <% if (locals.currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <span class="spacer"></span>
+    <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <span class="spacer"></span>
+    <a href="/login">Login</a>
+    <a href="/register" class="btn btn-primary btn-sm">Register</a>
+  <% } %>
+</nav>
+
+<div class="container page">
+  <h1 class="mb-2">Search Snippets</h1>
+  <form method="GET" action="/search" class="flex flex-wrap mb-2" style="gap:.5rem">
+    <input type="text" name="q" value="<%= q %>" placeholder="Keywords…" style="width:280px" />
+    <input type="text" name="lang" value="<%= lang %>" placeholder="Language (e.g. python)" style="width:160px" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <% if (total > 0) { %>
+    <p class="text-muted mb-2">Found <strong><%= total %></strong> result<%= total !== 1 ? 's' : '' %></p>
+    <table>
+      <thead><tr><th>Title</th><th>Language</th><th>Author</th><th>Views</th><th>Date</th></tr></thead>
+      <tbody>
+        <% results.forEach(s => { %>
+          <tr>
+            <td><a href="/snippets/<%= s.id %>"><%= s.title %></a></td>
+            <td><span class="badge badge-blue"><%= s.language %></span></td>
+            <td><a href="/profile/<%= s.username %>"><%= s.username %></a></td>
+            <td><%= s.view_count %></td>
+            <td class="text-muted"><%= new Date(s.created_at).toLocaleDateString() %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <% if (pages > 1) { %>
+      <div class="pagination">
+        <% for (let i = 1; i <= pages; i++) { %>
+          <a href="/search?q=<%= encodeURIComponent(q) %>&lang=<%= encodeURIComponent(lang) %>&page=<%= i %>"
+             class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+      </div>
+    <% } %>
+  <% } else if (q || lang) { %>
+    <div class="alert alert-info">No results found for your search.</div>
+  <% } %>
+</div>
+</body>
+</html>

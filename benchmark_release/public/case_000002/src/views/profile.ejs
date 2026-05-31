@@ -1,0 +1,40 @@
+<%
+  title = 'Profile'
+  const actRows = recentActivity.map(r => `
+    <div class="entry">
+      <span class="pill">${r.kind}</span>
+      <span class="muted"> ${r.message || ''}</span>
+      <span class="muted" style="float:right;font-size:0.85rem">${r.created_at}</span>
+    </div>
+  `).join('')
+  body = `
+<h1>Profile — ${u.username}</h1>
+<p class="muted">${u.email} · <span class="pill">${u.role}</span> · joined ${u.created_at}</p>
+<p>${u.bio || '<em>No bio set</em>'}</p>
+
+<details>
+  <summary>Edit profile</summary>
+  <form class="form" method="post" action="/profile/update" style="margin-top:0.5rem;max-width:500px">
+    <label>Bio <input name="bio" value="${u.bio || ''}"></label>
+    <label>Avatar URL <input name="avatar_url" type="url" value="${u.avatar_url || ''}"></label>
+    <br><button type="submit">Save</button>
+  </form>
+</details>
+
+<details style="margin-top:1rem">
+  <summary>Change password</summary>
+  <form class="form" method="post" action="/profile/password" style="margin-top:0.5rem;max-width:400px">
+    <label>Current password <input type="password" name="current_password" required></label>
+    <label>New password <input type="password" name="new_password" minlength="6" required></label>
+    <br><button type="submit">Change password</button>
+  </form>
+</details>
+
+<h2>API Keys</h2>
+<p>${keyCount} key(s) · <a href="/api-keys">Manage →</a></p>
+
+<h2>Recent activity</h2>
+${actRows || '<p class="muted">No activity yet</p>'}
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

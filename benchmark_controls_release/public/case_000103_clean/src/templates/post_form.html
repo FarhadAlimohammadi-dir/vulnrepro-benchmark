@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} — ContentHub{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{% if post %}Edit Post{% else %}New Post{% endif %}</h1>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="{{ post.title if post else '' }}" required>
+
+        <label for="category">Category</label>
+        <select name="category" id="category">
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if post and post.category == cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            <option value="draft" {% if post and post.status == 'draft' %}selected{% endif %}>Draft</option>
+            <option value="published" {% if post and post.status == 'published' %}selected{% endif %}>Published</option>
+        </select>
+
+        <label for="content">Content (HTML)</label>
+        <textarea name="content" id="content">{{ post.content if post else '' }}</textarea>
+
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">
+            {% if post %}Save Changes{% else %}Publish Post{% endif %}
+        </button>
+        <a href="/" class="btn btn-secondary" style="margin-top:1rem;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

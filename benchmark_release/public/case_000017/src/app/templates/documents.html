@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Documents &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>Shared Documents</h2>
+    <div class="tag-filters">
+      <a class="tag-filter {% if not tag %}active{% endif %}" href="/documents">All</a>
+      {% for t in tags %}
+      <a class="tag-filter {% if tag == t %}active{% endif %}" href="/documents?tag={{ t }}">{{ t }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="doc-table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Tag</th>
+          <th>Owner</th>
+          <th>Updated</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in docs %}
+        <tr>
+          <td><a href="/documents/{{ doc.id }}">{{ doc.title }}</a></td>
+          <td><span class="tag-badge">{{ doc.tags or '—' }}</span></td>
+          <td>{{ doc.owner_name or '—' }}</td>
+          <td>{{ doc.updated_at[:10] if doc.updated_at else '—' }}</td>
+          <td><a class="btn btn-sm btn-outline" href="/documents/{{ doc.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for p in range(1, pages+1) %}
+    <a class="page-btn {% if p == page %}active{% endif %}"
+       href="/documents?page={{ p }}{% if tag %}&tag={{ tag }}{% endif %}">{{ p }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

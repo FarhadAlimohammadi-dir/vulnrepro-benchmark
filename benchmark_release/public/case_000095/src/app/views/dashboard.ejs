@@ -1,0 +1,40 @@
+<%- include('layout', { title: 'Dashboard', body: `
+  <h2>Dashboard</h2>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h4>Total Workflows</h4>
+      <div class="value"><%= stats.total %></div>
+    </div>
+    <div class="stat-card">
+      <h4>Executed</h4>
+      <div class="value"><%= stats.executed %></div>
+    </div>
+    <div class="stat-card">
+      <h4>Last Activity</h4>
+      <div class="value"><%= stats.recent || 'N/A' %></div>
+    </div>
+  </div>
+
+  <h3>Recent Workflows</h3>
+  <% if (workflows.length === 0) { %>
+    <p>No workflows yet. <a href="/workflows/new">Create one</a></p>
+  <% } else { %>
+    <% workflows.slice(0, 5).forEach(workflow => { %>
+      <div class="workflow-card">
+        <div>
+          <h4><%= workflow.name %></h4>
+          <p><strong>URL:</strong> <%= workflow.webhook_url %></p>
+          <p><strong>Method:</strong> <%= workflow.method %> | <strong>Executions:</strong> <%= workflow.execution_count %></p>
+        </div>
+        <div class="workflow-actions">
+          <a href="/workflows/<%= workflow.id %>" class="btn">View</a>
+          <form action="/api/workflows/execute" method="post" style="display: inline;">
+            <input type="hidden" name="workflow_id" value="<%= workflow.id %>">
+            <button type="submit" class="btn btn-secondary">Execute</button>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+  <% } %>
+` }) %>

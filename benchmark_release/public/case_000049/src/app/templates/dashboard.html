@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HelpDesk Pro — Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; }
+        .topbar { background: #1a73e8; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .topbar h1 { font-size: 18px; }
+        .container { max-width: 900px; margin: 24px auto; padding: 0 24px; }
+        .section { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .section h2 { font-size: 16px; margin-bottom: 12px; color: #333; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 8px; background: #f8f9fa; color: #666; }
+        td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
+        .logout-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <h1>🎫 HelpDesk Pro</h1>
+        <div>Welcome, <strong>{{ username }}</strong> &nbsp;&nbsp; <a href="/logout" class="logout-btn">Sign Out</a></div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>My Recent Tickets</h2>
+            {% if tickets %}
+            <table>
+                <thead><tr><th>#</th><th>Title</th><th>Priority</th><th>Status</th><th>Created</th></tr></thead>
+                <tbody>
+                {% for t in tickets %}
+                <tr>
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.title }}</td>
+                    <td>{{ t.priority }}</td>
+                    <td>{{ t.status }}</td>
+                    <td>{{ t.created_at }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color:#888; font-size:13px;">No tickets yet. <a href="#">Submit a new ticket</a></p>
+            {% endif %}
+        </div>
+        <div class="section">
+            <h2>Announcements</h2>
+            {% for a in announcements %}
+            <div style="margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #eee;">
+                <strong>{{ a.title }}</strong>
+                <p style="font-size:13px; color:#555; margin-top:4px;">{{ a.body }}</p>
+            </div>
+            {% else %}
+            <p style="color:#888; font-size:13px;">No announcements.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

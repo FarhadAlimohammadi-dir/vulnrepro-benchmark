@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/dashboard">&#9656; Gateway Portal</a></div>
+    <ul class="nav-links">
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/requests">My Requests</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/admin" class="active">Admin</a></li>
+    </ul>
+    <div class="nav-user">
+      <a href="/logout" class="btn-logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Administration Dashboard</h1>
+      <span class="badge badge-admin">Admin</span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><%= totalUsers %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <% requestStats.forEach(function(s) { %>
+      <div class="stat-card">
+        <div class="stat-number"><%= s.count %></div>
+        <div class="stat-label"><%= s.status %> Requests</div>
+      </div>
+      <% }); %>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="showTab('users-tab', this)">Users</button>
+      <button class="tab-btn" onclick="showTab('requests-tab', this)">Requests</button>
+      <button class="tab-btn" onclick="showTab('audit-tab', this)">Audit Log</button>
+      <button class="tab-btn" onclick="showTab('depts-tab', this)">Departments</button>
+    </div>
+
+    <!-- Users Tab -->
+    <div id="users-tab" class="tab-content">
+      <h2>User Accounts</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Roles</th>
+            <th>Status</th>
+            <th>Last Login</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(u) { %>
+          <tr class="<%= u.enabled ? '' : 'row-disabled' %>">
+            <td><%= u.id %></td>
+            <td><%= u.username %></td>
+            <td><%= u.employee_name %></td>
+            <td><%= u.department %></td>
+            <td>
+              <% u.roles.split(',').forEach(function(r) { %>
+              <span class="role-badge role-badge-sm"><%= r.trim() %></span>
+              <% }); %>
+            </td>
+            <td><span class="badge badge-<%= u.enabled ? 'approved' : 'rejected' %>"><%= u.enabled ? 'Active' : 'Disabled' %></span></td>
+            <td><%= u.last_login ? new Date(u.last_login).toLocaleString() : 'Never' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Requests Tab -->
+    <div id="requests-tab" class="tab-content" style="display:none;">
+      <h2>Access Requests</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Requester</th>
+            <th>System</th>
+            <th>Title</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentRequests.forEach(function(r) { %>
+          <tr>
+            <td><%= r.id %></td>
+            <td><%= r.username %></td>
+            <td><%= r.system_name %></td>
+            <td><%= r.title %></td>
+            <td><span class="badge badge-level"><%= r.access_level %></span></td>
+            <td><span class="badge badge-<%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+            <td><%= new Date(r.created_at).toLocaleDateString() %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Audit Tab -->
+    <div id="audit-tab" class="tab-content" style="display:none;">
+      <h2>Audit Log</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Actor</th>
+            <th>Action</th>
+            <th>Target</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% auditEvents.forEach(function(e) { %>
+          <tr>
+            <td><%= new Date(e.created_at).toLocaleString() %></td>
+            <td><%= e.actor %></td>
+            <td><span class="badge badge-action"><%= e.action %></span></td>
+            <td><%= e.target %></td>
+            <td><%= e.ip_address %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Departments Tab -->
+    <div id="depts-tab" class="tab-content" style="display:none;">
+      <h2>Departments</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Manager</th>
+            <th>Headcount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% departments.forEach(function(d) { %>
+          <tr>
+            <td><%= d.name %></td>
+            <td><%= d.manager || '—' %></td>
+            <td><%= d.headcount %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2024 Target Corporation</p>
+  </footer>
+  <script>
+    function showTab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).style.display = 'block';
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

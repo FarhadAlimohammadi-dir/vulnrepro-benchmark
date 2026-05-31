@@ -1,0 +1,16 @@
+{
+  "name": "presethub",
+  "version": "1.2.0",
+  "description": "Theme and configuration preset management platform",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "ejs": "^3.1.8",
+    "better-sqlite3": "^9.0.0"
+  }
+}

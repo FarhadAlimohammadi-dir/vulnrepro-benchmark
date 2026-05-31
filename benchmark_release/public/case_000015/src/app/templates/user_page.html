@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}{{ viewed_user.username | e }} – NoteFlow{% endblock %}
+{% block content %}
+<div class="user-hero">
+  <h2>{{ viewed_user.username | e }}</h2>
+  {% if viewed_user.bio %}
+  <p>{{ viewed_user.bio | e }}</p>
+  {% endif %}
+  <small class="muted">Member since {{ viewed_user.created_at }}</small>
+</div>
+
+<h3>Public Notes</h3>
+{% if notes %}
+<div class="note-list">
+  {% for n in notes %}
+  <div class="card">
+    <div class="card-title"><a href="/notes/{{ n.id }}">{{ n.title | e }}</a></div>
+    <div class="card-meta">{{ n.updated_at }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">This user has no public notes.</p>
+{% endif %}
+{% endblock %}

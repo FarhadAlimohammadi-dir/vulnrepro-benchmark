@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> — Acme Blog</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a class="logo" href="/">Acme</a>
+      <ul>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="content">
+    <%- body %>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2024 Acme Corp. All rights reserved.</p>
+  </footer>
+</body>
+</html>

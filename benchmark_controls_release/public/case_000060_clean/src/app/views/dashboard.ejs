@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard — Community Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/dashboard">Home</a>
+      <a href="/dashboard/cases">Cases</a>
+      <a href="/dashboard/settings">Settings</a>
+      <a href="/api/profile">Profile</a>
+      <form class="nav-right" method="POST" action="/logout"><button type="submit">Log Out</button></form>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Welcome, <%= user.username %></h1>
+    <p>Role: <strong><%= user.role %></strong></p>
+
+    <section class="card">
+      <h2>Data Explorer</h2>
+      <p>Browse available objects or query records using the Aura API.</p>
+      <button class="btn-secondary" onclick="loadObjects()">List Available Objects</button>
+      <button class="btn-secondary" onclick="queryCases()">View Open Cases</button>
+      <% if (user.role === 'admin') { %>
+        <button class="btn-secondary" onclick="queryUsers()">View User Records</button>
+      <% } %>
+    </section>
+
+    <section id="result-panel" class="card" style="display:none">
+      <h3>Results</h3>
+      <pre id="result-body"></pre>
+    </section>
+  </main>
+
+  <script>
+  function showResult(data) {
+    document.getElementById('result-panel').style.display = 'block';
+    document.getElementById('result-body').textContent = JSON.stringify(data, null, 2);
+  }
+
+  function loadObjects() {
+    fetch('/api/aura', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'getObjects', params: {} })
+    }).then(r => r.json()).then(d => showResult(d.returnValue));
+  }
+
+  function queryCases() {
+    fetch('/api/aura', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'queryObject',
+        params: { objectName: 'cases', fields: ['id', 'subject', 'status', 'created_at'] }
+      })
+    }).then(r => r.json()).then(d => showResult(d.returnValue));
+  }
+
+  function queryUsers() {
+    fetch('/api/aura', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'queryObject',
+        params: { objectName: 'users', fields: ['username', 'email', 'ssn', 'phone'] }
+      })
+    }).then(r => r.json()).then(d => showResult(d.returnValue));
+  }
+  </script>
+</body>
+</html>

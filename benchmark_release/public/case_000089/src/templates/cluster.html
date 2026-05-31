@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cluster.name }} - StreamDash</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; }
+        .navbar { background: #1a1d27; border-bottom: 1px solid #2d3148; padding: 1rem 2rem; }
+        .navbar a { color: #7c83fd; text-decoration: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .metric-card { background: #1a1d27; border: 1px solid #2d3148; border-radius: 8px; padding: 1rem; text-align: center; }
+        .metric-val { font-size: 2rem; font-weight: 700; color: #7c83fd; }
+        .metric-label { font-size: 0.75rem; color: #64748b; margin-top: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; background: #1a1d27; border-radius: 8px; overflow: hidden; }
+        th { background: #2d3148; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; font-size: 0.875rem; }
+        a { color: #7c83fd; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar"><a href="/">← StreamDash</a> / {{ cluster.name }}</div>
+    <div class="container">
+        <div class="metrics">
+            <div class="metric-card"><div class="metric-val">{{ metrics.topic_count }}</div><div class="metric-label">Topics</div></div>
+            <div class="metric-card"><div class="metric-val">{{ metrics.broker_count }}</div><div class="metric-label">Brokers</div></div>
+            <div class="metric-card"><div class="metric-val">{{ metrics.message_count }}</div><div class="metric-label">Messages</div></div>
+            <div class="metric-card"><div class="metric-val">{{ metrics.under_replicated_partitions }}</div><div class="metric-label">Under-replicated</div></div>
+        </div>
+        <table>
+            <thead><tr><th>Topic</th><th>Partitions</th><th>Cleanup Policy</th><th>Created</th></tr></thead>
+            <tbody>
+            {% for topic in topics %}
+            <tr>
+                <td><a href="/clusters/{{ cluster.id }}/topics/{{ topic.name }}">{{ topic.name }}</a></td>
+                <td>{{ topic.partitions }}</td>
+                <td>{{ topic.cleanup_policy }}</td>
+                <td>{{ topic.created_at }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

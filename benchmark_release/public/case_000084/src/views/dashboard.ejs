@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TemplateStudio - Dashboard</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand">TemplateStudio</div>
+    <nav class="top-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/api/templates/list" id="nav-templates">Templates</a>
+    </nav>
+    <div class="user-info">
+      Welcome, <strong><%= username %></strong> &nbsp;|&nbsp;
+      <a href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#process">Process Assets</a></li>
+        <li><a href="#search">Search Templates</a></li>
+        <li><a href="#validate">Validate URLs</a></li>
+      </ul>
+    </aside>
+
+    <section class="content-area">
+
+      <div id="overview" class="card stats-card">
+        <h2>Overview</h2>
+        <div class="stat-row">
+          <div class="stat-box">
+            <span class="stat-num"><%= stats.total %></span>
+            <span class="stat-label">Total Templates</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num"><%= stats.active %></span>
+            <span class="stat-label">Active</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num"><%= stats.draft %></span>
+            <span class="stat-label">Draft</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="process" class="card">
+        <h2>Process Template Assets</h2>
+        <p class="hint">Provide a JSON body with a <code>remoteAssets</code> array to download and cache assets for your template.</p>
+        <form id="templateForm">
+          <label for="templateJson">Template JSON</label>
+          <textarea id="templateJson" placeholder='{"name":"MyTemplate","remoteAssets":["https://cdn.example.com/image.png"]}' required></textarea>
+          <button type="submit" class="btn-primary">Process</button>
+        </form>
+        <div id="processResult" class="result-box hidden"></div>
+      </div>
+
+      <div id="search" class="card">
+        <h2>Search Templates</h2>
+        <form id="searchForm">
+          <input type="text" id="searchQuery" placeholder="Template name..." minlength="2">
+          <button type="submit" class="btn-secondary">Search</button>
+        </form>
+        <div id="searchResult" class="result-box hidden"></div>
+      </div>
+
+      <div id="validate" class="card">
+        <h2>Validate URLs</h2>
+        <p class="hint">Enter one URL per line to check validity before adding to a template.</p>
+        <form id="validateForm">
+          <textarea id="urlsInput" placeholder="https://cdn.example.com/image.png&#10;https://cdn.example.com/video.mp4"></textarea>
+          <button type="submit" class="btn-secondary">Validate</button>
+        </form>
+        <div id="validateResult" class="result-box hidden"></div>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    // Process template
+    document.getElementById('templateForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resultEl = document.getElementById('processResult');
+      try {
+        const data = JSON.parse(document.getElementById('templateJson').value);
+        const res = await fetch('/api/process-template', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        resultEl.innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        resultEl.classList.remove('hidden');
+      } catch (err) {
+        resultEl.innerHTML = '<p class="error">Parse error: ' + err.message + '</p>';
+        resultEl.classList.remove('hidden');
+      }
+    });
+
+    // Search templates
+    document.getElementById('searchForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = document.getElementById('searchQuery').value;
+      const resultEl = document.getElementById('searchResult');
+      const res = await fetch('/api/templates/search?q=' + encodeURIComponent(q));
+      const result = await res.json();
+      resultEl.innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+      resultEl.classList.remove('hidden');
+    });
+
+    // Validate URLs
+    document.getElementById('validateForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const raw = document.getElementById('urlsInput').value;
+      const urls = raw.split('\n').map(s => s.trim()).filter(Boolean);
+      const resultEl = document.getElementById('validateResult');
+      const res = await fetch('/api/validate-urls', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls })
+      });
+      const result = await res.json();
+      resultEl.innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+      resultEl.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: title }) %>
+<div class="page-header">
+  <h1>My Profile</h1>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="card max-w-lg">
+  <form action="/profile" method="POST">
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" value="<%= user.email %>" disabled class="input-disabled">
+      <small class="muted">Email cannot be changed. Contact support for assistance.</small>
+    </div>
+    <div class="form-group">
+      <label for="display_name">Display Name</label>
+      <input type="text" id="display_name" name="display_name" value="<%= user.display_name || '' %>" class="input" placeholder="Your name">
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" value="<%= user.phone || '' %>" class="input" placeholder="+1 555 000 0000">
+    </div>
+    <div class="form-group">
+      <label for="timezone">Timezone</label>
+      <select id="timezone" name="timezone" class="input">
+        <option value="UTC" <%= user.timezone === 'UTC' ? 'selected' : '' %>>UTC</option>
+        <option value="America/New_York" <%= user.timezone === 'America/New_York' ? 'selected' : '' %>>Eastern Time</option>
+        <option value="America/Chicago" <%= user.timezone === 'America/Chicago' ? 'selected' : '' %>>Central Time</option>
+        <option value="America/Los_Angeles" <%= user.timezone === 'America/Los_Angeles' ? 'selected' : '' %>>Pacific Time</option>
+        <option value="Europe/London" <%= user.timezone === 'Europe/London' ? 'selected' : '' %>>London</option>
+        <option value="Europe/Paris" <%= user.timezone === 'Europe/Paris' ? 'selected' : '' %>>Paris / Berlin</option>
+        <option value="Asia/Tokyo" <%= user.timezone === 'Asia/Tokyo' ? 'selected' : '' %>>Tokyo</option>
+        <option value="Asia/Singapore" <%= user.timezone === 'Asia/Singapore' ? 'selected' : '' %>>Singapore</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-primary">Save Changes</button>
+  </form>
+</div>
+<%- include('partials/footer') %>

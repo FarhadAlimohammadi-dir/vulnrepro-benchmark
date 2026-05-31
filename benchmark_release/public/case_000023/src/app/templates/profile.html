@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>&#128100; {{ profile.username }}</h2>
+  <span class="badge">{{ profile.role }}</span>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Account Details</h3>
+    <dl class="detail-list">
+      <dt>Username</dt><dd>{{ profile.username }}</dd>
+      <dt>Email</dt><dd>{{ profile.email or '—' }}</dd>
+      <dt>Role</dt><dd>{{ profile.role }}</dd>
+      <dt>Member since</dt><dd>{{ profile.created_at[:10] }}</dd>
+      <dt>Last login</dt><dd>{{ profile.last_login[:16] if profile.last_login else '—' }}</dd>
+    </dl>
+    <hr>
+    <h4>Edit Profile</h4>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea id="edit-bio" rows="3" style="width:100%">{{ profile.bio or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="edit-email" value="{{ profile.email or '' }}">
+    </div>
+    <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+    <div id="profile-msg" class="form-error"></div>
+  </div>
+
+  <div class="card">
+    <h3>Recent Snippets</h3>
+    {% if recent %}
+    <ul class="item-list">
+      {% for s in recent %}
+      <li class="item-row">
+        <a href="/snippets/{{ s.id }}" class="item-title">{{ s.title }}</a>
+        <span class="badge badge-lang">{{ s.language }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No snippets yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function saveProfile() {
+    const msg = document.getElementById('profile-msg');
+    msg.textContent = '';
+    const r = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        bio:   document.getElementById('edit-bio').value,
+        email: document.getElementById('edit-email').value
+      })
+    });
+    const d = await r.json();
+    if (r.ok) { msg.style.color = '#28a745'; msg.textContent = 'Profile updated!'; }
+    else { msg.style.color = '#dc3545'; msg.textContent = d.error || 'Failed to update.'; }
+  }
+</script>
+{% endblock %}

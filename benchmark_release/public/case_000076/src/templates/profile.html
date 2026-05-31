@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.display_name | e }} — OldBlog{% endblock %}
+{% block content %}
+<h1>{{ profile.display_name | e }}</h1>
+<dl>
+  <dt>Username</dt><dd>{{ profile.username | e }}</dd>
+  <dt>Role</dt><dd>{{ profile.role | e }}</dd>
+  <dt>Joined</dt><dd>{{ profile.joined }}</dd>
+</dl>
+<p><a href="/users">&larr; All authors</a></p>
+{% endblock %}

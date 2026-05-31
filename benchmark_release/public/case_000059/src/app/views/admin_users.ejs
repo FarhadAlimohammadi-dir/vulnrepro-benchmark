@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FileVault — Admin: Users</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">📁 FileVault</div>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/admin/users" class="active">Admin</a>
+      <a href="/logout">Sign Out</a>
+    </div>
+  </nav>
+  <main class="main-content">
+    <div class="page-header"><h2>User Management</h2><span>Page <%= page %> of <%= totalPages %></span></div>
+    <table class="file-table">
+      <thead>
+        <tr><th>Username</th><th>User ID</th><th>Files</th><th>Storage (bytes)</th></tr>
+      </thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+        <tr>
+          <td><%= u.username %></td>
+          <td><%= u.user_id %></td>
+          <td><%= u.fileCount %></td>
+          <td><%= u.totalSize %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/admin/users?page=<%= page - 1 %>" class="btn btn-sm">Prev</a><% } %>
+      <% if (page < totalPages) { %><a href="/admin/users?page=<%= page + 1 %>" class="btn btn-sm">Next</a><% } %>
+    </div>
+  </main>
+</body>
+</html>

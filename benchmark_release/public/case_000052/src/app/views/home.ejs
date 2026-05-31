@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeFlow OAuth Platform</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><a href="/">&#128279; CodeFlow</a></div>
+    <div class="nav-links">
+      <a href="/" class="active">Home</a>
+      <a href="/oauth/clients">Applications</a>
+      <% if (user) { %>
+        <a href="/profile">Profile</a>
+        <a href="/admin">Admin</a>
+        <a href="/logout" class="nav-logout">Logout (<%= user %>)</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="hero">
+      <h1>CodeFlow OAuth 2.0</h1>
+      <p class="hero-sub">Secure authorization server for developer integrations</p>
+    </div>
+
+    <% if (user) { %>
+      <div class="card-grid">
+        <div class="card">
+          <h2>Quick Actions</h2>
+          <ul class="link-list">
+            <li><a href="/authorize?client_id=myapp&redirect_uri=https://legitimate-app.com/callback&response_type=code&state=demo-xyz">&#9654; Start OAuth Flow</a></li>
+            <li><a href="/oauth/clients">&#128196; Browse Applications</a></li>
+            <li><a href="/profile">&#128100; Manage Profile</a></li>
+            <li><a href="/admin">&#9881; Admin Panel</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Registered Applications</h2>
+          <% if (recentApps && recentApps.length) { %>
+            <ul class="link-list">
+              <% for (const app of recentApps) { %>
+                <li><a href="/oauth/clients/<%= app.id %>"><%= app.name %></a> <span class="badge"><%= app.scopes %></span></li>
+              <% } %>
+            </ul>
+          <% } else { %>
+            <p class="muted">No applications registered yet.</p>
+          <% } %>
+        </div>
+        <div class="card">
+          <h2>Platform Status</h2>
+          <ul class="stat-list">
+            <li><span>Server</span><span class="badge green">Online</span></li>
+            <li><span>OAuth Endpoint</span><span class="badge green">Active</span></li>
+            <li><span>Token Service</span><span class="badge green">Active</span></li>
+          </ul>
+          <p><a href="/health">&#128200; Health Check</a></p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="card center-card">
+        <h2>Welcome to CodeFlow</h2>
+        <p>Please log in to manage OAuth applications and authorize integrations.</p>
+        <a href="/login" class="btn btn-primary">Login</a>
+      </div>
+      <div class="card">
+        <h2>About This Platform</h2>
+        <p>CodeFlow provides a standards-compliant OAuth 2.0 authorization server for developer integrations. Features include:</p>
+        <ul>
+          <li>Authorization Code flow with PKCE support</li>
+          <li>Client credential management</li>
+          <li>Granular scope control</li>
+          <li>Full audit logging</li>
+          <li>Token revocation and refresh</li>
+        </ul>
+      </div>
+    <% } %>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 CodeFlow OAuth Platform &mdash; v2.1.0 &mdash; <a href="/health">Status</a></p>
+  </footer>
+</body>
+</html>

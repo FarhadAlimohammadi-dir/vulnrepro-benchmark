@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocManager - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; }
+        .nav a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 8px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stat-card h2 { font-size: 2rem; color: #3498db; margin: 0; }
+        .stat-card p { color: #666; margin: 0.5rem 0 0; }
+        .card { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>&#128196; DocManager</h1>
+        <div class="nav">
+            <a href="/api/documents/list">Documents</a>
+            <a href="/api/reports/list">Reports</a>
+            <a href="/api/admin/audit">Audit Logs</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>Dashboard</h2>
+            <p>Welcome back! Use the navigation above to access system features.</p>
+            <p><strong>API Endpoints:</strong></p>
+            <ul>
+                <li><code>POST /auth/login</code> - Authenticate</li>
+                <li><code>GET /api/documents/list</code> - List documents</li>
+                <li><code>GET /api/documents/search?q=term</code> - Search documents</li>
+                <li><code>GET /api/reports/list</code> - List reports</li>
+                <li><code>GET /api/reports/preview?file=report.html</code> - Preview report</li>
+                <li><code>GET /api/admin/audit</code> - View audit logs (admin)</li>
+                <li><code>GET /api/admin/stats</code> - System statistics (admin)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

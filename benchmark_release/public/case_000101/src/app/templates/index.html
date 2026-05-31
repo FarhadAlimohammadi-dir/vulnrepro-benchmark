@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <h1>OpenWrt ASU Build Portal</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="#builds">Builds</a>
+                <a href="#profiles">Profiles</a>
+                <a href="/health">Status</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Attended Sysupgrade Build Service</h2>
+            <p>Generate custom OpenWrt firmware images with your selected packages and target hardware profile.</p>
+        </section>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <h3>Multi-target Support</h3>
+                <p>Supports x86/64, ath79, ipq40xx, ramips and more hardware families across multiple OpenWrt release branches.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Build Caching</h3>
+                <p>Identical requests return cached firmware immediately, reducing build time for common configurations.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Audit Trail</h3>
+                <p>All build events are logged for compliance and operational review by the security team.</p>
+            </div>
+        </section>
+
+        <section id="quickstart" class="quickstart">
+            <h2>Quick Start</h2>
+            <pre><code>curl -s -X POST {{ request.host_url }}login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"builder","password":"builder456"}' | jq .session_id</code></pre>
+            <p>Then use the returned <code>session_id</code> as the <code>X-Session-ID</code> header for subsequent requests.</p>
+        </section>
+
+        <section id="builds" class="api-table">
+            <h2>API Reference</h2>
+            <table>
+                <thead>
+                    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>POST</td><td>/login</td><td>Authenticate and obtain session token</td></tr>
+                    <tr><td>POST</td><td>/api/v1/build</td><td>Submit a firmware build request</td></tr>
+                    <tr><td>POST</td><td>/api/v1/build-request-preview</td><td>Preview cache key without building</td></tr>
+                    <tr><td>POST</td><td>/api/v1/validate-packages</td><td>Validate package name list</td></tr>
+                    <tr><td>GET</td><td>/api/v1/cache-stats</td><td>View cache statistics</td></tr>
+                    <tr><td>GET</td><td>/api/v1/profiles</td><td>List hardware profiles</td></tr>
+                    <tr><td>GET</td><td>/api/v1/builds/history</td><td>Build history (paginated)</td></tr>
+                    <tr><td>GET</td><td>/api/v1/audit-log</td><td>Audit log (admin only)</td></tr>
+                    <tr><td>GET</td><td>/api/v1/user/profile</td><td>Current user profile</td></tr>
+                    <tr><td>GET</td><td>/health</td><td>Service health check</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>OpenWrt ASU Build Service &mdash; v2.4.1 &mdash; &copy; 2024</p>
+    </footer>
+</body>
+</html>

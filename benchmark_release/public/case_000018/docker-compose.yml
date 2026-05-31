@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - NODE_ENV=production
+      - SESSION_SECRET=vb-docker-secret-2024
+      - DB_PATH=/data/visionboard.db
+      - LOG_LEVEL=info
+    volumes:
+      - visionboard_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+volumes:
+  visionboard_data:

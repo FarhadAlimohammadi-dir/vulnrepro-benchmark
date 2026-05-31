@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}PromptForge — AI Prompt Management{% endblock %}
+{% block content %}
+<div class="hero">
+  <h1>PromptForge</h1>
+  <p class="lead">Build, manage, and deploy AI prompts for Google Cloud Vertex AI.</p>
+  <a href="/login" class="btn-primary">Get Started</a>
+</div>
+<div class="features">
+  <div class="feature-card">
+    <h3>📚 Prompt Library</h3>
+    <p>Organise and version-control your AI prompts across teams and projects.</p>
+  </div>
+  <div class="feature-card">
+    <h3>⚙️ Code Generation</h3>
+    <p>Instantly generate bash and Python snippets to call Vertex AI with your prompts.</p>
+  </div>
+  <div class="feature-card">
+    <h3>🔍 Validation</h3>
+    <p>Lint and preview prompts before deploying them to production pipelines.</p>
+  </div>
+  <div class="feature-card">
+    <h3>📊 Audit Log</h3>
+    <p>Track all changes and usage across your organisation for compliance.</p>
+  </div>
+</div>
+{% endblock %}

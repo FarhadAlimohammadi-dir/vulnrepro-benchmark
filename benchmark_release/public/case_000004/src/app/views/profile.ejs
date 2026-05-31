@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — NoteVault</title>
+  <link rel="stylesheet" href="/_assets/static/app.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">NoteVault</a>
+    <nav class="main-nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/search">Search</a>
+      <a href="/profile" class="nav-username"><%= user.display_name || user.username %></a>
+      <form action="/logout" method="post" style="margin:0">
+        <button type="submit" class="btn btn-sm btn-outline">Sign out</button>
+      </form>
+    </nav>
+  </div>
+</header>
+<main class="container main-content">
+  <div class="page-header"><h2>Your Profile</h2></div>
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="two-col">
+    <section class="card mb-lg">
+      <h3>Account details</h3>
+      <form method="post" action="/profile" class="form-stack">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" value="<%= user.username %>" disabled>
+        </div>
+        <div class="form-group">
+          <label for="display_name">Display name</label>
+          <input id="display_name" name="display_name" type="text" value="<%= user.display_name %>">
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" value="<%= user.email %>" required>
+        </div>
+        <div class="form-group">
+          <label>Plan</label>
+          <input type="text" value="<%= user.plan %>" disabled>
+        </div>
+        <button type="submit" class="btn">Save changes</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h3>Recent activity</h3>
+      <% if (activity.length === 0) { %>
+        <p class="empty-state">No activity yet.</p>
+      <% } else { %>
+      <table class="data-table data-table-sm">
+        <thead><tr><th>Action</th><th>Target</th><th>When</th></tr></thead>
+        <tbody>
+          <% activity.forEach(a => { %>
+          <tr>
+            <td><%= a.action %></td>
+            <td><%= a.target %></td>
+            <td class="muted"><%= a.created_at %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <% } %>
+    </section>
+  </div>
+</main>
+<footer class="site-footer"><div class="container"><small>&copy; 2024 NoteVault, Inc.</small></div></footer>
+</body>
+</html>

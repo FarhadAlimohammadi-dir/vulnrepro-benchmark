@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePilot – Settings</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<div class="container" style="max-width:640px">
+  <h1 class="page-title">Platform Settings</h1>
+
+  <div class="settings-form">
+    <div class="field">
+      <label>Plan Approval Window</label>
+      <p><code><%= planApprovalMs %> ms</code> &mdash; Configure via <code>PLAN_APPROVAL_MS</code> env var.</p>
+    </div>
+    <div class="field">
+      <label>Environment</label>
+      <p><code><%= nodeEnv %></code></p>
+    </div>
+    <div class="field">
+      <label>API Endpoints</label>
+      <ul>
+        <li><code>POST /api/issues</code> — Create issues (webhook)</li>
+        <li><code>POST /api/tasks/dispatch</code> — Dispatch codepilot agent</li>
+        <li><code>GET  /api/tasks/:id/results</code> — Poll task results</li>
+        <li><code>POST /api/repos/snippets/run</code> — Snippet sandbox</li>
+        <li><code>POST /api/repos/lint</code> — Source linting</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nexus-analytics:
+    build: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - nexus_data:/app/data
+      - nexus_templates:/app/user_templates
+    environment:
+      - SECRET_KEY=nexus-analytics-prod-key-2024
+      - DATABASE_PATH=/app/data/nexus.db
+      - TEMPLATE_DIR=/app/user_templates
+    restart: unless-stopped
+
+volumes:
+  nexus_data:
+  nexus_templates:

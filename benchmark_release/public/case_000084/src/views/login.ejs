@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TemplateStudio - Login</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-logo">
+      <h1>TemplateStudio</h1>
+      <p class="tagline">Ad template management for creative teams</p>
+    </div>
+    <form class="auth-form" method="post" action="/login">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" placeholder="Enter your username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-primary full-width">Sign In</button>
+      <% if (error) { %>
+        <p class="error-msg"><%= error %></p>
+      <% } %>
+      <p class="demo-note">Demo account: <code>demo</code> / <code>demo123</code></p>
+    </form>
+  </div>
+</body>
+</html>

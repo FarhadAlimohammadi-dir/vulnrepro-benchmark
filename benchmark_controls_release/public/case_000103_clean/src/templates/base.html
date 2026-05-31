@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ContentHub{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+        header { background: #1a1a2e; color: #fff; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        header a { color: #e0e0e0; text-decoration: none; margin-left: 1rem; }
+        header a:hover { color: #fff; }
+        .container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .btn { display: inline-block; padding: .5rem 1rem; border-radius: 4px; text-decoration: none; cursor: pointer; border: none; font-size: .95rem; }
+        .btn-primary { background: #1a1a2e; color: #fff; }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .flash { padding: .75rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+        .flash.error { background: #fde8e8; color: #c00; }
+        .flash.success { background: #e8fde8; color: #080; }
+        form label { display: block; margin: .75rem 0 .25rem; font-weight: 600; }
+        form input, form textarea, form select { width: 100%; padding: .5rem; border: 1px solid #ccc; border-radius: 4px; font-size: .95rem; }
+        form textarea { min-height: 200px; font-family: monospace; }
+        .meta { color: #777; font-size: .85rem; }
+        h1 { margin-bottom: 1rem; }
+        h2 { margin-bottom: .75rem; }
+        .tag { display: inline-block; background: #e8e8f8; padding: .2rem .6rem; border-radius: 12px; font-size: .8rem; margin-right: .3rem; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" style="font-size:1.3rem;font-weight:700;color:#fff;">ContentHub</a>
+    <nav>
+        <a href="/search">Search</a>
+        {% if session.get('username') %}
+            <a href="/posts/new">New Post</a>
+            <a href="/profile/{{ session['username'] }}">{{ session['username'] }}</a>
+            <form method="post" action="/logout" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        {% endif %}
+    </nav>
+</header>
+<div class="container">
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

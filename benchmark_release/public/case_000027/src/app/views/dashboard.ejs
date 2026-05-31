@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard — CodeVault</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⟨/⟩ CodeVault</a>
+  <a href="/snippets">Browse</a>
+  <a href="/search">Search</a>
+  <a href="/dashboard">Dashboard</a>
+  <% if (locals.currentUser && locals.currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+  <span class="spacer"></span>
+  <a href="/profile/<%= currentUser.username %>"><%= currentUser.username %></a>
+  <a href="/logout">Logout</a>
+</nav>
+
+<div class="container page">
+  <div class="flex mb-2">
+    <h1>Dashboard</h1>
+    <a href="/snippets/new" class="btn btn-primary btn-sm">+ New Snippet</a>
+  </div>
+
+  <div class="grid-3 mb-2">
+    <div class="card" style="text-align:center">
+      <div style="font-size:1.8rem;font-weight:700"><%= stats.total || 0 %></div>
+      <div class="text-muted">Total Snippets</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:1.8rem;font-weight:700"><%= stats.pub || 0 %></div>
+      <div class="text-muted">Public</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:1.8rem;font-weight:700"><%= stats.views || 0 %></div>
+      <div class="text-muted">Total Views</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h2 class="mb-2">My Snippets</h2>
+      <% if (!snippets.length) { %>
+        <p class="text-muted">You haven't created any snippets yet. <a href="/snippets/new">Create one!</a></p>
+      <% } %>
+      <% snippets.forEach(s => { %>
+        <div class="card">
+          <div class="flex">
+            <a href="/snippets/<%= s.id %>"><strong><%= s.title %></strong></a>
+            <span class="badge badge-blue"><%= s.language %></span>
+            <% if (s.public) { %><span class="badge badge-green">public</span><% } %>
+          </div>
+          <div class="text-muted mt-1">
+            <%= s.view_count %> views &nbsp;·&nbsp;
+            <%= new Date(s.created_at).toLocaleDateString() %>
+            &nbsp;·&nbsp;
+            <a href="/snippets/<%= s.id %>/edit">edit</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div>
+      <h2 class="mb-2">AI Code Suggest <span class="badge">beta</span></h2>
+      <div class="card">
+        <div class="form-group">
+          <label for="ai-prompt">Describe what you need</label>
+          <input type="text" id="ai-prompt" placeholder="e.g. stripe payment, aws s3 upload …" />
+        </div>
+        <button class="btn btn-primary" onclick="aiSuggest()">Get Suggestion</button>
+        <pre id="ai-out" style="margin-top:12px;min-height:60px;font-size:.78rem;white-space:pre-wrap"></pre>
+        <script>
+        async function aiSuggest() {
+          document.getElementById('ai-out').textContent = 'Loading…';
+          const p = document.getElementById('ai-prompt').value;
+          try {
+            const r = await fetch('/ai/suggest', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({prompt: p})
+            });
+            const d = await r.json();
+            document.getElementById('ai-out').textContent = d.suggestion
+              ? d.suggestion
+              : JSON.stringify(d, null, 2);
+          } catch(e) {
+            document.getElementById('ai-out').textContent = 'Error: ' + e.message;
+          }
+        }
+        </script>
+      </div>
+
+      <h2 class="mb-2 mt-3">Quick Links</h2>
+      <div class="card">
+        <ul style="list-style:none">
+          <li class="mb-1"><a href="/snippets/new">➕ Create new snippet</a></li>
+          <li class="mb-1"><a href="/profile/<%= currentUser.username %>">👤 View your profile</a></li>
+          <li class="mb-1"><a href="/profile/settings/edit">⚙️ Account settings</a></li>
+          <li class="mb-1"><a href="/search">🔍 Search snippets</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

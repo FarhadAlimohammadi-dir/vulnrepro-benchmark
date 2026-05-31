@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}{{ doc.title }} &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="content-page">
+  <div class="page-header">
+    <h2>{{ doc.title }}</h2>
+    <div class="doc-meta-bar">
+      <span class="tag-badge">{{ doc.tags or 'general' }}</span>
+      <span class="text-muted">by {{ doc.owner_name or 'Unknown' }}</span>
+      <span class="text-muted">v{{ doc.version }}</span>
+      <span class="text-muted">Updated {{ doc.updated_at[:10] if doc.updated_at else '' }}</span>
+    </div>
+  </div>
+
+  <div class="doc-body-card">
+    <pre class="doc-body-text">{{ doc.body }}</pre>
+  </div>
+
+  <div class="doc-actions">
+    <a class="btn btn-outline" href="/documents">Back to Documents</a>
+    {% if user and (user.id == doc.owner_id or user.role == 'admin') %}
+    <button class="btn btn-danger" onclick="confirmDelete({{ doc.id }})">Delete</button>
+    {% endif %}
+  </div>
+</div>
+<script>
+function confirmDelete(id) {
+  if (confirm('Are you sure you want to delete this document?')) {
+    fetch('/admin/documents/' + id + '/delete', {method:'POST'})
+      .then(() => window.location='/documents');
+  }
+}
+</script>
+{% endblock %}

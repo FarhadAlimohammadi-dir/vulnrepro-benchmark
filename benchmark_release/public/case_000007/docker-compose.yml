@@ -1,0 +1,14 @@
+services:
+  toolforge:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - toolforge_data:/data
+    environment:
+      - SECRET_KEY=tf-prod-secret-change-me
+      - DB_PATH=/data/toolforge.db
+volumes:
+  toolforge_data:

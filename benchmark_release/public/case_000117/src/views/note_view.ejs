@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteFlow — <%= note.title %></title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; margin: 0; }
+    header { background: #1a1a2e; color: #fff; padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.25rem; }
+    nav a, nav button { color: #a5b4fc; text-decoration: none; margin-left: 1rem; background: none; border: none; cursor: pointer; font-size: 1rem; }
+    main { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    .note-meta { font-size: .8rem; color: #888; margin-bottom: 1rem; }
+    .note-body { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.08); padding: 1.5rem 2rem; line-height: 1.7; }
+    .actions { margin-top: 1.25rem; display: flex; gap: .75rem; }
+    .btn { padding: .4rem 1rem; border-radius: 4px; text-decoration: none; font-size: .875rem; border: none; cursor: pointer; }
+    .btn-primary { background: #4f46e5; color: #fff; }
+    .btn-danger  { background: #ef4444; color: #fff; }
+    .btn-neutral { background: #e5e7eb; color: #374151; }
+    pre { background: #f1f5f9; border-radius: 4px; padding: .75rem; overflow-x: auto; }
+    code { font-family: 'Fira Code', monospace; font-size: .875em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✏️ NoteFlow</h1>
+    <nav>
+      <a href="/notes">← Notes</a>
+      <form method="POST" action="/auth/logout" style="display:inline">
+        <button>Logout</button>
+      </form>
+    </nav>
+  </header>
+  <main>
+    <h2><%= note.title %></h2>
+    <div class="note-meta">
+      By <strong><%= owner.username %></strong> ·
+      <span><%= note.visibility %></span> ·
+      Last updated <%= note.updated_at %>
+      <% if (note.tags) { %> · Tags: <%= note.tags %><% } %>
+    </div>
+
+    <div class="note-body" id="noteBody">
+      <%- note.sanitized_content %>
+    </div>
+
+    <div class="actions">
+      <% if (isOwner) { %>
+        <a class="btn btn-primary" href="/notes/<%= note.id %>/edit">Edit</a>
+        <a class="btn btn-neutral" href="/notes/<%= note.id %>/export">Export .txt</a>
+        <form method="POST" action="/notes/<%= note.id %>/delete" style="margin:0">
+          <button class="btn btn-danger" onclick="return confirm('Delete this note?')">Delete</button>
+        </form>
+      <% } else { %>
+        <a class="btn btn-neutral" href="/notes/<%= note.id %>/export">Export .txt</a>
+      <% } %>
+    </div>
+
+    <% if (isOwner && shares.length > 0) { %>
+      <h3>Shared with</h3>
+      <ul>
+        <% shares.forEach(s => { %>
+          <li><%= s.username %> (<%= s.permission %>)</li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>

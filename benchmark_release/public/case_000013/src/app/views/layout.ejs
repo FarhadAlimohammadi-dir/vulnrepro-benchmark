@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== 'undefined' ? title + ' – DevForge' : 'DevForge' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/dashboard">⚙ DevForge</a>
+    <% if (currentUser) { %>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <% if (currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">👤 <%= currentUser.username %></a>
+      <a href="/logout">Logout</a>
+    </div>
+    <% } %>
+  </nav>
+  <main class="container">
+    <%- body %>
+  </main>
+  <footer class="footer">DevForge v2.0 &copy; 2024</footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}ModelHub — Admin{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Admin Panel</h1></div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num">{{ user_count }}</div><div class="stat-label">Users</div></div>
+  <div class="stat-card"><div class="stat-num">{{ model_count }}</div><div class="stat-label">Models</div></div>
+  <div class="stat-card"><div class="stat-num">{{ ds_count }}</div><div class="stat-label">Datasets</div></div>
+</div>
+
+<div class="admin-links" style="margin:1rem 0">
+  <a href="/admin/users" class="btn btn-secondary">Manage Users</a>
+  <a href="/admin/models" class="btn btn-secondary">Manage Models</a>
+</div>
+
+<div class="card">
+  <h3>Audit Log (last 40 entries)</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Detail</th><th>IP</th></tr>
+    </thead>
+    <tbody>
+      {% for e in log_entries %}
+      <tr>
+        <td class="muted">{{ e.created_at[:16] }}</td>
+        <td>{{ e.username or 'anon' }}</td>
+        <td>{{ e.action }}</td>
+        <td>{{ e.resource_type or '' }} {{ e.resource_id or '' }}</td>
+        <td>{{ e.detail or '' }}</td>
+        <td class="muted">{{ e.ip_address or '' }}</td>
+      </tr>
+      {% endfor %}
+      {% if not log_entries %}<tr><td colspan="6" class="muted">No entries.</td></tr>{% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

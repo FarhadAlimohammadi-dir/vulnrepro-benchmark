@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard &mdash; NexusChat{% endblock %}
+{% block content %}
+<div class="dashboard">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Channels</div>
+      {% for room in rooms %}
+      <a class="sidebar-link" href="/room/{{ room.id }}"># {{ room.name }}</a>
+      {% endfor %}
+    </div>
+    {% if notifications %}
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Notifications</div>
+      {% for n in notifications %}
+      <div class="notif-item">{{ n.message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </aside>
+
+  <main class="main-content">
+    <div class="welcome-banner">
+      <h2>Welcome back, {{ user.display_name or username }}!</h2>
+      <p class="text-muted">Pick a channel to continue the conversation, or browse shared documents below.</p>
+    </div>
+
+    <section class="doc-section">
+      <div class="section-header">
+        <h3>Recent Documents</h3>
+        <a class="btn btn-sm btn-outline" href="/documents">View all</a>
+      </div>
+      <div class="doc-grid">
+        {% for doc in docs %}
+        <a class="doc-card" href="/documents/{{ doc.id }}">
+          <div class="doc-tag tag-{{ doc.tags or 'default' }}">{{ doc.tags or 'general' }}</div>
+          <div class="doc-title">{{ doc.title }}</div>
+          <div class="doc-meta">Updated {{ doc.updated_at[:10] if doc.updated_at else '' }}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="channels-section">
+      <div class="section-header">
+        <h3>Active Channels</h3>
+      </div>
+      <div class="channel-list">
+        {% for room in rooms %}
+        <a class="channel-row" href="/room/{{ room.id }}">
+          <span class="channel-icon">#</span>
+          <span class="channel-name">{{ room.name }}</span>
+          <span class="channel-desc text-muted">{{ room.description }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+</div>
+{% endblock %}

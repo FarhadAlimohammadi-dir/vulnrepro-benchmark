@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - ProjectFlow</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); width: 380px; }
+        h1 { color: #4f46e5; font-size: 1.6rem; margin-bottom: 8px; }
+        .subtitle { color: #64748b; margin-bottom: 32px; font-size: 0.9rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 6px; }
+        input[type=text], input[type=password] { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; margin-bottom: 20px; }
+        input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .btn { width: 100%; padding: 12px; background: #6366f1; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn:hover { background: #4f46e5; }
+        .flash { padding: 10px 14px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .back { text-align: center; margin-top: 20px; font-size: 0.875rem; color: #64748b; }
+        .back a { color: #6366f1; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>ProjectFlow</h1>
+        <p class="subtitle">Sign in to your account</p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+        <div class="flash">{{ msg }}</div>
+        {% endfor %}
+        {% endwith %}
+        <form method="POST" action="/login">
+            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+        <div class="back"><a href="/">← Back to home</a></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroSSR - Request Inspector</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">AstroSSR</div>
+    <nav class="nav"><a href="/">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>Request Inspector</h1>
+    <div class="panel">
+      <table class="info-table">
+        <tr>
+          <th>Constructed URL</th>
+          <td class="mono"><%= url %></td>
+        </tr>
+        <tr>
+          <th>Pathname</th>
+          <td class="mono"><%= pathname %></td>
+        </tr>
+        <tr>
+          <th>Hostname</th>
+          <td class="mono"><%= hostname %></td>
+        </tr>
+      </table>
+    </div>
+    <a href="/" class="btn btn-secondary">Back to Home</a>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2024 AstroSSR Platform.</p>
+  </footer>
+</body>
+</html>

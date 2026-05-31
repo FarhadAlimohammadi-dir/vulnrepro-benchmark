@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Admin – DocuMind AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h2>&#9881; Admin Panel</h2>
+    <p>System administration and monitoring.</p>
+  </div>
+
+  <div class="admin-grid">
+    <!-- System Stats -->
+    <div class="settings-card" id="statsCard">
+      <h3>&#128202; System Statistics</h3>
+      <div id="statsContent">Loading…</div>
+    </div>
+
+    <!-- User Management -->
+    <div class="settings-card full-width">
+      <h3>&#128101; User Management</h3>
+      <div id="userTable">Loading…</div>
+    </div>
+
+    <!-- Audit Log -->
+    <div class="settings-card full-width">
+      <h3>&#128221; Recent Audit Log</h3>
+      <div class="audit-controls">
+        <label>Entries: <select id="auditLimit" onchange="loadAudit()">
+          <option value="50">50</option>
+          <option value="100" selected>100</option>
+          <option value="250">250</option>
+        </select></label>
+      </div>
+      <div id="auditLog">Loading…</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadStats() {
+  const r = await fetch('/api/admin/stats');
+  const d = await r.json();
+  document.getElementById('statsContent').innerHTML = `
+    <table class="info-table">
+      <tr><td>Total users</td><td><strong>${d.users}</strong></td></tr>
+      <tr><td>Total documents</td><td><strong>${d.documents}</strong></td></tr>
+      <tr><td>Chat sessions</td><td><strong>${d.chat_sessions}</strong></td></tr>
+    </table>
+    <h4>Recent Logins</h4>
+    <table class="info-table">
+      ${(d.recent_logins||[]).map(u => `<tr><td>${u.username}</td><td>${u.last_login||'never'}</td></tr>`).join('')}
+    </table>`;
+}
+
+async function loadUsers() {
+  const r = await fetch('/api/admin/users');
+  const d = await r.json();
+  const rows = (d.users||[]).map(u => `
+    <tr>
+      <td>${u.id}</td>
+      <td>${u.username}</td>
+      <td>${u.display_name||''}</td>
+      <td>${u.email||''}</td>
+      <td>${u.department||''}</td>
+      <td>
+        <select onchange="updateRole(${u.id}, this.value)">
+          ${['user','hr','admin'].map(r => `<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </td>
+      <td>${u.last_login||'never'}</td>
+    </tr>`).join('');
+  document.getElementById('userTable').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Username</th><th>Name</th><th>Email</th><th>Dept</th><th>Role</th><th>Last Login</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+async function updateRole(uid, role) {
+  const r = await fetch(`/api/admin/users/${uid}/role`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({role})
+  });
+  const d = await r.json();
+  if (!d.ok) alert(d.error || 'Failed to update role');
+}
+
+async function loadAudit() {
+  const limit = document.getElementById('auditLimit').value;
+  const r = await fetch(`/api/admin/audit?limit=${limit}`);
+  const d = await r.json();
+  const rows = (d.logs||[]).map(l => `
+    <tr>
+      <td>${l.id}</td>
+      <td>${l.username||'—'}</td>
+      <td>${l.action}</td>
+      <td>${l.resource||'—'}</td>
+      <td>${l.ip_address||'—'}</td>
+      <td>${l.created_at}</td>
+    </tr>`).join('');
+  document.getElementById('auditLog').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th><th>Time</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="6">No log entries.</td></tr>'}</tbody>
+    </table>`;
+}
+
+loadStats();
+loadUsers();
+loadAudit();
+</script>
+{% endblock %}

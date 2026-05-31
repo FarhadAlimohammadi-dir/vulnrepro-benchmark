@@ -1,0 +1,23 @@
+<%
+  title = 'All Projects — Admin'
+  const rows = projects.map(p => `
+    <tr>
+      <td>${p.id}</td>
+      <td><a href="/projects/${p.id}">${p.name}</a></td>
+      <td class="muted">${p.workspace_name || ''}</td>
+      <td class="muted">${p.owner_name}</td>
+      <td><span class="pill">${p.language || '—'}</span></td>
+      <td class="muted">${p.archived ? 'archived' : 'active'}</td>
+      <td class="muted">${p.created_at}</td>
+    </tr>
+  `).join('')
+  body = `
+<h1>All projects</h1>
+<table class="list">
+  <thead><tr><th>ID</th><th>Name</th><th>Workspace</th><th>Owner</th><th>Lang</th><th>Status</th><th>Created</th></tr></thead>
+  <tbody>${rows || '<tr><td colspan="7" class="muted">No projects</td></tr>'}</tbody>
+</table>
+<p><a href="/admin">← Back to admin</a></p>
+`
+%>
+<%- include('layout', { title, body, user, flash }) %>

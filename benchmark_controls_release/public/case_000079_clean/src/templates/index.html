@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gRPC Platform - Enterprise Service Gateway</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; margin: 0; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #63b3ed; font-size: 2rem; }
+        .badge { background: #2d3748; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; color: #68d391; }
+        .endpoint { background: #1a202c; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 3px solid #4299e1; }
+        .method { display: inline-block; background: #2b6cb0; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        code { background: #2d3748; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>gRPC Platform <span class="badge">v2.4.1</span></h1>
+        <p>Enterprise service gateway with gRPC-Web transcoding bridge. Internal microservices communicate via the gRPC bridge; external clients use the REST API.</p>
+
+        <h2>REST API Endpoints</h2>
+        <div class="endpoint">
+            <span class="method">POST</span> <code>/api/auth/login</code>
+            <p>Authenticate and receive a session token.</p>
+        </div>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/users/profile</code>
+            <p>Retrieve authenticated user profile. Requires <code>Authorization: Bearer &lt;token&gt;</code></p>
+        </div>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/reports/</code>
+            <p>List reports accessible to the authenticated user.</p>
+        </div>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/admin/audit</code>
+            <p>Audit log access (admin only).</p>
+        </div>
+
+        <h2>gRPC-Web Bridge</h2>
+        <div class="endpoint">
+            <span class="method">POST</span> <code>/api/grpc-web/v1/UserService/GetUserProfile</code>
+            <p>Fetch user profile via gRPC-Web framing.</p>
+        </div>
+        <div class="endpoint">
+            <span class="method">POST</span> <code>/api/grpc-web/v1/SearchService/Search</code>
+            <p>Full-text search across published reports.</p>
+        </div>
+
+        <h2>Health</h2>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/health</code>
+            <p>Service health check endpoint.</p>
+        </div>
+    </div>
+</body>
+</html>

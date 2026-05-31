@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AssetFlow - Audit Log</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">AssetFlow</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/settings">Settings</a>
+      <a href="/logout">Logout</a>
+    </div>
+    <div class="nav-user">Welcome, <strong><%= username %></strong></div>
+  </nav>
+  <div class="container">
+    <h2>Audit Log</h2>
+    <!-- TODO: add date-range filtering (AUDIT-310) -->
+    <table>
+      <thead>
+        <tr><th>ID</th><th>User ID</th><th>Action</th><th>Details</th><th>Timestamp</th></tr>
+      </thead>
+      <tbody>
+        <% logs.forEach(l => { %>
+          <tr>
+            <td><%= l.id %></td>
+            <td><%= l.user_id %></td>
+            <td><%= l.action %></td>
+            <td><%= l.details %></td>
+            <td><%= l.created_at %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+</body>
+</html>

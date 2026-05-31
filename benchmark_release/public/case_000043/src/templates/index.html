@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHost - Repository Hosting</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #0d1117; color: #c9d1d9; }
+        header { background: #161b22; border-bottom: 1px solid #30363d; padding: 16px 24px; }
+        h1 { color: #f0f6fc; margin: 0; font-size: 20px; }
+        .container { max-width: 960px; margin: 40px auto; padding: 0 24px; }
+        .card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 24px; margin-bottom: 16px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; background: #21262d; border: 1px solid #30363d; }
+    </style>
+</head>
+<body>
+    <header><h1>🐙 GitHost</h1></header>
+    <div class="container">
+        <div class="card">
+            <h2>Welcome to GitHost</h2>
+            <p>Self-hosted Git repository management with integrated credential storage.</p>
+            <p>API Base: <code>/api</code></p>
+        </div>
+        <div class="card">
+            <h3>Endpoints</h3>
+            <ul>
+                <li><code>POST /api/auth/login</code> — Authenticate</li>
+                <li><code>GET  /api/repos</code> — List repositories</li>
+                <li><code>POST /api/credential/lookup</code> — Git credential resolution</li>
+                <li><code>GET  /api/tokens</code> — Manage API tokens</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

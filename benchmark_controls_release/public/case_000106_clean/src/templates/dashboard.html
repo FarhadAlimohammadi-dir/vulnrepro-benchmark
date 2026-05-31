@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - TeamHub</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 20px; background: #f9f9f9; }
+        .nav { background: #0066cc; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; }
+        .nav a { color: white; text-decoration: none; margin-right: 20px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .project-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .status-active { color: green; } .status-paused { color: orange; } .status-completed { color: gray; }
+        .msg-item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .member-item { padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+        h2 { margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/projects/">Projects</a>
+        <a href="/messages/">Inbox</a>
+        <a href="/team/directory">Directory</a>
+        {% if user.is_admin %}<a href="/admin/">Admin</a>{% endif %}
+        <a href="/auth/logout" style="float:right">Logout ({{ user.username }})</a>
+    </div>
+
+    <h1>Welcome, {{ user.display_name }}!</h1>
+
+    <div class="grid">
+        <div>
+            <div class="card">
+                <h2>Recent Projects</h2>
+                {% for p in projects %}
+                <div class="project-item">
+                    <strong>{{ p.name }}</strong>
+                    <span class="status-{{ p.status }}" style="float:right">{{ p.status }}</span>
+                    <br><small>{{ p.description }}</small>
+                    <br><small>Owner: {{ p.owner_name }}</small>
+                </div>
+                {% else %}
+                <p>No projects yet. <a href="/projects/new">Create one</a>.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <h2>Unread Messages</h2>
+                {% for m in messages %}
+                <div class="msg-item">
+                    <a href="/messages/{{ m.id }}">{{ m.subject }}</a><br>
+                    <small>from {{ m.sender_name }}</small>
+                </div>
+                {% else %}
+                <p>No unread messages.</p>
+                {% endfor %}
+                <br><a href="/messages/">View Inbox</a>
+            </div>
+            <div class="card" style="margin-top:20px">
+                <h2>Team Members</h2>
+                {% for m in team_members %}
+                <div class="member-item">
+                    <a href="/profile/{{ m.username }}">{{ m.display_name }}</a>
+                    <span style="float:right; color:#888; font-size:12px">{{ m.role }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FileSync Pro – Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">FileSync Pro <span class="version">v2.1.0</span></div>
+    <nav>
+      <a href="#files">My Files</a>
+      <a href="#quota">Quota</a>
+      <a href="#audit">Audit Log</a>
+      <a href="#settings">Settings</a>
+    </nav>
+    <div class="user-badge">
+      {% if username %}
+        Logged in as <strong>{{ username | e }}</strong>
+        &nbsp;<a href="/logout" class="btn-sm">Log out</a>
+      {% else %}
+        <a href="/login" class="btn-sm">Log in</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="files">
+      <h2>Synced Files</h2>
+      <!-- TODO: paginate this table once we exceed 200 rows per user -->
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Source</th>
+            <th>Status</th>
+            <th>Synced At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in files %}
+          <tr>
+            <td>{{ f.filename | e }}</td>
+            <td>{{ f.source | e }}</td>
+            <td class="status-{{ f.status | e }}">{{ f.status | e }}</td>
+            <td>{{ f.syncedAt | e }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">No files synced yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="quota">
+      <h2>Storage Quota</h2>
+      <div class="quota-bar">
+        <div class="quota-used" style="width: {{ quota_pct }}%"></div>
+      </div>
+      <p>{{ quota.used_mb }} MB used of {{ quota.quota_mb }} MB</p>
+    </section>
+
+    <section id="audit" class="admin-only">
+      <h2>Recent Audit Events</h2>
+      <table class="data-table">
+        <thead>
+          <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr>
+        </thead>
+        <tbody>
+          {% for e in audit_entries %}
+          <tr>
+            <td>{{ e.timestamp | e }}</td>
+            <td>{{ e.username | e }}</td>
+            <td>{{ e.action | e }}</td>
+            <td>{{ e.detail | e }}</td>
+            <td>{{ e.ip | e }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5">No events recorded.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 FileSync Pro. All rights reserved.</p>
+    <!-- TODO: add build SHA here via CI template injection for traceability -->
+  </footer>
+</body>
+</html>

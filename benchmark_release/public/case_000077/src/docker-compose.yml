@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=prod-secret-key-f8a3c2d1e9b4
+      - DATABASE_URL=sqlite:///taskflow.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusBoard — Sign In</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="auth-page">
+<div class="auth-card">
+  <div class="auth-logo">NexusBoard</div>
+  <p class="auth-tagline">Project &amp; Task Management for Modern Teams</p>
+  <% if (flash) { %><div class="flash"><%= flash %></div><% } %>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <form method="POST" action="/login" autocomplete="off">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" placeholder="your username" required autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DocCollab - Dashboard</title>
+  <style>
+    body { font-family: Inter, sans-serif; margin: 0; background: #f5f5f5; }
+    nav { background: #0066CC; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    nav a { color: white; text-decoration: none; margin-left: 1rem; }
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    h2 { color: #333; border-bottom: 2px solid #0066CC; padding-bottom: 0.5rem; }
+    .doc-list { list-style: none; padding: 0; }
+    .doc-item { background: white; margin: 0.5rem 0; padding: 1rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .doc-item a { color: #0066CC; text-decoration: none; font-weight: 500; }
+    .badge { font-size: 0.75rem; background: #e8f0fe; color: #0066CC; padding: 2px 8px; border-radius: 10px; }
+    .badge.xml { background: #fce8e8; color: #cc0000; }
+    .new-doc { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    input[type=text], textarea, select { width: 100%; padding: 0.5rem; margin: 0.3rem 0 0.8rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 0.95rem; }
+    textarea { height: 120px; font-family: monospace; }
+    button { padding: 0.6rem 1.5rem; background: #0066CC; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .meta { color: #888; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span><strong>DocCollab</strong></span>
+    <div>
+      <span>Logged in as <strong><%= user.username %></strong></span>
+      <% if (user.role === 'admin') { %><a href="/admin/logs">Admin</a><% } %>
+      <form method="POST" action="/auth/logout" style="display:inline"><button style="background:transparent;border:none;color:white;cursor:pointer;padding:0;margin-left:1rem;">Logout</button></form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="new-doc">
+      <h3 style="margin-top:0">Create New Document</h3>
+      <form id="createForm">
+        <input type="text" id="docTitle" placeholder="Document title" required>
+        <textarea id="docContent" placeholder="Enter HTML or XML content..."></textarea>
+        <label>Media Type:
+          <select id="docType">
+            <option value="text/html">HTML</option>
+            <option value="application/xhtml+xml">XML/XHTML</option>
+          </select>
+        </label>
+        <label style="margin-left:1rem"><input type="checkbox" id="docPublic"> Make Public</label>
+        <br><br>
+        <button type="submit">Create Document</button>
+        <span id="createMsg" style="margin-left:1rem;color:#666;font-size:0.9rem;"></span>
+      </form>
+    </div>
+
+    <h2>My Documents (<%= owned.length %>)</h2>
+    <ul class="doc-list">
+      <% owned.forEach(d => { %>
+      <li class="doc-item">
+        <div>
+          <a href="/documents/<%= d.id %>"><%= d.title %></a>
+          <span class="badge <%= d.media_type.includes('xml') ? 'xml' : '' %>"><%= d.media_type.includes('xml') ? 'XML' : 'HTML' %></span>
+          <div class="meta"><%= d.updated_at %></div>
+        </div>
+        <div>
+          <% if (d.is_public) { %><span class="badge">Public</span><% } %>
+        </div>
+      </li>
+      <% }) %>
+    </ul>
+
+    <h2>Shared With Me</h2>
+    <ul class="doc-list">
+      <% shared.forEach(d => { %>
+      <li class="doc-item">
+        <a href="/documents/<%= d.id %>"><%= d.title %></a>
+        <span class="meta">from <%= d.owner_name %></span>
+      </li>
+      <% }) %>
+    </ul>
+
+    <h2>Public Documents</h2>
+    <ul class="doc-list">
+      <% publicDocs.forEach(d => { %>
+      <li class="doc-item">
+        <a href="/documents/<%= d.id %>"><%= d.title %></a>
+        <span class="meta">by <%= d.owner_name %></span>
+      </li>
+      <% }) %>
+    </ul>
+  </div>
+  <script>
+    document.getElementById('createForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resp = await fetch('/documents', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          title: document.getElementById('docTitle').value,
+          content: document.getElementById('docContent').value,
+          media_type: document.getElementById('docType').value,
+          is_public: document.getElementById('docPublic').checked,
+        })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        document.getElementById('createMsg').textContent = 'Created! ID: ' + data.id;
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        document.getElementById('createMsg').textContent = 'Error: ' + data.error;
+      }
+    });
+  </script>
+</body>
+</html>

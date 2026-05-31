@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Banking Portal - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .card { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 8px 15px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome, <%= username %></h1>
+    <div class="card">
+      <h2>Account Balance</h2>
+      <p id="balance">Loading...</p>
+    </div>
+    <div class="card">
+      <h2>Recent Transactions</h2>
+      <div id="transactions">Loading...</div>
+    </div>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Load balance via HTTP (not WebSocket)
+    fetch('/api/balance')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('balance').textContent = '$' + d.balance;
+      });
+
+    function logout() {
+      fetch('/logout').then(() => window.location = '/login-page');
+    }
+  </script>
+</body>
+</html>

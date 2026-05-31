@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  presethub:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    volumes:
+      - presethub_data:/app/data
+
+volumes:
+  presethub_data:

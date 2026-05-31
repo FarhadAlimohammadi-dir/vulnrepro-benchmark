@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PresetHub — Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="logo">🎨 PresetHub</span>
+      <nav>
+        <a href="/">Dashboard</a>
+        <a href="/api/presets/gallery">Gallery</a>
+        <% if (user) { %>
+          <span class="user-chip"><%= user.username %></span>
+          <a href="/logout" class="btn btn-sm">Logout</a>
+        <% } else { %>
+          <a href="#login-section" class="btn btn-sm">Login</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <% if (!user) { %>
+    <section class="card" id="login-section">
+      <h2>Sign In</h2>
+      <div class="form-row">
+        <input id="loginUser" type="text" placeholder="Username" />
+        <input id="loginPass" type="password" placeholder="Password" />
+        <button class="btn" onclick="doLogin()">Sign In</button>
+      </div>
+      <div id="loginStatus" class="status-msg hidden"></div>
+    </section>
+    <% } %>
+
+    <section class="card">
+      <h2>Apply Preset Configuration</h2>
+      <p class="hint">Paste a JSON preset below and apply it to your workspace. Supports full Vuetify theme objects.</p>
+      <textarea id="presetInput" placeholder='{"name":"My Theme","theme":{"dark":false,"colors":{"primary":"#1976d2"}}}' rows="8"></textarea>
+      <div class="form-actions">
+        <button class="btn" onclick="applyPreset()">Apply Preset</button>
+        <button class="btn btn-secondary" onclick="loadSample()">Load Sample</button>
+      </div>
+      <div id="applyStatus" class="status-msg hidden"></div>
+    </section>
+
+    <section class="card">
+      <h2>My Presets</h2>
+      <button class="btn btn-secondary" onclick="loadPresets()">Refresh List</button>
+      <div id="presetList" class="preset-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>Public Gallery</h2>
+      <div class="gallery-grid">
+        <% if (typeof publicPresets !== 'undefined' && publicPresets.length > 0) { %>
+          <% publicPresets.forEach(p => { %>
+          <div class="gallery-item">
+            <strong><%= p.name %></strong>
+            <span class="tag"><%= p.tags || 'untagged' %></span>
+            <small>by <%= p.author %></small>
+          </div>
+          <% }) %>
+        <% } else { %>
+          <p>No public presets yet.</p>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>System Health</h2>
+      <button class="btn btn-secondary" onclick="checkHealth()">Run Health Check</button>
+      <div id="healthStatus" class="status-msg hidden"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>PresetHub v1.2 &mdash; Theme management for modern apps</p>
+  </footer>
+
+  <script>
+    function doLogin() {
+      const username = document.getElementById('loginUser').value;
+      const password = document.getElementById('loginPass').value;
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('loginStatus');
+        el.textContent = d.message;
+        el.className = 'status-msg ' + (d.status === 'ok' ? 'ok' : 'err');
+        if (d.status === 'ok') setTimeout(() => location.reload(), 800);
+      });
+    }
+
+    function applyPreset() {
+      const input = document.getElementById('presetInput').value;
+      let parsed;
+      try { parsed = JSON.parse(input); } catch(e) {
+        showStatus('applyStatus', 'Invalid JSON: ' + e.message, 'err');
+        return;
+      }
+      fetch('/api/presets/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parsed)
+      })
+      .then(r => r.json())
+      .then(d => showStatus('applyStatus', JSON.stringify(d), d.status === 'ok' ? 'ok' : 'err'))
+      .catch(e => showStatus('applyStatus', 'Request failed: ' + e.message, 'err'));
+    }
+
+    function loadPresets() {
+      fetch('/api/presets/list')
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('presetList');
+        if (!d.presets || d.presets.length === 0) {
+          el.innerHTML = '<p>No presets saved yet.</p>';
+          return;
+        }
+        el.innerHTML = d.presets.map(p =>
+          `<div class="preset-card"><strong>${escHtml(p.name)}</strong><small>${p.created_at}</small></div>`
+        ).join('');
+      })
+      .catch(() => {});
+    }
+
+    function loadSample() {
+      document.getElementById('presetInput').value = JSON.stringify({
+        "name": "Ocean Blue",
+        "theme": {
+          "dark": false,
+          "colors": {
+            "primary": "#0277bd",
+            "secondary": "#00acc1",
+            "accent": "#80d8ff"
+          }
+        },
+        "icons": { "iconfont": "mdi" }
+      }, null, 2);
+    }
+
+    function checkHealth() {
+      fetch('/api/health')
+      .then(r => r.json())
+      .then(d => {
+        const msg = d.prototype_clean
+          ? '✓ Runtime environment clean'
+          : '✗ Unexpected prototype keys detected: ' + d.extra_proto_keys.join(', ');
+        showStatus('healthStatus', msg, d.prototype_clean ? 'ok' : 'err');
+      });
+    }
+
+    function showStatus(id, msg, cls) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = 'status-msg ' + cls;
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — NovaSpark IDE</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">⚡ NovaSpark IDE</span>
+    <div class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects" class="active">Projects</a>
+      <% if (user.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+      <a href="/profile">Profile</a>
+      <form method="POST" action="/logout" style="display:inline">
+        <button type="submit" class="btn-link">Logout (<%= user.username %>)</button>
+      </form>
+    </div>
+  </nav>
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Your Projects <span class="muted" style="font-size:1rem;">(<%= total %>)</span></h1>
+        <a href="/projects/search" class="btn btn-secondary btn-sm">Search Public</a>
+      </div>
+
+      <!-- New project form -->
+      <div class="card">
+        <h2>New Project</h2>
+        <form method="POST" action="/projects" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+          <div class="form-group" style="flex:2;min-width:160px;margin-bottom:0;">
+            <label>Name</label>
+            <input type="text" name="name" required placeholder="my-project" />
+          </div>
+          <div class="form-group" style="flex:3;min-width:200px;margin-bottom:0;">
+            <label>Description</label>
+            <input type="text" name="description" placeholder="Optional description" />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Language</label>
+            <select name="language">
+              <% langs.forEach(function(l) { %><option value="<%= l %>"><%= l %></option><% }); %>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Visibility</label>
+            <select name="visibility">
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+            </select>
+          </div>
+          <div style="padding-bottom:0;">
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Project grid -->
+      <% if (projects.length === 0) { %>
+      <div class="empty-state">
+        <p>No projects yet. Create your first one above.</p>
+      </div>
+      <% } else { %>
+      <div class="project-grid">
+        <% projects.forEach(function(p) { %>
+        <div class="project-card">
+          <div class="project-card-header">
+            <a href="/projects/<%= p.id %>"><%= p.name %></a>
+            <span class="badge badge-lang"><%= p.language %></span>
+            <% if (p.visibility === 'public') { %><span class="badge" style="background:#322659;color:#b794f4;">public</span><% } %>
+          </div>
+          <p class="project-desc"><%= p.description || 'No description.' %></p>
+          <p class="project-meta">Updated <%= p.updated_at.slice(0,10) %></p>
+          <div class="btn-row">
+            <a href="/projects/<%= p.id %>" class="btn btn-secondary btn-sm">Open</a>
+            <form method="POST" action="/projects/<%= p.id %>/delete" style="display:inline"
+                  onsubmit="return confirm('Delete this project?');">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+
+      <!-- Pagination -->
+      <% if (pages > 1) { %>
+      <div style="display:flex;gap:8px;margin-top:20px;">
+        <% for (let i = 1; i <= pages; i++) { %>
+        <a href="/projects?page=<%= i %>" class="btn btn-secondary btn-sm" style="<%= i===page?'background:#3182ce;color:#fff':'' %>"><%= i %></a>
+        <% } %>
+      </div>
+      <% } %>
+      <% } %>
+    </div>
+  </main>
+  <footer>
+    <span class="muted">NovaSpark IDE v<%= appVersion %> &mdash; &copy; 2025 NovaSpark Inc.</span>
+  </footer>
+</body>
+</html>

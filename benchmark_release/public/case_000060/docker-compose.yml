@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  crm-portal:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - NODE_ENV=development

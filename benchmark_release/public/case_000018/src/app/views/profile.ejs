@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@<%= profileUser.username %> — VisionBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="/"><span class="brand-icon">◈</span> VisionBoard</a>
+  <div class="navbar-links">
+    <a href="/gallery">Gallery</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard">My Images</a>
+      <a href="/settings">Settings</a>
+      <% if (isAdmin) { %><a href="/admin">Admin</a><% } %>
+      <span class="nav-user">@<%= currentUser.username %></span>
+      <form method="POST" action="/logout" style="display:inline">
+        <button class="btn btn-ghost btn-sm">Sign out</button>
+      </form>
+    <% } else { %>
+      <a href="/login">Sign in</a>
+    <% } %>
+  </div>
+</nav>
+<main class="container">
+  <div class="profile-header">
+    <div class="avatar-circle"><%= profileUser.username[0].toUpperCase() %></div>
+    <div>
+      <h2><%= profileUser.full_name || profileUser.username %></h2>
+      <p class="text-muted">@<%= profileUser.username %> · <span class="plan-badge plan-<%= profileUser.plan %>"><%= profileUser.plan %></span></p>
+      <% if (profileUser.bio) { %><p><%= profileUser.bio %></p><% } %>
+      <p class="text-muted" style="font-size:.85em">Member since <%= profileUser.created_at.split(' ')[0] %></p>
+    </div>
+  </div>
+
+  <h3>Public Images (<%= images.length %>)</h3>
+  <% if (images.length === 0) { %>
+    <div class="empty-state"><p>No public images.</p></div>
+  <% } else { %>
+  <div class="image-grid">
+    <% images.forEach(img => { %>
+    <div class="image-card">
+      <div class="image-thumb"><span class="mime-icon"><%= img.content_type.split('/')[1].toUpperCase() %></span></div>
+      <div class="image-meta">
+        <p class="image-filename"><%= img.filename %></p>
+        <p class="image-desc"><%= (img.ai_description || '').substring(0, 90) %></p>
+        <div class="image-tags">
+          <% (img.tags||'').split(',').filter(Boolean).forEach(t => { %>
+            <span class="tag"><%= t.trim() %></span>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</main>
+<footer class="site-footer"><p>© 2024 VisionBoard</p></footer>
+</body>
+</html>

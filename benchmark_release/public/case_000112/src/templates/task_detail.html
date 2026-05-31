@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ task.title }} - TaskFlow</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .navbar { background: #1a73e8; color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 800px; margin: 32px auto; padding: 0 16px; }
+        .card { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        h1 { font-size: 22px; margin-bottom: 16px; }
+        .meta { font-size: 13px; color: #888; margin-bottom: 8px; }
+        .comment { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .comment:last-child { border-bottom: none; }
+        .comment-author { font-weight: 600; font-size: 13px; }
+        .comment-body { font-size: 14px; margin-top: 4px; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: vertical; min-height: 80px; }
+        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #1a73e8; color: white; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight:600;font-size:18px;">TaskFlow</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/tasks">Tasks</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h1>{{ task.title }}</h1>
+            <div class="meta">Project: {{ task.project_name }} | Status: {{ task.status }} | Priority: {{ task.priority }}</div>
+            <div class="meta">Assigned to: {{ task.assignee_name or 'Unassigned' }} | Created by: {{ task.creator_name }}</div>
+            {% if task.description %}
+            <p style="margin-top:16px;font-size:14px;">{{ task.description }}</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h2 style="font-size:18px;margin-bottom:16px;">Comments</h2>
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-author">{{ comment.username }}</div>
+                <div class="comment-body">{{ comment.body }}</div>
+                <div class="meta" style="margin-top:4px;">{{ comment.created_at }}</div>
+            </div>
+            {% endfor %}
+            <form method="POST" action="/tasks/{{ task.id }}/comment" style="margin-top:16px;">
+                <textarea name="body" placeholder="Add a comment..."></textarea>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

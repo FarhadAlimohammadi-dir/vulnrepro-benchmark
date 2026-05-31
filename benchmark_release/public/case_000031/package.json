@@ -1,0 +1,18 @@
+{
+  "name": "socialkit-platform",
+  "version": "2.1.0",
+  "description": "Social integration platform for embedded widgets and plugin management",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index.js",
+    "seed": "node app/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "better-sqlite3": "^9.0.0",
+    "ejs": "^3.1.9",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.0"
+  }
+}

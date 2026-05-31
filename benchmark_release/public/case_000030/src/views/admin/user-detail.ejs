@@ -1,0 +1,79 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="page-header">
+  <a href="/admin/users" class="btn-link">&larr; Back to Users</a>
+  <h1><%= target.display_name || target.email %></h1>
+</div>
+
+<% if (flash) { %>
+<div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+<% } %>
+
+<div class="admin-grid">
+  <section class="card">
+    <h2>Account Details</h2>
+    <dl class="detail-list">
+      <dt>ID</dt><dd><code><%= target.id %></code></dd>
+      <dt>Email</dt><dd><%= target.email %></dd>
+      <dt>Display Name</dt><dd><%= target.display_name || '—' %></dd>
+      <dt>Role</dt><dd><span class="badge badge-<%= target.role %>"><%= target.role %></span></dd>
+      <dt>Status</dt><dd><span class="badge <%= target.is_active ? 'badge-active' : 'badge-inactive' %>"><%= target.is_active ? 'Active' : 'Inactive' %></span></dd>
+      <dt>MFA</dt><dd><%= target.mfa_enabled ? 'Enabled' : 'Disabled' %></dd>
+      <dt>Last Login</dt><dd><%= target.last_login ? new Date(target.last_login).toLocaleString() : 'Never' %></dd>
+      <dt>Created</dt><dd><%= new Date(target.created_at).toLocaleString() %></dd>
+    </dl>
+    <% if (target.is_active) { %>
+    <form action="/admin/users/<%= target.id %>/deactivate" method="POST" onsubmit="return confirm('Deactivate this user?')">
+      <button type="submit" class="btn-danger">Deactivate Account</button>
+    </form>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Recent Activity</h2>
+    <% if (activity.length > 0) { %>
+    <ul class="activity-list">
+      <% activity.forEach(evt => { %>
+      <li class="activity-item">
+        <span class="activity-action"><%= evt.action.replace(/_/g, ' ') %></span>
+        <small class="muted"><%= new Date(evt.created_at).toLocaleString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="muted">No activity recorded.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Connected Apps (<%= connectedApps.length %>)</h2>
+    <% if (connectedApps.length > 0) { %>
+    <ul class="app-list">
+      <% connectedApps.forEach(app => { %>
+      <li class="app-item">
+        <strong><%= app.app_name %></strong>
+        <small class="muted"><%= app.granted_scopes %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="muted">No apps connected.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>API Keys (<%= apiKeys.length %>)</h2>
+    <% if (apiKeys.length > 0) { %>
+    <ul class="app-list">
+      <% apiKeys.forEach(k => { %>
+      <li class="app-item">
+        <strong><%= k.name %></strong>
+        <small class="muted">Created <%= new Date(k.created_at).toLocaleDateString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="muted">No API keys.</p>
+    <% } %>
+  </section>
+</div>
+<%- include('../partials/footer') %>

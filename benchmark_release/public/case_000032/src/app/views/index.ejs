@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixelFlow Analytics Platform</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/">PixelFlow</a>
+      <span class="nav-tagline">Analytics Platform</span>
+    </div>
+    <div class="nav-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/apps">My Apps</a>
+        <a href="/profile">Profile</a>
+        <form action="/logout" method="POST" style="display:inline">
+          <button type="submit" class="btn-link">Sign Out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Sign In</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Meta Pixel Analytics Platform</h1>
+      <p class="hero-sub">Track conversions, measure audience engagement, and optimize your ad performance with real-time analytics powered by the Meta Pixel.</p>
+      <% if (!user) { %>
+        <a href="/login" class="btn btn-primary">Get Started</a>
+      <% } else { %>
+        <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+      <% } %>
+    </div>
+
+    <% if (user) { %>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Your Applications</h3>
+        <% if (apps && apps.length > 0) { %>
+          <ul class="item-list">
+            <% apps.forEach(function(app) { %>
+              <li>
+                <span class="item-name"><%= app.name %></span>
+                <span class="badge"><%= app.scopes %></span>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p class="muted">No applications yet. <a href="/api/apps">Create one</a>.</p>
+        <% } %>
+      </div>
+
+      <div class="card">
+        <h3>Recent Pixel Events</h3>
+        <% if (recentEvents && recentEvents.length > 0) { %>
+          <ul class="item-list">
+            <% recentEvents.slice(0,8).forEach(function(ev) { %>
+              <li>
+                <span class="badge badge-event"><%= ev.event_type %></span>
+                <span class="muted small"><%= ev.pixel_id %></span>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p class="muted">No events recorded yet.</p>
+        <% } %>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Real-Time Analytics</h3>
+        <p>Monitor pixel events as they happen with millisecond precision across all your properties.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>OAuth 2.0 Integration</h3>
+        <p>Seamless OAuth flows with nonce validation, PKCE support, and token lifecycle management.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <h3>Graph API Access</h3>
+        <p>Direct integration with the measurement API for server-side event deduplication.</p>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 PixelFlow Analytics. All rights reserved.</p>
+  </footer>
+</body>
+</html>
