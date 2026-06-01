@@ -2,7 +2,7 @@
 
 A benchmark that checks if an AI model can actually review vulnerable code, or if it just sounds confident.
 
-![Overview](assets/release_overview.svg)
+![Overview](assets/bench_image.png)
 
 Most security benchmarks ask one question: can the model find the bug? That is only half the job. The other half, the part that actually wears you down in real review work, is not flagging things that aren't there. A model that screams "vulnerable" at every file will look great on a benchmark that only measures recall, and be useless in practice.
 
