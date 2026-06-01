@@ -30,7 +30,7 @@ A model that flags everything gets punished by the controls. That's on purpose.
 
 238 blind tasks: 119 vulnerable cases and 119 clean controls, shuffled together with opaque IDs.
 
-![Leaderboard](assets/leaderboard_balanced.svg)
+![Leaderboard](assets/bench_image.png)
 
 | Model | Balanced | Vulnerable Recall | True Negative | False Positive |
 |---|---:|---:|---:|---:|
