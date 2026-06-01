@@ -124,7 +124,8 @@ There's a matching `run_openai_benchmark.py` for OpenAI models. The full command
 While I was making the app with AI, I tried and used some models for making and placing the bug for benchmark only, while I observed that code created by Opus 4.7 and Sonnet 4.6 had more vulnerabilities than just what I said. For example, the model was supposed to make an RCE or XSS, but when we checked for the benchmark, the models had found more vulnerabilities like IDOR and Broken Access Control. In the same app and same prompt, GPT-5.5 medium made the app with only the same bug, but sometimes a more low-impact bug like a CSP header issue. So if you want to use these models to create a CTF and you are just saying this part must be vulnerable, you have to double-check the code, especially with Claude models.
 ## Thanks
 
-To [vitorfhc](https://github.com/vitorfhc) and [Bug Bounty Daily](https://bugbountydaily.com/), which surfaced a lot of the writeups this was built from. To [rez0](https://x.com/rez0__) and [Justin Gardner](https://x.com/Rhynorater) for the conversations and public sharing around AI-assisted security work. And first of all to the original researchers who published the findings these cases are based on.
+First of all, to the original researchers who published the findings these cases are based on. To [vitorfhc](https://github.com/vitorfhc) for [Bug Bounty Daily](https://bugbountydaily.com/), who surfaced a lot of the writeups this was built from. And to [rez0](https://x.com/rez0__) and [Justin Gardner](https://x.com/Rhynorater) for the conversations and public sharing around AI-assisted security work.
+
 
 ## Safety
 
