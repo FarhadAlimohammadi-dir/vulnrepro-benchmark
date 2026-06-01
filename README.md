@@ -67,7 +67,7 @@ And they mostly weren't "the model can't read code" failures. They were **chain-
 
 `Important note:` For prompt-injection cases, we used like if/else situation and not a real LLM behind it, so that might not be good for benchmarking, but i decided to make them and see models feedback
 
-This is the most interesting result in the whole project, and it's written up in [docs/FINDINGS.md](docs/FINDINGS.md) and [the false-negative analysis](analysis_false_negatives_20260530/ACTUAL_WEAKNESS_PATTERNS_FOR_MODEL_MISSES.md).
+This is the most interesting result in the whole project, and it's written up in [docs/FINDINGS.md](docs/FINDINGS.md)
 
 ## What's in here
 
