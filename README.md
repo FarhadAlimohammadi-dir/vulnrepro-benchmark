@@ -12,6 +12,20 @@ The cases come from real bug bounty writeups. Most of them I found through the w
 
 This measures **source-code review**, not black-box hacking. The model reads the application source and decides if there is a reportable vulnerability. It does not get a live URL to attack, and it gets no hint about whether a case is vulnerable or clean, and no comment pointing at the vulnerable function. But in the future, I will add blackbox testing as a bug bounty hunter to score that as well.
 
+**Interesting that AI missed!**
+
+One of the missed cases is a redirect page with a `next` parameter. At first glance it looks like a common low-effort
+  XSS: the app reflects `next` into a continue link and meta-refresh flow without validating the scheme, so
+  `javascript:alert(...)` can survive into the page.
+
+  The interesting part is the context. In the original bug class, that page sits inside a browser/extension trust
+  boundary. So the impact is not only "popup an alert"; the redirect becomes a bridge into a more trusted execution
+  path. A model has to understand the product flow, not just match the word `javascript:`.
+
+  That is exactly the kind of case I wanted in the benchmark: a bug where the sink is visible, but the real impact only
+  makes sense after following the surrounding trust chain.
+  
+
 ## Clean controls (the part I care about most)
 
 For every vulnerable case there is a **clean twin**. I took the same app and made the rest of it safe, so the model can't get an easy point from some unrelated bug. I used AI to find and fix other issues and kept only the one vulnerability the original writeup was about.
