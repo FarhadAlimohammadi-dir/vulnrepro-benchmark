@@ -12,7 +12,7 @@ The cases come from real bug bounty writeups. Most of them I found through the w
 
 This measures **source-code review**, not black-box hacking. The model reads the application source and decides if there is a reportable vulnerability. It does not get a live URL to attack, and it gets no hint about whether a case is vulnerable or clean, and no comment pointing at the vulnerable function. But in the future, I will add blackbox testing as a bug bounty hunter to score that as well.
 
-#Interesting that AI missed!
+# Interesting that AI missed!
 
 One of the missed cases is a redirect page with a `next` parameter. At first glance it looks like a common low-effort
   XSS: the app reflects `next` into a continue link and meta-refresh flow without validating the scheme, so
